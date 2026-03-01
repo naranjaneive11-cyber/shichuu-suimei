@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四柱推命 プレミアム鑑定 | 鳥海伯翠流</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <main class="container">
+        <!-- Header -->
+        <section class="hero glass-panel">
+            <h1 class="title" style="margin-bottom: 0;">四柱推命鑑定書</h1>
+        </section>
+
+        <section class="card glass input-section">
+            <div class="mode-toggle" style="display:flex; justify-content:center; gap:1rem; margin-bottom:1.5rem;">
+                <button type="button" id="btn-mode-single" class="btn-primary"
+                    style="padding:0.5rem 2rem; border-radius:20px;">👤 個人占い</button>
+                <button type="button" id="btn-mode-pair" class="btn-secondary"
+                    style="padding:0.5rem 2rem; border-radius:20px; opacity:0.7;">💕 相性占い</button>
+            </div>
+
+            <form id="appraisal-form">
+                <input type="hidden" id="appraisal-mode" value="single">
+
+                <div id="person-a-block">
+                    <h3 class="form-section-title" id="title-person-a"
+                        style="display:none; margin-bottom:1rem; font-size:1.1rem; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:0.5rem; color:var(--text-primary);">
+                        あなた（一人目）の情報</h3>
+                    <div class="form-group">
+                        <label for="name">お名前</label>
+                        <input type="text" id="name" placeholder="例：山田 太郎" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>生年月日</label>
+                            <div class="birthday-selects">
+                                <select id="birthday-year" required>
+                                    <option value="">年</option>
+                                </select>
+                                <select id="birthday-month" required>
+                                    <option value="">月</option>
+                                    <option value="1">1月</option>
+                                    <option value="2">2月</option>
+                                    <option value="3">3月</option>
+                                    <option value="4">4月</option>
+                                    <option value="5">5月</option>
+                                    <option value="6">6月</option>
+                                    <option value="7">7月</option>
+                                    <option value="8">8月</option>
+                                    <option value="9">9月</option>
+                                    <option value="10">10月</option>
+                                    <option value="11">11月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                                <select id="birthday-day" required>
+                                    <option value="">日</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>性別</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="gender" value="male" checked>
+                                    <span>男性</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="gender" value="female">
+                                    <span>女性</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="person-b-block" class="hidden" style="margin-top:2rem;">
+                    <h3 class="form-section-title"
+                        style="margin-bottom:1rem; font-size:1.1rem; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:0.5rem; color:var(--text-primary);">
+                        お相手（二人目）の情報</h3>
+                    <div class="form-group">
+                        <label for="name-b">お名前</label>
+                        <input type="text" id="name-b" placeholder="例：鈴木 花子">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>生年月日</label>
+                            <div class="birthday-selects">
+                                <select id="birthday-year-b">
+                                    <option value="">年</option>
+                                </select>
+                                <select id="birthday-month-b">
+                                    <option value="">月</option>
+                                    <option value="1">1月</option>
+                                    <option value="2">2月</option>
+                                    <option value="3">3月</option>
+                                    <option value="4">4月</option>
+                                    <option value="5">5月</option>
+                                    <option value="6">6月</option>
+                                    <option value="7">7月</option>
+                                    <option value="8">8月</option>
+                                    <option value="9">9月</option>
+                                    <option value="10">10月</option>
+                                    <option value="11">11月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                                <select id="birthday-day-b">
+                                    <option value="">日</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>性別</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="gender-b" value="male">
+                                    <span>男性</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="gender-b" value="female" checked>
+                                    <span>女性</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top:1.5rem;">鑑定を開始する</button>
+            </form>
+        </section>
+
+        <section id="result-section" class="result-section hidden">
+            <div class="card glass result-card">
+                <div class="result-header">
+                    <h2 id="result-user-name">山田 太郎 様</h2>
+                    <p id="result-user-info">1988年6月29日 生まれ</p>
+                </div>
+
+                <div class="meishiki-container">
+                    <h3>命式表</h3>
+
+                    <div class="chushatsu-container">
+                        <div class="chushatsu-box">天中殺：<span id="chushatsu-value">--</span></div>
+                    </div>
+
+                    <div class="meishiki-grid">
+                        <!-- Header Row (L to R: Label, Day, Month, Year) -->
+                        <div class="meishiki-item header label">柱</div>
+                        <div class="meishiki-item header day-pillar">日柱</div>
+                        <div class="meishiki-item header">月柱</div>
+                        <div class="meishiki-item header">年柱</div>
+
+                        <!-- Kanshi Row -->
+                        <div class="meishiki-item label">干支</div>
+                        <div id="kanshi-day" class="meishiki-item kanshi-cell day-pillar">
+                            <div class="kanshi-chars" id="char-day">--</div>
+                        </div>
+                        <div id="kanshi-month" class="meishiki-item kanshi-cell">
+                            <div class="kanshi-chars" id="char-month">--</div>
+                        </div>
+                        <div id="kanshi-year" class="meishiki-item kanshi-cell">
+                            <div class="kanshi-chars" id="char-year">--</div>
+                        </div>
+
+                        <!-- Number Row -->
+                        <div class="meishiki-item label">（蔵干指数）</div>
+                        <div id="num-day" class="meishiki-item value day-pillar">30</div>
+                        <div id="num-month" class="meishiki-item value">--</div>
+                        <div id="num-year" class="meishiki-item value">30</div>
+
+                        <!-- Zokan Row -->
+                        <div class="meishiki-item label">蔵干</div>
+                        <div id="zokan-day" class="meishiki-item value day-pillar">--</div>
+                        <div id="zokan-month" class="meishiki-item value">--</div>
+                        <div id="zokan-year" class="meishiki-item value">--</div>
+
+                        <!-- Tsuhensai (Main Star) Row -->
+                        <div class="meishiki-item label">通変星</div>
+                        <div id="tuhen-day-main" class="meishiki-item value day-pillar"></div>
+                        <div id="tuhen-month" class="meishiki-item value">--</div>
+                        <div id="tuhen-year" class="meishiki-item value">--</div>
+
+                        <!-- Zokan Tsuhensai Row -->
+                        <div class="meishiki-item label">蔵干通変星</div>
+                        <div id="ztuhen-day" class="meishiki-item value day-pillar">--</div>
+                        <div id="ztuhen-month" class="meishiki-item value">--</div>
+                        <div id="ztuhen-year" class="meishiki-item value">--</div>
+
+                        <!-- Juniniunsei Row -->
+                        <div class="meishiki-item label">十二運星</div>
+                        <div id="unsei-day" class="meishiki-item value day-pillar">--</div>
+                        <div id="unsei-month" class="meishiki-item value">--</div>
+                        <div id="unsei-year" class="meishiki-item value">--</div>
+
+                        <!-- Unsei Energy Row -->
+                        <div class="meishiki-item label">運勢エネルギー</div>
+                        <div id="energy-day" class="meishiki-item value energy-cell day-pillar">--</div>
+                        <div id="energy-month" class="meishiki-item value energy-cell">--</div>
+                        <div id="energy-year" class="meishiki-item value energy-cell">--</div>
+                    </div>
+                </div>
+
+                <div class="analysis-grid">
+                    <div class="analysis-card nature-card">
+                        <h4>本質（日干）</h4>
+                        <div id="nature-icon" class="nature-icon">🌿</div>
+                        <p id="nature-title" class="nature-title">乙（きのと）</p>
+                        <p id="nature-desc" class="nature-desc">準備中...</p>
+                    </div>
+                    <div class="analysis-card parameter-card" style="padding: 1.5rem 0.5rem;">
+                        <h4 style="margin-bottom: 0;">📊 五行バランス</h4>
+                        <div class="radar-chart-container"
+                            style="position: relative; width: 100%; height: 180px; margin: 0 auto;">
+                            <canvas id="fiveStarsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="analysis-card">
+                        <h4>運勢エネルギー</h4>
+                        <div class="energy-circle">
+                            <span id="energy-value">0</span>
+                        </div>
+                        <p class="energy-label">Total Score / 36</p>
+                        <p id="energy-desc" class="analysis-small">準備中...</p>
+                    </div>
+                    <div class="analysis-card health-card">
+                        <h4>🍀 健康運・体質傾向</h4>
+                        <div id="health-icon" class="nature-icon" style="font-size:2.5rem; margin-bottom:0.5rem;">🏥
+                        </div>
+                        <p id="health-title" class="nature-title" style="font-size:1.1rem;">判定中...</p>
+                        <p id="health-desc" class="nature-desc"
+                            style="font-size:0.9rem; text-align:left; margin-top:0.8rem;">準備中...</p>
+                    </div>
+                </div>
+
+                <!-- 守護イメージ（フルワイド配置） -->
+                <div class="image-card card-sub"
+                    style="margin-bottom: 1.5rem; height: 280px; border-left: none; border-radius: 16px;">
+                    <h4>守護イメージ</h4>
+                    <div class="kanshi-image-container" style="border-radius: 16px;">
+                        <img id="kanshi-image" src="" alt="日柱イメージ" class="kanshi-image">
+                    </div>
+                </div>
+                <div class="tables-grid">
+                    <!-- 天中殺年表 -->
+                    <div class="chushatsu-years-section card-sub">
+                        <h4>🗓️ 天中殺 年表</h4>
+                        <p class="chushatsu-legend"><span class="cs-badge cs-on">天中殺</span>＝当該地支の年 &nbsp; <span
+                                class="cs-badge cs-now">今年</span>＝現在年</p>
+                        <div id="chushatsu-year-table" class="chushatsu-year-table"></div>
+                    </div>
+
+                    <!-- 大運表 -->
+                    <div class="da-yun-section card-sub">
+                        <h4>🌌 大運（10年ごとの運勢）</h4>
+                        <div class="da-yun-legend">
+                            <span>立運：<strong id="tate-un-age" style="color:var(--accent);">--</strong>歳</span>
+                            <span>方向：<strong id="da-yun-direction">--</strong></span>
+                        </div>
+                        <div id="da-yun-table" class="da-yun-table"></div>
+                    </div>
+                </div>
+
+                <div class="personality-report card-sub">
+                    <h4>総合鑑定書</h4>
+                    <p id="report-text">準備中...</p>
+                </div>
+
+                <button id="reset-btn" class="btn-secondary">別の鑑定を行う</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 四柱推命プレミアム鑑定 - 鳥海伯翠流メソッド</p>
+    </footer>
+
+    <script>
+        /**
+         * 四柱推命 鑑定ロジック (鳥海伯翠流)
+         */
+
+        // --- 定数・データ定義 ---
+
+        const TENKAN = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+        const CHISHI = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+
+        // 通変星対応表 (日干 vs 他の天干/蔵干)
+        const TUHEN_TABLE = {
+            '甲': { '甲': '比肩', '乙': '劫財', '丙': '食神', '丁': '傷官', '戊': '偏財', '己': '正財', '庚': '偏官', '辛': '正官', '壬': '偏印', '癸': '印綬' },
+            '乙': { '乙': '比肩', '甲': '劫財', '丁': '食神', '丙': '傷官', '己': '偏財', '戊': '正財', '辛': '偏官', '庚': '正官', '癸': '偏印', '壬': '印綬' },
+            '丙': { '丙': '比肩', '丁': '劫財', '戊': '食神', '己': '傷官', '庚': '偏財', '辛': '正財', '壬': '偏官', '癸': '正官', '甲': '偏印', '乙': '印綬' },
+            '丁': { '丁': '比肩', '丙': '劫財', '己': '食神', '戊': '傷官', '辛': '偏財', '庚': '正財', '癸': '偏官', '壬': '正官', '乙': '偏印', '甲': '印綬' },
+            '戊': { '戊': '比肩', '己': '劫財', '庚': '食神', '辛': '傷官', '壬': '偏財', '癸': '正財', '甲': '偏官', '乙': '正官', '丙': '偏印', '丁': '印綬' },
+            '己': { '己': '比肩', '戊': '劫財', '辛': '食神', '庚': '傷官', '癸': '偏財', '壬': '正財', '乙': '偏官', '甲': '正官', '丁': '偏印', '丙': '印綬' },
+            '庚': { '庚': '比肩', '辛': '劫財', '壬': '食神', '癸': '傷官', '甲': '偏財', '乙': '正財', '丙': '偏官', '丁': '正官', '戊': '偏印', '己': '印綬' },
+            '辛': { '辛': '比肩', '庚': '劫財', '癸': '食神', '壬': '傷官', '乙': '偏財', '甲': '正財', '丁': '偏官', '丙': '正官', '己': '偏印', '戊': '印綬' },
+            '壬': { '壬': '比肩', '癸': '劫財', '甲': '食神', '乙': '傷官', '丙': '偏財', '丁': '正財', '戊': '偏官', '己': '正官', '庚': '偏印', '辛': '印綬' },
+            '癸': { '癸': '比肩', '壬': '劫財', '乙': '食神', '甲': '傷官', '丁': '偏財', '丙': '正財', '己': '偏官', '戊': '正官', '辛': '偏印', '庚': '印綬' }
+        };
+
+        // 十二運星対応表 (日干 vs 地支)
+        const UNSEI_TABLE = {
+            '甲': { '亥': '長生', '戌': '養', '酉': '胎', '申': '絶', '未': '墓', '午': '死', '巳': '病', '辰': '衰', '卯': '帝旺', '寅': '建禄', '丑': '冠帯', '子': '沐浴' },
+            '乙': { '午': '長生', '巳': '沐浴', '辰': '冠帯', '卯': '建禄', '寅': '帝旺', '丑': '衰', '子': '病', '亥': '死', '戌': '墓', '酉': '絶', '申': '胎', '未': '養' },
+            '丙': { '寅': '長生', '丑': '養', '子': '胎', '亥': '絶', '戌': '墓', '酉': '死', '申': '病', '未': '衰', '午': '帝旺', '巳': '建禄', '辰': '冠帯', '卯': '沐浴' },
+            '丁': { '酉': '長生', '申': '沐浴', '未': '冠帯', '午': '建禄', '巳': '帝旺', '辰': '衰', '卯': '病', '寅': '死', '丑': '墓', '子': '絶', '亥': '胎', '戌': '養' },
+            '戊': { '寅': '長生', '丑': '養', '子': '胎', '亥': '絶', '戌': '墓', '酉': '死', '申': '病', '未': '衰', '午': '帝旺', '巳': '建禄', '辰': '冠帯', '卯': '沐浴' },
+            '己': { '酉': '長生', '申': '沐浴', '未': '冠帯', '午': '建禄', '巳': '帝旺', '辰': '衰', '卯': '病', '寅': '死', '丑': '墓', '子': '絶', '亥': '胎', '戌': '養' },
+            '庚': { '巳': '長生', '辰': '養', '卯': '胎', '寅': '絶', '丑': '墓', '子': '死', '亥': '病', '戌': '衰', '酉': '帝旺', '申': '建禄', '未': '冠帯', '午': '沐浴' },
+            '辛': { '子': '長生', '亥': '沐浴', '戌': '冠帯', '酉': '建禄', '申': '帝旺', '未': '衰', '午': '病', '巳': '死', '辰': '墓', '卯': '絶', '寅': '胎', '丑': '養' },
+            '壬': { '申': '長生', '未': '養', '午': '胎', '巳': '絶', '辰': '墓', '卯': '死', '寅': '病', '丑': '衰', '子': '帝旺', '亥': '建禄', '戌': '冠帯', '酉': '沐浴' },
+            '癸': { '卯': '長生', '寅': '沐浴', '丑': '冠帯', '子': '建禄', '亥': '帝旺', '戌': '衰', '酉': '病', '申': '死', '未': '墓', '午': '絶', '巳': '胎', '辰': '養' }
+        };
+
+        // 十二運星のエネルギー値 (鳥海流)
+        const ENERGY_VALUES = {
+            '胎': 3, '養': 6, '長生': 9, '沐浴': 7, '冠帯': 10, '建禄': 11,
+            '帝旺': 12, '衰': 8, '病': 4, '死': 2, '墓': 5, '絶': 1
+        };
+
+        // 鳥海流 蔵干表 (地支 vs 日数)
+        const TORIUMI_ZOKAN = {
+            '子': (d) => (d <= 10 ? '壬' : '癸'),
+            '丑': (d) => (d <= 9 ? '癸' : (d <= 12 ? '辛' : '己')),
+            '寅': (d) => (d <= 7 ? '戊' : (d <= 14 ? '丙' : '甲')),
+            '卯': (d) => (d <= 10 ? '甲' : '乙'),
+            '辰': (d) => (d <= 9 ? '乙' : (d <= 12 ? '癸' : '戊')),
+            '巳': (d) => (d <= 7 ? '庚' : (d <= 14 ? '戊' : '丙')),
+            '午': (d) => (d <= 10 ? '丙' : (d <= 20 ? '己' : '丁')),
+            '未': (d) => (d <= 9 ? '丁' : (d <= 12 ? '乙' : '己')),
+            '申': (d) => (d <= 10 ? '戊' : (d <= 17 ? '壬' : '庚')),
+            '酉': (d) => (d <= 10 ? '庚' : '辛'),
+            '戌': (d) => (d <= 9 ? '辛' : (d <= 12 ? '丁' : '戊')),
+            '亥': (d) => (d <= 12 ? '甲' : '壬')
+        };
+
+        // 十二支と季節の対応
+        const SEASON_MAP = {
+            '寅': '春', '卯': '春', '辰': '春',
+            '巳': '夏', '午': '夏', '未': '夏',
+            '申': '秋', '酉': '秋', '戌': '秋',
+            '亥': '冬', '子': '冬', '丑': '冬'
+        };
+
+        // 日干ごとのアイコン・説明
+        const NATURE_DATA = {
+            '甲': { icon: '🌲', title: '甲 (きのえ)', desc: 'まっすぐ伸びる大樹。正義感があり、向上心に燃えるリーダータイプ。' },
+            '乙': { icon: '🌿', title: '乙 (きのと)', desc: 'しなやかな草花。調和を重んじ、粘り強さと柔軟性を兼ね備える。' },
+            '丙': { icon: '☀️', title: '丙 (ひのえ)', desc: '燦々と輝く太陽。明るく開放的で、周囲を照らすカリスマ性を持つ。' },
+            '丁': { icon: '🕯️', title: '丁 (ひのと)', desc: '温かな灯火。繊細で情熱的、内面に強い意志を秘めた努力家。' },
+            '戊': { icon: '⛰️', title: '戊 (つちのえ)', desc: '堂々とした山。包容力があり、周囲からの信頼を集める安定型。' },
+            '己': { icon: '🌱', title: '己 (つちのと)', desc: '豊かな田園。愛情深く、多才で知識を吸収する力に優れる。' },
+            '庚': { icon: '⚔️', title: '庚 (かのえ)', desc: '鋭い鋼鉄。決断力と行動力があり、逆境に立ち向かう開拓者。' },
+            '辛': { icon: '💎', title: '辛 (かのと)', desc: '輝く宝石。美意識が高く、試練を経て輝きを増す直感の人。' },
+            '壬': { icon: '🌊', title: '壬 (みずのえ)', desc: '広大な海。自由奔放で知的、どんな環境にも適応する変幻自在。' },
+            '癸': { icon: '🌧️', title: '癸 (みずのと)', desc: '潤いの雨。慈愛に満ち、献身的に周囲を癒やす知恵の持ち主。' }
+        };
+
+        // 健康運データ（日干・五行ベース）
+        const HEALTH_DATA = {
+            '甲': { element: '木', icon: '🌳', title: '肝臓・自律神経に注意', desc: 'ストレスを溜め込むと肝臓や自律神経、目の疲れに出やすい体質です。意識的なリラックスと十分な睡眠を心がけ、酸味のある食べ物（柑橘類やお酢など）を摂ると吉。' },
+            '乙': { element: '木', icon: '🌿', title: '肝臓・自律神経に注意', desc: '気疲れやストレスが神経や首、肩のコリとして現れやすいタイプです。マッサージやアロマでリラックスする時間を持ち、酸味のあるものを少しずつ取り入れましょう。' },
+            '丙': { element: '火', icon: '☀️', title: '心臓・血液循環に注意', desc: '感情の起伏が心臓の負担や血圧、動悸に繋がりやすい体質です。興奮しすぎないように落ち着く時間を持ち、苦味のある食べ物（ゴーヤや緑茶など）でクールダウンを。' },
+            '丁': { element: '火', icon: '🕯️', title: '心臓・血液循環に注意', desc: '神経をすり減らすと心臓や小腸に負担がかかり、不眠や血流不足になりやすい傾向があります。夜はゆっくり過ごすことを意識し、苦味のアクセントを取り入れましょう。' },
+            '戊': { element: '土', icon: '⛰️', title: '胃腸・消化器系に注意', desc: '考えすぎや悩み事が直接胃腸のトラブル（胃痛や消化不良）に出やすい体質です。甘味のある自然な食材（かぼちゃやさつまいもなど）を摂り、よく噛んで食べることが大切です。' },
+            '己': { element: '土', icon: '🌾', title: '胃腸・消化器系に注意', desc: '世話焼きで気を使って無理をすると、脾臓や胃、口すわりの不調が出やすいタイプです。食事の時間を規則正しくし、根菜類など自然な甘味をゆっくり味わいましょう。' },
+            '庚': { element: '金', icon: '⚔️', title: '肺・呼吸器系に注意', desc: '乾燥や悲しみの感情に弱く、風邪を引くと咳や鼻炎、皮膚の荒れとして長引きやすい体質です。辛味の食材（ネギや生姜など）を取り入れ、深呼吸と保湿を徹底してください。' },
+            '辛': { element: '金', icon: '💎', title: '肺・呼吸器系に注意', desc: 'デリケートでストレスに弱く、呼吸器や大腸、肌の乾燥トラブルに出やすい傾向です。白湯や保湿ケアで体を労わり、適度に辛味のあるネギやスパイスで温めましょう。' },
+            '壬': { element: '水', icon: '🌊', title: '腎臓・冷え性に注意', desc: '寒さや冷えに最も弱く、生命力の源である腎臓や仙骨、泌尿器に疲れが出やすい体質です。塩気を適度に取り入れ、下半身を冷やさないように温活を意識することが重要です。' },
+            '癸': { element: '水', icon: '🌧️', title: '腎臓・冷え性に注意', desc: '疲労が蓄積するとホルモンバランスや免疫力が落ち、膀胱や足腰・耳の不調に出やすいタイプです。黒い食材（黒豆や海藻など）と適度な塩味を摂り、体を芯から温めてください。' }
+        };
+
+        // 五星（通変星グループ）の定義
+        const FIVE_STARS = {
+            'jisei': ['比肩', '劫財'],
+            'yusei': ['食神', '傷官'],
+            'zaisei': ['偏財', '正財'],
+            'kansei': ['偏官', '正官'],
+            'insei': ['偏印', '印綬']
+        };
+
+        // 節入り日データ（簡易版）
+        const SETSUIRI = [5, 4, 6, 5, 5, 6, 7, 7, 8, 8, 7, 7]; // 1月〜12月の節入り日
+
+        // --- メインロジック ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('appraisal-form');
+            const resetBtn = document.getElementById('reset-btn');
+            const inputSection = document.querySelector('.input-section');
+            const resultSection = document.getElementById('result-section');
+
+            // 年プルダウンの生成
+            const yearSelect = document.getElementById('birthday-year');
+            const yearSelectB = document.getElementById('birthday-year-b');
+            const currentYear = new Date().getFullYear();
+            for (let y = currentYear; y >= 1920; y--) {
+                const optA = document.createElement('option');
+                optA.value = y; optA.textContent = y + '年';
+                yearSelect.appendChild(optA);
+
+                const optB = document.createElement('option');
+                optB.value = y; optB.textContent = y + '年';
+                yearSelectB.appendChild(optB);
+            }
+
+            // 日プルダウン更新（一人目）
+            function updateDays() {
+                const daySelect = document.getElementById('birthday-day');
+                const y = parseInt(yearSelect.value) || 2000;
+                const m = parseInt(document.getElementById('birthday-month').value) || 1;
+                const maxDay = new Date(y, m, 0).getDate();
+                const prevDay = parseInt(daySelect.value);
+                daySelect.innerHTML = '<option value="">日</option>';
+                for (let d = 1; d <= maxDay; d++) {
+                    const opt = document.createElement('option');
+                    opt.value = d; opt.textContent = d + '日';
+                    if (d === prevDay) opt.selected = true;
+                    daySelect.appendChild(opt);
+                }
+            }
+
+            // 日プルダウン更新（二人目）
+            function updateDaysB() {
+                const daySelect = document.getElementById('birthday-day-b');
+                const y = parseInt(yearSelectB.value) || 2000;
+                const m = parseInt(document.getElementById('birthday-month-b').value) || 1;
+                const maxDay = new Date(y, m, 0).getDate();
+                const prevDay = parseInt(daySelect.value);
+                daySelect.innerHTML = '<option value="">日</option>';
+                for (let d = 1; d <= maxDay; d++) {
+                    const opt = document.createElement('option');
+                    opt.value = d; opt.textContent = d + '日';
+                    if (d === prevDay) opt.selected = true;
+                    daySelect.appendChild(opt);
+                }
+            }
+
+            yearSelect.addEventListener('change', updateDays);
+            document.getElementById('birthday-month').addEventListener('change', updateDays);
+            yearSelectB.addEventListener('change', updateDaysB);
+            document.getElementById('birthday-month-b').addEventListener('change', updateDaysB);
+            updateDays();
+            updateDaysB();
+
+            // モード切替
+            const btnSingle = document.getElementById('btn-mode-single');
+            const btnPair = document.getElementById('btn-mode-pair');
+            const modeInput = document.getElementById('appraisal-mode');
+            const blockA = document.getElementById('person-a-block');
+            const blockB = document.getElementById('person-b-block');
+            const titleA = document.getElementById('title-person-a');
+
+            btnSingle.addEventListener('click', () => {
+                modeInput.value = 'single';
+                btnSingle.className = 'btn-primary';
+                btnSingle.style.opacity = '1';
+                btnPair.className = 'btn-secondary';
+                btnPair.style.opacity = '0.7';
+                blockB.classList.add('hidden');
+                titleA.style.display = 'none';
+            });
+
+            btnPair.addEventListener('click', () => {
+                modeInput.value = 'pair';
+                btnPair.className = 'btn-primary';
+                btnPair.style.opacity = '1';
+                btnSingle.className = 'btn-secondary';
+                btnSingle.style.opacity = '0.7';
+                blockB.classList.remove('hidden');
+                titleA.style.display = 'block';
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                try {
+                    const mode = modeInput.value;
+                    const y = parseInt(document.getElementById('birthday-year').value);
+                    const m = parseInt(document.getElementById('birthday-month').value);
+                    const d = parseInt(document.getElementById('birthday-day').value);
+                    const name = document.getElementById('name').value;
+                    const gender = document.querySelector('input[name="gender"]:checked').value;
+
+                    if (!y || !m || !d) {
+                        alert('生年月日を選択してください。');
+                        return;
+                    }
+
+                    const birthday = new Date(y, m - 1, d);
+                    const meishiki = calculateMeishiki(birthday);
+                    const daYun = calculateDaYun(birthday, gender, meishiki);
+
+                    if (mode === 'single') {
+                        document.getElementById('compatibility-section')?.remove();
+                        displayResult(name, birthday, meishiki, daYun);
+                    } else {
+                        // 相性占いモード
+                        const yB = parseInt(document.getElementById('birthday-year-b').value);
+                        const mB = parseInt(document.getElementById('birthday-month-b').value);
+                        const dB = parseInt(document.getElementById('birthday-day-b').value);
+                        const nameB = document.getElementById('name-b').value || 'お相手';
+                        const genderB = document.querySelector('input[name="gender-b"]:checked').value;
+
+                        if (!yB || !mB || !dB) {
+                            alert('お相手の生年月日を選択してください。');
+                            return;
+                        }
+
+                        const birthdayB = new Date(yB, mB - 1, dB);
+                        const meishikiB = calculateMeishiki(birthdayB);
+                        const daYunB = calculateDaYun(birthdayB, genderB, meishikiB);
+
+                        document.getElementById('compatibility-section')?.remove();
+                        // 個人鑑定セクションを相性モード時はすべて非表示
+                        const hidePairs = [
+                            '.meishiki-container', '.tables-grid', '.image-card',
+                            '.analysis-grid', '.personality-report'
+                        ];
+                        hidePairs.forEach(sel => {
+                            const el = document.querySelector(sel);
+                            if (el) el.style.display = 'none';
+                        });
+
+                        // 結果ヘッダーの情報をペア向けに書き換え
+                        document.getElementById('result-user-name').innerHTML = `${name} 様 <span style="font-size:0.8em; color:var(--text-secondary); margin:0 0.5rem;">×</span> ${nameB} 様`;
+                        document.getElementById('result-user-info').textContent = `相性鑑定結果`;
+
+                        renderCompatibility(name, meishiki, gender, nameB, meishikiB, genderB);
+                    }
+
+                    inputSection.classList.add('hidden');
+                    resultSection.classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } catch (error) {
+                    alert("エラーが発生しました: " + error.message + "\n\n" + error.stack);
+                    console.error(error);
+                }
+            });
+
+            resetBtn.addEventListener('click', () => {
+                resultSection.classList.add('hidden');
+                inputSection.classList.remove('hidden');
+            });
+        });
+
+        const ELEMENT_MAP = {
+            '甲': '+木', '乙': '-木', '丙': '+火', '丁': '-火', '戊': '+土', '己': '-土', '庚': '+金', '辛': '-金', '壬': '+水', '癸': '-水',
+            '子': '+水', '丑': '-土', '寅': '+木', '卯': '-木', '辰': '+土', '巳': '-火', '午': '+火', '未': '-土', '申': '+金', '酉': '-金', '戌': '+土', '亥': '-水'
+        };
+
+        const CHUSHATSU_TABLE = {
+            '甲子': '戌亥', '乙丑': '戌亥', '丙寅': '戌亥', '丁卯': '戌亥', '戊辰': '戌亥', '己巳': '戌亥', '庚午': '戌亥', '辛未': '戌亥', '壬申': '戌亥', '癸酉': '戌亥',
+            '甲戌': '申酉', '乙亥': '申酉', '丙子': '申酉', '丁丑': '申酉', '戊寅': '申酉', '己卯': '申酉', '庚辰': '申酉', '辛巳': '申酉', '壬午': '申酉', '癸未': '申酉',
+            '甲申': '午未', '乙酉': '午未', '丙戌': '午未', '丁亥': '午未', '戊子': '午未', '己丑': '午未', '庚寅': '午未', '辛卯': '午未', '壬辰': '午未', '癸巳': '午未',
+            '甲午': '辰巳', '乙未': '辰巳', '丙申': '辰巳', '丁酉': '辰巳', '戊戌': '辰巳', '己亥': '辰巳', '庚子': '辰巳', '辛丑': '辰巳', '壬寅': '辰巳', '癸卯': '辰巳',
+            '甲辰': '寅卯', '乙巳': '寅卯', '丙午': '寅卯', '丁未': '寅卯', '戊申': '寅卯', '己酉': '寅卯', '庚戌': '寅卯', '辛亥': '寅卯', '壬子': '寅卯', '癸丑': '寅卯',
+            '甲寅': '子丑', '乙卯': '子丑', '丙辰': '子丑', '丁巳': '子丑', '戊午': '子丑', '己未': '子丑', '庚申': '子丑', '辛酉': '子丑', '壬戌': '子丑', '癸亥': '子丑'
+        };
+
+        function getDaysInMonth(year, month) {
+            return new Date(year, month, 0).getDate();
+        }
+
+        function calculateMeishiki(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+
+            // 1. 日干支
+            const baseDate = new Date(1900, 0, 1);
+            const diffDays = Math.floor((date - baseDate) / (1000 * 60 * 60 * 24));
+            let dayKanshiIndex = (diffDays + 10) % 60;
+            if (dayKanshiIndex < 0) dayKanshiIndex += 60;
+            const dayTenkan = TENKAN[dayKanshiIndex % 10];
+            const dayChishi = CHISHI[dayKanshiIndex % 12];
+            const dayKanshiStr = dayTenkan + dayChishi;
+
+            // 2. 年干支
+            let yearForKanshi = year;
+            if (month < 2 || (month === 2 && day < SETSUIRI[1])) yearForKanshi--;
+            let yearKanshiIndex = (yearForKanshi - 4) % 60;
+            if (yearKanshiIndex < 0) yearKanshiIndex += 60;
+            const yearTenkan = TENKAN[yearKanshiIndex % 10];
+            const yearChishi = CHISHI[yearKanshiIndex % 12];
+
+            // 3. 月干支
+            let monthAdjusted = month;
+            let currentSetsuiriDay = SETSUIRI[month - 1];
+            let daysSinceSetsuiri = day - currentSetsuiriDay + 1;
+            if (daysSinceSetsuiri <= 0) {
+                monthAdjusted--;
+                if (monthAdjusted === 0) monthAdjusted = 12;
+                let prevMonthSetsuiriDay = SETSUIRI[monthAdjusted - 1];
+                let daysInPrevMonth = getDaysInMonth(year, monthAdjusted);
+                daysSinceSetsuiri = (daysInPrevMonth - prevMonthSetsuiriDay + 1) + day;
+            }
+            const monthTenkanOffset = [2, 4, 6, 8, 0];
+            const yearTenkanGroup = yearKanshiIndex % 10;
+            const monthTenkanIndex = (monthTenkanOffset[yearTenkanGroup % 5] + (monthAdjusted - 2) + 10) % 10;
+            const monthTenkan = TENKAN[monthTenkanIndex];
+            const monthChishi = CHISHI[monthAdjusted % 12];
+
+            // 4. 蔵干
+            const zokanMonth = TORIUMI_ZOKAN[monthChishi](daysSinceSetsuiri);
+            const zokanYear = TORIUMI_ZOKAN[yearChishi](30);
+            const zokanDay = TORIUMI_ZOKAN[dayChishi](30);
+
+            // 5. 通変星 (蔵干ベース)
+            const tuhenYear = TUHEN_TABLE[dayTenkan][yearTenkan]; // 年柱の通変星は天干から
+            const tuhenMonth = TUHEN_TABLE[dayTenkan][monthTenkan]; // 月柱の通変星は天干から
+
+            // 蔵干通変星
+            const ztuhenYear = TUHEN_TABLE[dayTenkan][zokanYear];
+            const ztuhenMonth = TUHEN_TABLE[dayTenkan][zokanMonth];
+            const ztuhenDay = TUHEN_TABLE[dayTenkan][zokanDay];
+
+            // 6. 十二運星
+            const unseiYear = UNSEI_TABLE[dayTenkan][yearChishi];
+            const unseiMonth = UNSEI_TABLE[dayTenkan][monthChishi];
+            const unseiDay = UNSEI_TABLE[dayTenkan][dayChishi];
+
+            const totalEnergy = ENERGY_VALUES[unseiYear] + ENERGY_VALUES[unseiMonth] + ENERGY_VALUES[unseiDay];
+            const chushatsu = CHUSHATSU_TABLE[dayKanshiStr];
+
+            return {
+                dayTenkan, dayChishi, zokanDay,
+                yearTenkan, yearChishi, zokanYear,
+                monthTenkan, monthChishi, zokanMonth,
+                tuhenYear, tuhenMonth,
+                ztuhenYear, ztuhenMonth, ztuhenDay,
+                unseiYear, unseiMonth, unseiDay,
+                totalEnergy, chushatsu,
+                daysSinceSetsuiri
+            };
+        }
+
+        // --- 五行バランス（五星）の計算 ---
+        function calculateFiveStars(m) {
+            const balance = { jisei: 0, yusei: 0, zaisei: 0, kansei: 0, insei: 0 };
+
+            // 各通変星の判定対象と比率
+            const targets = [
+                { star: m.tuhenYear, weight: 10 },
+                { star: m.ztuhenYear, weight: 10 },
+                { star: m.tuhenMonth, weight: 20 },
+                { star: m.ztuhenMonth, weight: 30 },
+                { star: m.ztuhenDay, weight: 30 }
+            ];
+
+            for (const t of targets) {
+                if (!t.star || t.star === '--') continue;
+                for (const group in FIVE_STARS) {
+                    if (FIVE_STARS[group].includes(t.star)) {
+                        balance[group] += t.weight;
+                        break;
+                    }
+                }
+            }
+            return balance;
+        }
+
+        function calculateDaYun(date, gender, m) {
+            // 年干の陰陽
+            const isYokan = ['甲', '丙', '戊', '庚', '壬'].includes(m.yearTenkan);
+            const isMale = (gender === 'male');
+
+            // 順行か逆行か（男・陽、女・陰 なら順行。それ以外は逆行）
+            const isForward = (isMale && isYokan) || (!isMale && !isYokan);
+
+            // 節入りの計算（日数ベース簡易版）
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+
+            let diffDays = 0;
+            const currentSetsuiriDay = SETSUIRI[month - 1];
+
+            if (isForward) {
+                if (day < currentSetsuiriDay) {
+                    diffDays = currentSetsuiriDay - day;
+                } else {
+                    let nextMonth = month + 1;
+                    if (nextMonth > 12) nextMonth = 1;
+                    const nextSetsuiriDay = SETSUIRI[nextMonth - 1];
+                    const daysInMonth = getDaysInMonth(year, month);
+                    diffDays = (daysInMonth - day) + nextSetsuiriDay;
+                }
+            } else { // 逆行
+                if (day >= currentSetsuiriDay) {
+                    diffDays = day - currentSetsuiriDay + 1;
+                } else {
+                    let prevMonth = month - 1;
+                    if (prevMonth < 1) prevMonth = 12;
+                    let prevYear = month === 1 ? year - 1 : year;
+                    const prevSetsuiriDay = SETSUIRI[prevMonth - 1];
+                    const daysInPrevMonth = getDaysInMonth(prevYear, prevMonth);
+                    diffDays = (daysInPrevMonth - prevSetsuiriDay) + day + 1;
+                }
+            }
+
+            // 立運：日数を3で割る（四捨五入）
+            let tateUn = Math.round(diffDays / 3);
+            if (tateUn <= 0) tateUn = 1; // 0歳運は1歳運として扱うのが一般的
+
+            // 月柱干支を取得
+            let tIdx = TENKAN.indexOf(m.monthTenkan);
+            let cIdx = CHISHI.indexOf(m.monthChishi);
+
+            // 10年ごとの干支を計算
+            const cycles = [];
+            for (let i = 0; i < 9; i++) {
+                if (isForward) {
+                    tIdx = (tIdx + 1) % 10;
+                    cIdx = (cIdx + 1) % 12;
+                } else {
+                    tIdx = (tIdx - 1 + 10) % 10;
+                    cIdx = (cIdx - 1 + 12) % 12;
+                }
+                const startAge = tateUn + i * 10;
+                const endAge = startAge + 9;
+
+                const tTenkan = TENKAN[tIdx];
+                const tChishi = CHISHI[cIdx];
+
+                // 通変星と十二運星（日干から見て算出）
+                const tuhen = TUHEN_TABLE[m.dayTenkan][tTenkan];
+                const unsei = UNSEI_TABLE[m.dayTenkan][tChishi];
+
+                cycles.push({
+                    startAge,
+                    endAge,
+                    kanshi: tTenkan + tChishi,
+                    tuhen,
+                    unsei,
+                    isCurrent: false
+                });
+            }
+
+            // 現在年齢に該当する行を判定
+            const currentAge = new Date().getFullYear() - date.getFullYear();
+            for (let c of cycles) {
+                if (currentAge >= c.startAge && currentAge <= c.endAge) {
+                    c.isCurrent = true;
+                    break;
+                }
+            }
+            if (currentAge < tateUn && cycles.length > 0) {
+                cycles[0].isCurrent = true; // 立運前の場合は最初をマーク
+            }
+
+            return {
+                direction: isForward ? '順行' : '逆行',
+                tateUn,
+                cycles
+            };
+        }
+
+        function displayResult(name, date, m, daYun) {
+            document.getElementById('result-user-name').textContent = `${name} 様`;
+            document.getElementById('result-user-info').textContent = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 生まれ`;
+            document.getElementById('chushatsu-value').textContent = m.chushatsu;
+
+            // 年柱
+            document.getElementById('char-year').textContent = m.yearTenkan + m.yearChishi;
+            document.getElementById('zokan-year').textContent = m.zokanYear;
+            document.getElementById('tuhen-year').textContent = m.tuhenYear;
+            document.getElementById('ztuhen-year').textContent = m.ztuhenYear;
+            document.getElementById('unsei-year').textContent = m.unseiYear;
+            document.getElementById('energy-year').textContent = ENERGY_VALUES[m.unseiYear];
+
+            // 月柱
+            document.getElementById('char-month').textContent = m.monthTenkan + m.monthChishi;
+            document.getElementById('num-month').textContent = m.daysSinceSetsuiri;
+            document.getElementById('zokan-month').textContent = m.zokanMonth;
+            document.getElementById('tuhen-month').textContent = m.tuhenMonth;
+            document.getElementById('ztuhen-month').textContent = m.ztuhenMonth;
+            document.getElementById('unsei-month').textContent = m.unseiMonth;
+            document.getElementById('energy-month').textContent = ENERGY_VALUES[m.unseiMonth];
+
+            // 日柱
+            document.getElementById('char-day').textContent = m.dayTenkan + m.dayChishi;
+            document.getElementById('zokan-day').textContent = m.zokanDay;
+            document.getElementById('ztuhen-day').textContent = m.ztuhenDay;
+            document.getElementById('unsei-day').textContent = m.unseiDay;
+            document.getElementById('energy-day').textContent = ENERGY_VALUES[m.unseiDay];
+
+            const nature = NATURE_DATA[m.dayTenkan];
+            document.getElementById('nature-icon').textContent = nature.icon;
+            document.getElementById('nature-title').textContent = nature.title;
+            document.getElementById('nature-desc').textContent = nature.desc;
+
+            // 🍀 健康運・体質チェック（五行カウント方式）
+            const elementsCount = { '木': 0, '火': 0, '土': 0, '金': 0, '水': 0 };
+            const components = [
+                m.yearTenkan, m.yearChishi,
+                m.monthTenkan, m.monthChishi,
+                m.dayTenkan, m.dayChishi
+            ];
+
+            // 命式6文字の五行（木・火・土・金・水）をカウント
+            components.forEach(c => {
+                if (ELEMENT_MAP[c]) {
+                    const el = ELEMENT_MAP[c].charAt(1);
+                    if (elementsCount[el] !== undefined) elementsCount[el]++;
+                }
+            });
+
+            const HEALTH_RULES = [
+                { el: '木', name: '肝臓、筋肉、神経' },
+                { el: '火', name: '心臓、血液、血圧' },
+                { el: '土', name: '消化器' },
+                { el: '金', name: '肺、呼吸器、喘息' },
+                { el: '水', name: '腎臓' }
+            ];
+
+            let healthHtml = '<table style="width:100%; text-align:left; font-size:0.95rem; border-collapse:collapse; margin-top:0.5rem;">';
+            HEALTH_RULES.forEach(r => {
+                const count = elementsCount[r.el];
+                let mark = '×';
+                let color = '#ec4899'; // 赤（不足）
+                if (count === 1 || count === 2) {
+                    mark = '〇';
+                    color = '#10b981'; // 緑（適正）
+                } else if (count >= 3) {
+                    mark = '△';
+                    color = '#f59e0b'; // 黄・オレンジ（過多）
+                }
+                healthHtml += `<tr style="border-bottom:1px solid rgba(255,255,255,0.1);">
+                                <td style="padding:0.5rem 0; color:var(--text-primary);"><span style="display:inline-block; width:20px; text-align:center;">${r.el}</span><span style="font-size:0.85em; margin-left:8px; color:var(--text-secondary);">${r.name}</span></td>
+                                <td style="text-align:right; font-weight:bold; color:${color}; width:30px; font-size:1.1em;">${mark}</td>
+                            </tr>`;
+            });
+            healthHtml += '</table>';
+
+            // 基礎体力（エネルギー）からのワンポイントアドバイス
+            let healthAdv = '';
+            if (m.totalEnergy >= 25) {
+                healthAdv = '<p style="font-size:0.85em; color:var(--text-secondary); margin-top:0.8rem;">※エネルギー値が高いため、不完全燃焼にならないよう適度な運動での発散をおすすめします。</p>';
+            } else if (m.totalEnergy <= 10) {
+                healthAdv = '<p style="font-size:0.85em; color:var(--text-secondary); margin-top:0.8rem;">※基礎体力が控えめです。無理は禁物で、疲れを感じる前にこまめな休息を。</p>';
+            }
+
+            const healthCard = document.querySelector('.health-card');
+            healthCard.innerHTML = `<h4>🍀 健康運・体質傾向</h4>${healthHtml}${healthAdv}`;
+
+            document.getElementById('energy-value').textContent = m.totalEnergy;
+            let energyDesc = '';
+            if (m.totalEnergy >= 25) energyDesc = '社会を牽引する、非常に強力なエネルギーを持っています。';
+            else if (m.totalEnergy >= 15) energyDesc = 'バランスの取れた、安定したエネルギーの持ち主です。';
+            else energyDesc = '自分自身の内面や特定の分野を深めるのに適したエネルギーです。';
+            document.getElementById('energy-desc').textContent = energyDesc;
+
+            // 五星の計算とレーダーチャートの描画
+            const starsBalance = calculateFiveStars(m);
+            const ctx = document.getElementById('fiveStarsChart').getContext('2d');
+
+            if (window.fiveStarsRadarChart) {
+                window.fiveStarsRadarChart.destroy();
+            }
+
+            window.fiveStarsRadarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        `自星 (${starsBalance.jisei || 0}%)`,
+                        `遊星 (${starsBalance.yusei || 0}%)`,
+                        `財星 (${starsBalance.zaisei || 0}%)`,
+                        `官星 (${starsBalance.kansei || 0}%)`,
+                        `印星 (${starsBalance.insei || 0}%)`
+                    ],
+                    datasets: [{
+                        label: '五行バランス',
+                        data: [
+                            starsBalance.jisei || 0,
+                            starsBalance.yusei || 0,
+                            starsBalance.zaisei || 0,
+                            starsBalance.kansei || 0,
+                            starsBalance.insei || 0
+                        ],
+                        backgroundColor: 'rgba(129, 140, 248, 0.25)', // スタイリッシュなインディゴ/パープル系半透明
+                        borderColor: '#a78bfa',
+                        pointBackgroundColor: '#c084fc',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#c084fc',
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.15)', lineWidth: 1 },
+                            pointLabels: {
+                                color: '#fdfdfd',
+                                font: { size: 10, family: "'Inter', 'Outfit', 'Noto Sans JP', sans-serif" }
+                            },
+                            ticks: {
+                                display: false, // 目盛り数値は非表示
+                                beginAtZero: true,
+                                max: 60 // グラフの最大広がり具合の調整
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return ' ' + context.raw + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 大運の描画
+            document.getElementById('tate-un-age').textContent = daYun.tateUn;
+            document.getElementById('da-yun-direction').textContent = daYun.direction;
+            const dyContainer = document.getElementById('da-yun-table');
+            dyContainer.innerHTML = '';
+            for (let c of daYun.cycles) {
+                const row = document.createElement('div');
+                row.className = 'dy-row' + (c.isCurrent ? ' dy-current' : '');
+
+                // 年齢幅
+                const ageCol = document.createElement('span');
+                ageCol.className = 'dy-age';
+                ageCol.textContent = `${c.startAge}歳〜${c.endAge}歳`;
+
+                // 干支
+                const kanshiCol = document.createElement('span');
+                kanshiCol.className = 'dy-kanshi';
+                kanshiCol.textContent = c.kanshi;
+
+                // 通変星・十二運星
+                const starsCol = document.createElement('span');
+                starsCol.className = 'dy-stars';
+                starsCol.innerHTML = `<span style="font-size:0.85em; color:var(--text-secondary);">${c.tuhen} / ${c.unsei}</span>`;
+
+                // 補足・マーク
+                const descCol = document.createElement('span');
+                descCol.className = 'dy-desc';
+                if (c.isCurrent) {
+                    descCol.innerHTML = '<span class="cs-badge cs-now" style="margin-left:auto;">現在</span>';
+                }
+
+                row.appendChild(ageCol);
+                row.appendChild(kanshiCol);
+                row.appendChild(starsCol);
+                row.appendChild(descCol);
+                dyContainer.appendChild(row);
+            }
+
+            // イメージ画像の設定
+            const season = SEASON_MAP[m.dayChishi];
+            let fileName = `${m.dayTenkan}（${season}）.webp`;
+            if (m.dayTenkan === '辛' && season === '秋') {
+                fileName = '辛（秋）.png';
+            }
+            const imgPath = `カメラ ロール/${encodeURIComponent(fileName)}`;
+            const kanshiImg = document.getElementById('kanshi-image');
+            kanshiImg.src = imgPath;
+            kanshiImg.alt = `${m.dayTenkan}（${season}）のイメージ`;
+
+            // 天中殺年表の生成
+            renderChushatsuYearTable(m.chushatsu, m.dayTenkan);
+
+            let report = `あなたは「${m.dayTenkan}」の性質を持ち、${nature.desc}\n\n`;
+            report += `社会的な立場を表す月柱には「${m.tuhenMonth}」の主星があり、その性質があなたの人生の核となります。`;
+            report += `また、十二運星には「${m.unseiDay}」を持っており、一生を通じて${m.unseiDay}の運気に守られています。\n\n`;
+            report += `運勢エネルギーは${m.totalEnergy}点と、${energyDesc}`;
+
+            document.getElementById('report-text').textContent = report;
+        }
+
+        /**
+         * 天中殺年表の生成
+         * chushatsuStr: 例) '戌亥' '申酉' '子丑' etc.
+         * dayTenkan: 日干（陰陽の判定に使用）
+         */
+        function renderChushatsuYearTable(chushatsuStr, dayTenkan) {
+            const container = document.getElementById('chushatsu-year-table');
+            container.innerHTML = '';
+
+            const cs1 = chushatsuStr[0]; // 空亡1年目の地支
+            const cs2 = chushatsuStr[1]; // 空亡2年目の地支
+
+            const currentYear = 2026;
+            const startYear = currentYear - 6;
+            const endYear = currentYear + 6;
+
+            // 天中殺1年目(cs1)の直前地支 → 前天中殺
+            const cs1Idx = CHISHI.indexOf(cs1);
+            const preCS = CHISHI[(cs1Idx - 1 + 12) % 12]; // 1つ前の地支
+
+            // 陽干（＋）か陰干（－）か判定
+            const isYokan = ['甲', '丙', '戊', '庚', '壬'].includes(dayTenkan);
+
+            // ルール：陰干ならcs1が「忍耐(index 0)」
+            // 陽干ならcs1が「陰徳(index 1)」になるよう、起点(index 0)を1つ前の地支(preCS)とする
+            const csStartChishi = isYokan ? preCS : cs1;
+            const cycleStartIdx = CHISHI.indexOf(csStartChishi);
+
+            // 12年サイクルのラベル定義（指定ルールに準拠）
+            const CYCLE_DATA = [
+                { label: '忍耐', rating: '×', ratingClass: 'bad', desc: '天中殺: 1年目' },    // 0: 1年目
+                { label: '陰徳', rating: '×', ratingClass: 'bad', desc: '天中殺: 2年目' },    // 1: 2年目
+                { label: '修行', rating: '×', ratingClass: 'bad', desc: '天中殺: 3年目' },    // 2: 3年目
+                { label: '夜明け', rating: '○', ratingClass: 'good', desc: '4年目' },        // 3: 4年目
+                { label: '進化', rating: '○', ratingClass: 'good', desc: '5年目' },          // 4: 5年目
+                { label: '決意', rating: '○', ratingClass: 'good', desc: '6年目' },          // 5: 6年目
+                { label: '休息', rating: '×', ratingClass: 'bad', desc: '7年目' },           // 6: 7年目
+                { label: '青春', rating: '◎', ratingClass: 'great', desc: '8年目' },        // 7: 8年目
+                { label: '空転', rating: '××', ratingClass: 'bad', desc: '9年目' },          // 8: 9年目
+                { label: '飛躍', rating: '◎◎', ratingClass: 'great', desc: '10年目' },      // 9: 10年目
+                { label: '絶好調', rating: '◎◎', ratingClass: 'great', desc: '11年目' },    // 10: 11年目
+                { label: '頂点', rating: '◎', ratingClass: 'great', desc: '12年目' },        // 11: 12年目
+            ];
+
+            // 年の地支を求める関数
+            function getYearChishi(y) {
+                let idx = (y - 4) % 12;
+                if (idx < 0) idx += 12;
+                return CHISHI[idx];
+            }
+
+            // 地支 → サイクル位置を計算
+            function getCyclePosition(chishi) {
+                const chishiIdx = CHISHI.indexOf(chishi);
+                return (chishiIdx - cycleStartIdx + 12) % 12;
+            }
+
+            // 十二支の動物名
+            const ZODIAC = {
+                '子': '子（ね）', '丑': '丑（うし）', '寅': '寅（とら）', '卯': '卯（う）',
+                '辰': '辰（たつ）', '巳': '巳（み）', '午': '午（うま）', '未': '未（ひつじ）',
+                '申': '申（さる）', '酉': '酉（とり）', '戌': '戌（いぬ）', '亥': '亥（い）'
+            };
+
+            // 十二支と月の対応（節月基準）
+            const BRANCH_MONTH = {
+                '子': '12月', '丑': '1月', '寅': '2月', '卯': '3月',
+                '辰': '4月', '巳': '5月', '午': '6月', '未': '7月',
+                '申': '8月', '酉': '9月', '戌': '10月', '亥': '11月'
+            };
+
+            for (let y = startYear; y <= endYear; y++) {
+                const chishi = getYearChishi(y);
+                const cyclePos = getCyclePosition(chishi);
+                const cycle = CYCLE_DATA[cyclePos];
+
+                // 天中殺（1〜3年目 ＝ index 0, 1, 2）
+                const isCS = (cyclePos >= 0 && cyclePos <= 2);
+                const isNow = (y === currentYear);
+
+                const row = document.createElement('div');
+                let rowClass = 'cs-row';
+                if (isCS) rowClass += ' cs-active';
+                if (isNow) rowClass += ' cs-current';
+                row.className = rowClass;
+
+                // 年・月
+                const yearCol = document.createElement('span');
+                yearCol.className = 'cs-year';
+                yearCol.innerHTML = `${y}年 <span style="font-size:0.85em; color:var(--text-secondary); margin-left:0.25rem;">${BRANCH_MONTH[chishi]}</span>`;
+
+                // 地支（漢字のみ）
+                const chishiCol = document.createElement('span');
+                chishiCol.className = 'cs-chishi';
+                chishiCol.style.fontWeight = 'bold';
+                chishiCol.style.fontSize = '1.05em';
+                chishiCol.style.textAlign = 'center';
+                chishiCol.textContent = chishi;
+
+                // ラベル＋説明
+                const labelCol = document.createElement('span');
+                labelCol.className = 'cs-label';
+                labelCol.innerHTML = `<span class="cs-label-name">${cycle.label}</span><span class="cs-label-desc">${cycle.desc}</span>`;
+
+                // ○△× 評価
+                const ratingCol = document.createElement('span');
+                ratingCol.className = `cs-rating cs-rating-${cycle.ratingClass}`;
+                ratingCol.textContent = cycle.rating;
+
+                // バッジ
+                const badgeCol = document.createElement('span');
+                badgeCol.className = 'cs-badges';
+                let badgeHTML = '';
+                if (isCS) badgeHTML += '<span class="cs-badge cs-on">天中殺</span>';
+                if (isNow) badgeHTML += '<span class="cs-badge cs-now">今年</span>';
+                badgeCol.innerHTML = badgeHTML;
+
+                row.appendChild(yearCol);
+                row.appendChild(chishiCol);
+                row.appendChild(labelCol);
+                row.appendChild(ratingCol);
+                row.appendChild(badgeCol);
+                container.appendChild(row);
+            }
+        }
+
+        /**
+         * 日干同士の相性を判定する
+         */
+        function getTenkanRelation(t1, t2) {
+            if (t1 === t2) return { type: '比和', desc: '同じ五行の性質を持つため、友達のように価値観が合いやすく、気を使わない居心地の良い関係です。' };
+
+            // 干合（大吉）の組み合わせ
+            const kangoMap = {
+                '甲': '己', '己': '甲',
+                '乙': '庚', '庚': '乙',
+                '丙': '辛', '辛': '丙',
+                '丁': '壬', '壬': '丁',
+                '戊': '癸', '癸': '戊'
+            };
+            if (kangoMap[t1] === t2) {
+                return { type: '干合', desc: '「干合（かんごう）」と呼ばれる最高の相性です。磁石のように強烈に惹かれ合い、お互いに無いものを補い合える夫婦の縁が強い関係です。' };
+            }
+
+            const e1 = ELEMENT_MAP[t1].charAt(1);
+            const e2 = ELEMENT_MAP[t2].charAt(1);
+
+            if (e1 === e2) return { type: '比和', desc: '似た者同士で共感しやすい関係です。一緒にいて気楽ですが、ぶつかると意地を張り合うことも。' };
+
+            // 相生（生じる・生じられる）
+            const soshou = { '木': '火', '火': '土', '土': '金', '金': '水', '水': '木' };
+            if (soshou[e1] === e2 || soshou[e2] === e1) {
+                return { type: '相生', desc: '一方がもう一方を自然とサポートし、育てあう関係（相生）です。親子のように無償の愛や思いやりを持てる良い相性です。' };
+            }
+
+            // 相剋（剋する・剋される）
+            const sokoku = { '木': '土', '土': '水', '水': '火', '火': '金', '金': '木' };
+            if (sokoku[e1] === e2 || sokoku[e2] === e1) {
+                return { type: '相剋', desc: '価値観が異なるため刺激を与え合う関係（相剋）です。自分の殻を破ってくれる相手ですが、一緒にいすぎるとストレスを感じることも。適度な距離感がカギです。' };
+            }
+
+            return { type: '普通', desc: '特に強い反発も引き合いもない標準的な関係です。お互いの努力と思いやりで自由に形を作れます。' };
+        }
+
+        /**
+         * 日支同士の相性を判定する
+         */
+        function getChishiRelation(c1, c2) {
+            // 支合（しごう）: 大吉
+            const shigo = { '子': '丑', '丑': '子', '寅': '亥', '亥': '寅', '卯': '戌', '戌': '卯', '辰': '酉', '酉': '辰', '巳': '申', '申': '巳', '午': '未', '未': '午' };
+            if (shigo[c1] === c2) return { type: '支合', desc: '「支合」という現実面の相性が抜群の組み合わせ。一緒に何かをするとスムーズに進み、意気投合しやすい大吉の関係です。' };
+
+            // 三合（さんごう）会局の簡易判定（本来は3つ揃うのが完全だが、2つでも半会として強い縁）
+            const sangoGroups = [
+                ['申', '子', '辰'], ['亥', '卯', '未'], ['寅', '午', '戌'], ['巳', '酉', '丑']
+            ];
+            for (let g of sangoGroups) {
+                if (g.includes(c1) && g.includes(c2) && c1 !== c2) {
+                    return { type: '三合', desc: '「三合（半会）」という発展を意味する良い相性です。お互いの長所が引き出され、一緒にいると運気がスケールアップします。' };
+                }
+            }
+
+            // 冲（ちゅう）: 衝突
+            const chu = { '子': '午', '午': '子', '丑': '未', '未': '丑', '寅': '申', '申': '寅', '卯': '酉', '酉': '卯', '辰': '戌', '戌': '辰', '巳': '亥', '亥': '巳' };
+            if (chu[c1] === c2) return { type: '冲', desc: '「冲」と呼ばれる対極の組み合わせ。意見が衝突しやすく喧嘩になりがち。相手の違いを面白がり、リスペクトを持つことが長続きの秘訣です。' };
+
+            // 刑（けい）: 摩擦
+            // 簡易的に有名な自刑などを判定
+            if (c1 === c2 && ['辰', '午', '酉', '亥'].includes(c1)) {
+                return { type: '刑', desc: '「自刑」と呼ばれる関係。似ているからこそ相手の嫌な部分が目につきやすく、ライバルになりやすい相性です。' };
+            }
+
+            return { type: '普通', desc: '現実的な行動パターンやペースにおいて、極端な衝突はありません。お互いの歩み寄りで良好な関係を築けます。' };
+        }
+
+        /**
+         * 相性鑑定結果をDOMに追加
+         */
+        function renderCompatibility(nameA, mA, genderA, nameB, mB, genderB) {
+            let compSection = document.getElementById('compatibility-section');
+            if (!compSection) {
+                compSection = document.createElement('div');
+                compSection.id = 'compatibility-section';
+                compSection.className = 'compatibility-card card-sub glass';
+                compSection.style.marginBottom = '2rem';
+                compSection.style.padding = '1.5rem';
+
+                // 結果ヘッダーのすぐ下に追加
+                const resultHeader = document.querySelector('.result-header');
+                resultHeader.parentNode.insertBefore(compSection, resultHeader.nextSibling);
+            }
+
+            // --- 命式を並列表示するHelper ---
+            function buildMeishikiTable(m, label) {
+                const rows = [
+                    { rowLabel: '干支', dayVal: m.dayTenkan + m.dayChishi, monVal: m.monthTenkan + m.monthChishi, yearVal: m.yearTenkan + m.yearChishi },
+                    { rowLabel: '蔵干', dayVal: m.zokanDay, monVal: m.zokanMonth, yearVal: m.zokanYear },
+                    { rowLabel: '通変星', dayVal: '—', monVal: m.tuhenMonth, yearVal: m.tuhenYear },
+                    { rowLabel: '蔵干通変', dayVal: m.ztuhenDay, monVal: m.ztuhenMonth, yearVal: m.ztuhenYear },
+                    { rowLabel: '十二運星', dayVal: m.unseiDay, monVal: m.unseiMonth, yearVal: m.unseiYear },
+                    { rowLabel: 'EN', dayVal: ENERGY_VALUES[m.unseiDay], monVal: ENERGY_VALUES[m.unseiMonth], yearVal: ENERGY_VALUES[m.unseiYear] },
+                ];
+
+                const cellStyle = 'padding:0.4rem 0.3rem; text-align:center; font-size:0.85rem; border-bottom:1px solid rgba(255,255,255,0.07);';
+                const hdStyle = 'padding:0.4rem 0.3rem; text-align:center; font-size:0.8rem; color:var(--text-secondary); font-weight:600; border-bottom:1px solid rgba(255,255,255,0.15);';
+                const lblStyle = 'padding:0.4rem 0.3rem; font-size:0.75rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.07); white-space:nowrap;';
+
+                let headerRow = `<tr><th style="${lblStyle}"></th><th style="${hdStyle}">日柱</th><th style="${hdStyle}">月柱</th><th style="${hdStyle}">年柱</th></tr>`;
+                let bodyRows = rows.map(r =>
+                    `<tr>
+                        <td style="${lblStyle}">${r.rowLabel}</td>
+                        <td style="${cellStyle} color:#c084fc; font-weight:bold;">${r.dayVal}</td>
+                        <td style="${cellStyle}">${r.monVal}</td>
+                        <td style="${cellStyle}">${r.yearVal}</td>
+                    </tr>`
+                ).join('');
+                const energyTotal = m.totalEnergy;
+                let energyColor = energyTotal >= 25 ? '#10b981' : (energyTotal >= 15 ? '#f59e0b' : '#ec4899');
+                let footerRow = `<tr><td colspan="4" style="padding:0.5rem 0.3rem; text-align:right; font-size:0.85rem; color:${energyColor}; font-weight:bold;">合計EN: ${energyTotal}</td></tr>`;
+
+                return `
+                    <div style="flex:1; min-width:0;">
+                        <p style="text-align:center; font-size:0.9rem; color:var(--text-secondary); margin-bottom:0.5rem;">${label}</p>
+                        <div style="font-size:2rem; text-align:center; margin-bottom:0.4rem;">${NATURE_DATA[m.dayTenkan].icon}</div>
+                        <table style="width:100%; border-collapse:collapse;">
+                            <thead>${headerRow}</thead>
+                            <tbody>${bodyRows}${footerRow}</tbody>
+                        </table>
+                    </div>`;
+            }
+
+            // --- スコア計算（4項目 合計100%） ---
+            function evalScore(relation, isMark) {
+                // isMark: { maru: 条件, sankaku: 条件 }
+                if (isMark.maru) return { mark: '〇', pts: 25 };
+                if (isMark.sankaku) return { mark: '△', pts: 15 };
+                return { mark: '×', pts: 0 };
+            }
+
+            // ① 日干の関係
+            const stemRel = getTenkanRelation(mA.dayTenkan, mB.dayTenkan);
+            const stemScore = evalScore(stemRel, {
+                maru: ['干合', '相生'].includes(stemRel.type),
+                sankaku: ['比和'].includes(stemRel.type)
+            });
+
+            // ② 日柱の地支
+            const dayBranchRel = getChishiRelation(mA.dayChishi, mB.dayChishi);
+            const dayBranchScore = evalScore(dayBranchRel, {
+                maru: ['支合', '三合'].includes(dayBranchRel.type),
+                sankaku: ['普通'].includes(dayBranchRel.type)
+            });
+
+            // ③ 月柱の地支
+            const monBranchRel = getChishiRelation(mA.monthChishi, mB.monthChishi);
+            const monBranchScore = evalScore(monBranchRel, {
+                maru: ['支合', '三合'].includes(monBranchRel.type),
+                sankaku: ['普通'].includes(monBranchRel.type)
+            });
+
+            // ④ 運勢エネルギーの差分
+            // 男性と女性を特定
+            let energyMale, energyFemale;
+            if (genderA === 'male') {
+                energyMale = mA.totalEnergy; energyFemale = mB.totalEnergy;
+            } else {
+                energyMale = mB.totalEnergy; energyFemale = mA.totalEnergy;
+            }
+            const energyDiff = energyMale - energyFemale;
+            let energyScore;
+            if (energyDiff >= 1 && energyDiff <= 5) {
+                energyScore = { mark: '〇', pts: 25, desc: `男性が+${energyDiff}点（理想的なバランス）` };
+            } else if (energyDiff >= 6) {
+                energyScore = { mark: '△', pts: 15, desc: `男性が+${energyDiff}点（やや大きなリード）` };
+            } else if (energyDiff < 0 && energyDiff >= -5) {
+                energyScore = { mark: '△', pts: 15, desc: `女性が+${Math.abs(energyDiff)}点（かかあ天下気味）` };
+            } else if (energyDiff < -5) {
+                energyScore = { mark: '×', pts: 0, desc: `女性が+${Math.abs(energyDiff)}点（かかあ天下の相性）` };
+            } else {
+                // 同値
+                energyScore = { mark: '〇', pts: 25, desc: `同エネルギー（完全均等）` };
+            }
+
+            const totalScore = stemScore.pts + dayBranchScore.pts + monBranchScore.pts + energyScore.pts;
+
+            let heart = totalScore >= 80 ? '💖' : (totalScore >= 60 ? '💕' : (totalScore >= 40 ? '💛' : '🍃'));
+
+            function markBadge(mark) {
+                const color = mark === '〇' ? '#10b981' : (mark === '△' ? '#f59e0b' : '#ec4899');
+                return `<span style="display:inline-block; width:2rem; height:2rem; line-height:2rem; text-align:center; font-size:1.2rem; font-weight:bold; color:${color}; background:rgba(255,255,255,0.06); border-radius:50%;">${mark}</span>`;
+            }
+
+            const tableStyle = 'width:100%; border-collapse:collapse; margin-top:1rem;';
+            const thStyle = 'padding:0.6rem 0.5rem; text-align:left; font-size:0.82rem; color:var(--text-secondary); border-bottom:1px solid rgba(255,255,255,0.12); font-weight:600;';
+            const tdStyle = 'padding:0.6rem 0.5rem; font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.07); vertical-align:middle;';
+            const ptStyle = 'text-align:right; font-weight:bold; font-size:1rem;';
+
+            const scoreTableRows = [
+                {
+                    label: '① 日柱の天干（精神・本質）',
+                    badge: markBadge(stemScore.mark),
+                    rel: stemRel.type,
+                    pts: stemScore.pts
+                },
+                {
+                    label: '② 日柱の地支（行動・居心地）',
+                    badge: markBadge(dayBranchScore.mark),
+                    rel: dayBranchRel.type,
+                    pts: dayBranchScore.pts
+                },
+                {
+                    label: '③ 月柱の地支（社会・価値観）',
+                    badge: markBadge(monBranchScore.mark),
+                    rel: monBranchRel.type,
+                    pts: monBranchScore.pts
+                },
+                {
+                    label: '④ 運勢エネルギー差',
+                    badge: markBadge(energyScore.mark),
+                    rel: energyScore.desc,
+                    pts: energyScore.pts
+                },
+            ];
+
+            const scoreRows = scoreTableRows.map(r => `
+                <tr>
+                    <td style="${tdStyle}">${r.label}</td>
+                    <td style="${tdStyle} text-align:center;">${r.badge}</td>
+                    <td style="${tdStyle} color:var(--text-secondary); font-size:0.82rem;">${r.rel}</td>
+                    <td style="${tdStyle} ${ptStyle} color:${r.pts >= 25 ? '#10b981' : r.pts >= 15 ? '#f59e0b' : '#ec4899'};">${r.pts}%</td>
+                </tr>`).join('');
+
+            const tableHtml = `
+                <table style="${tableStyle}">
+                    <thead>
+                        <tr>
+                            <th style="${thStyle}">判定項目</th>
+                            <th style="${thStyle} text-align:center;">評価</th>
+                            <th style="${thStyle}">詳細</th>
+                            <th style="${thStyle} text-align:right;">点数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${scoreRows}
+                        <tr>
+                            <td colspan="3" style="padding:0.7rem 0.5rem; font-weight:bold; font-size:0.95rem; color:var(--text-primary); text-align:right;">合計スコア</td>
+                            <td style="padding:0.7rem 0.5rem; font-weight:900; font-size:1.3rem; text-align:right; color:var(--primary);">${totalScore}%</td>
+                        </tr>
+                    </tbody>
+                </table>`;
+
+            // ========== 特殊縁の判定 ==========
+            const specialBonds = [];
+
+            // ① 律音（りつおん）: 日柱の天干・地支が完全に一致
+            if (mA.dayTenkan === mB.dayTenkan && mA.dayChishi === mB.dayChishi) {
+                specialBonds.push({
+                    name: '律音',
+                    yomi: 'りつおん',
+                    icon: '🔮',
+                    color: '#f472b6',
+                    bg: 'rgba(244,114,182,0.12)',
+                    border: '#f472b6',
+                    desc: '日柱（天干・地支）が完全に一致する、極めて稀な宿命的縁。鏡のように似た魂の持ち主で、深い共鳴と共感が生まれます。一緒にいると自分がよく分かる、特別な関係です。'
+                });
+            }
+
+            // ② 宿命大半会（しゅくめいだいはんかい）: 年支が三合の関係
+            const SANGO_GROUPS = [
+                ['申', '子', '辰'], // 水局
+                ['亥', '卯', '未'], // 木局
+                ['寅', '午', '戌'], // 火局
+                ['巳', '酉', '丑']  // 金局
+            ];
+            for (const g of SANGO_GROUPS) {
+                if (g.includes(mA.yearChishi) && g.includes(mB.yearChishi) && mA.yearChishi !== mB.yearChishi) {
+                    const element = g === SANGO_GROUPS[0] ? '水' : g === SANGO_GROUPS[1] ? '木' : g === SANGO_GROUPS[2] ? '火' : '金';
+                    specialBonds.push({
+                        name: '宿命大半会',
+                        yomi: 'しゅくめいだいはんかい',
+                        icon: '⭐',
+                        color: '#fbbf24',
+                        bg: 'rgba(251,191,36,0.12)',
+                        border: '#fbbf24',
+                        desc: `年柱の地支（${mA.yearChishi}と${mB.yearChishi}）が「三合${element}局」の関係。生まれ年から繋がる宿命的な縁で、二人は同じ大きな流れの中に生きています。人生の節目で出会う、運命が引き寄せた組み合わせです。`
+                    });
+                    break;
+                }
+            }
+
+            // ③ 日柱冲（宿命的対決）: 日支が冲の関係
+            const CHU_MAP = { '子': '午', '午': '子', '丑': '未', '未': '丑', '寅': '申', '申': '寅', '卯': '酉', '酉': '卯', '辰': '戌', '戌': '辰', '巳': '亥', '亥': '巳' };
+            if (CHU_MAP[mA.dayChishi] === mB.dayChishi && mA.dayTenkan !== mB.dayTenkan) {
+                specialBonds.push({
+                    name: '宿命対冲',
+                    yomi: 'しゅくめいたいちゅう',
+                    icon: '⚡',
+                    color: '#fb923c',
+                    bg: 'rgba(251,146,60,0.12)',
+                    border: '#fb923c',
+                    desc: `日柱の地支（${mA.dayChishi}と${mB.dayChishi}）が「冲」の関係。正反対の性質が強烈に引き合う緊張した縁。刺激し合い、共に成長できますが、妥協点を見つける努力が不可欠です。`
+                });
+            }
+
+            // ④ 天干干合（日干が干合の関係）
+            const KANGO_MAP = { '甲': '己', '己': '甲', '乙': '庚', '庚': '乙', '丙': '辛', '辛': '丙', '丁': '壬', '壬': '丁', '戊': '癸', '癸': '戊' };
+            if (KANGO_MAP[mA.dayTenkan] === mB.dayTenkan) {
+                specialBonds.push({
+                    name: '日干干合',
+                    yomi: 'にっかんかんごう',
+                    icon: '💫',
+                    color: '#34d399',
+                    bg: 'rgba(52,211,153,0.12)',
+                    border: '#34d399',
+                    desc: `日柱の天干（${mA.dayTenkan}と${mB.dayTenkan}）が「干合」。五行が化合する最上の吉縁で、魂レベルで惹かれ合います。お互いに欠けているものを補い合える、理想的なパートナーシップです。`
+                });
+            }
+
+            // 特殊縁のHTMLを構築
+            let specialHtml = '';
+            if (specialBonds.length > 0) {
+                const badges = specialBonds.map(b =>
+                    `<span style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.35rem 0.9rem; background:${b.bg}; border:1px solid ${b.color}; border-radius:20px; font-size:0.85rem; color:${b.color}; font-weight:700; white-space:nowrap;">${b.icon} ${b.name}</span>`
+                ).join('');
+                const cards = specialBonds.map(b =>
+                    `<div style="padding:1rem 1.2rem; background:${b.bg}; border-radius:12px; border:1px solid ${b.color}40;">
+                        <p style="font-size:0.75rem; color:${b.color}; font-weight:700; letter-spacing:0.05em; margin-bottom:0.4rem;">${b.icon} ${b.name}（${b.yomi}）</p>
+                        <p style="font-size:0.88rem; line-height:1.65; color:var(--text-light); margin:0;">${b.desc}</p>
+                    </div>`
+                ).join('');
+                specialHtml = `
+                    <div style="margin-bottom:2rem; padding:1.2rem; background:rgba(255,255,255,0.04); border-radius:14px; border:1px solid rgba(255,255,255,0.1);">
+                        <p style="font-size:0.75rem; color:var(--text-secondary); letter-spacing:0.05em; margin-bottom:0.8rem; font-weight:600;">✨ 特殊な縁（宿命的マーカー）</p>
+                        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">${badges}</div>
+                        <div style="display:flex; flex-direction:column; gap:0.7rem;">${cards}</div>
+                    </div>`;
+            }
+
+            // 解説コメント
+            let comment = '';
+            if (totalScore >= 85) comment = '四柱推命の観点から見て、ほぼ最高の組み合わせです。運命的な深い縁を感じさせます。大切に育んでいきましょう。';
+            else if (totalScore >= 70) comment = 'バランスの良い相性です。お互いの良さが引き出され、長く安定した関係を築きやすいでしょう。';
+            else if (totalScore >= 55) comment = '努力次第で良好な関係になれる相性です。価値観の違いを面白がれるかどうかがポイントです。';
+            else if (totalScore >= 40) comment = 'いくつかの課題がある相性ですが、克服することで大きな成長をもたらす関係にもなり得ます。';
+            else comment = '相互理解に時間と努力が必要な相性です。しかし、困難な相性ほど乗り越えたときの絆は深くなります。';
+
+            let html = `
+                <h3 style="text-align:center; color:#fdfdfd; margin-bottom:0.5rem; font-size:1.3rem;">${heart} 相性スコア</h3>
+                <div style="text-align:center; font-size:3rem; font-weight:900; color:var(--primary); text-shadow:0 0 20px rgba(129,140,248,0.5); margin-bottom:0.3rem;">${totalScore}<span style="font-size:1.5rem;">%</span></div>
+                <p style="text-align:center; font-size:0.9rem; color:var(--text-secondary); margin-bottom:2rem;">${comment}</p>
+
+                ${specialHtml}
+
+                <!-- 命式 並列表示 -->
+                <h4 style="color:#a78bfa; margin-bottom:0.8rem; font-size:1rem;">📜 命式比較</h4>
+                <div style="display:flex; gap:1rem; margin-bottom:2rem; overflow-x:auto; padding-bottom:0.5rem;">
+                    ${buildMeishikiTable(mA, `${nameA}（あなた）`)}
+                    <div style="display:flex; align-items:center; font-size:1.5rem; color:var(--text-secondary); padding:0 0.5rem; flex-shrink:0;">×</div>
+                    ${buildMeishikiTable(mB, `${nameB}（お相手）`)}
+                </div>
+
+                <!-- スコア詳細テーブル -->
+                <h4 style="color:#a78bfa; margin-bottom:0.2rem; font-size:1rem;">📊 スコア内訳（4項目・合計100%）</h4>
+                <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.5rem;">〇=25% / △=15% / ×=0%</p>
+                ${tableHtml}
+
+                <!-- 日干・日支・月支の解説 -->
+                <div style="margin-top:2rem; display:flex; flex-direction:column; gap:1rem;">
+                    <div style="padding:1rem; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid #a78bfa;">
+                        <p style="font-size:0.8rem; color:#a78bfa; font-weight:600; margin-bottom:0.4rem;">① 日柱の天干（${stemRel.type}）</p>
+                        <p style="font-size:0.9rem; line-height:1.6; color:var(--text-light); margin:0;">${stemRel.desc}</p>
+                    </div>
+                    <div style="padding:1rem; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid #818cf8;">
+                        <p style="font-size:0.8rem; color:#818cf8; font-weight:600; margin-bottom:0.4rem;">② 日柱の地支（${dayBranchRel.type}）</p>
+                        <p style="font-size:0.9rem; line-height:1.6; color:var(--text-light); margin:0;">${dayBranchRel.desc}</p>
+                    </div>
+                    <div style="padding:1rem; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid #6366f1;">
+                        <p style="font-size:0.8rem; color:#6366f1; font-weight:600; margin-bottom:0.4rem;">③ 月柱の地支（${monBranchRel.type}）</p>
+                        <p style="font-size:0.9rem; line-height:1.6; color:var(--text-light); margin:0;">${monBranchRel.desc}</p>
+                    </div>
+                    <div style="padding:1rem; background:rgba(255,255,255,0.03); border-radius:10px; border-left:3px solid #4f46e5;">
+                        <p style="font-size:0.8rem; color:#a5b4fc; font-weight:600; margin-bottom:0.4rem;">④ 運勢エネルギー差（男:${energyMale}点 / 女:${energyFemale}点）</p>
+                        <p style="font-size:0.9rem; line-height:1.6; color:var(--text-light); margin:0;">${energyScore.desc}</p>
+                    </div>
+                </div>
+            `;
+
+            compSection.innerHTML = html;
+        }
+    </script>
+</body>
+
+</html>

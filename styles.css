@@ -1,0 +1,845 @@
+:root {
+    --primary-gradient: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+    --bg-dark: #03040b;
+    --card-bg: rgba(20, 22, 35, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.04);
+    --text-primary: #ffffff;
+    --text-secondary: #8b95a5;
+    --accent: #a78bfa;
+    --accent-glow: rgba(167, 139, 250, 0.25);
+    --success: #10b981;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Outfit', 'Noto Sans JP', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    font-weight: 300;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* Background Decorations */
+.background-blobs {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.12;
+    animation: move 20s infinite alternate;
+}
+
+.blob-1 {
+    width: 600px;
+    height: 600px;
+    background: #4f46e5;
+    top: -150px;
+    left: -150px;
+}
+
+.blob-2 {
+    width: 500px;
+    height: 500px;
+    background: #9333ea;
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.blob-3 {
+    width: 400px;
+    height: 400px;
+    background: #2563eb;
+    top: 40%;
+    left: 60%;
+    animation-delay: -10s;
+}
+
+@keyframes move {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(50px, 100px) scale(1.1);
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    flex: 1;
+}
+
+/* Header */
+.hero {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+}
+
+.title span {
+    display: block;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 300;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+/* Cards */
+.card {
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+}
+
+.glass {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.input-section {
+    padding: 2.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+select option {
+    background: #1e293b;
+    color: white;
+}
+
+.birthday-selects {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.birthday-selects select {
+    flex: 1;
+    min-width: 0;
+    padding-right: 0.5rem;
+}
+
+
+.radio-group {
+    display: flex;
+    gap: 1rem;
+    padding-top: 0.5rem;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.radio-label input {
+    accent-color: var(--accent);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 1.1rem;
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px -3px var(--accent-glow);
+    text-transform: uppercase;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px -4px var(--accent-glow);
+    filter: brightness(1.1);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+}
+
+.btn-secondary {
+    display: block;
+    margin: 2rem auto 0;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    color: white;
+    border-color: white;
+}
+
+/* Results Section */
+.result-section {
+    margin-top: 2rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.result-card {
+    padding: 2.5rem;
+}
+
+.result-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.result-header h2 {
+    font-size: 1.75rem;
+    margin-bottom: 0.25rem;
+}
+
+.result-header p {
+    color: var(--text-secondary);
+}
+
+/* Meishiki Table (Sando Style) */
+.meishiki-container {
+    margin-bottom: 2.5rem;
+}
+
+.meishiki-container h3 {
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.chushatsu-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.chushatsu-box {
+    background: rgba(167, 139, 250, 0.1);
+    border: 1px solid var(--accent);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: var(--accent);
+}
+
+.meishiki-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    /* 1px very subtle grid lines */
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.meishiki-item {
+    background: rgba(10, 12, 16, 0.9);
+    padding: 0.75rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 60px;
+    transition: background 0.3s ease;
+}
+
+.meishiki-item:hover {
+    background: rgba(20, 24, 32, 0.95);
+}
+
+.meishiki-item.header {
+    background: rgba(255, 255, 255, 0.04);
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--accent);
+    min-height: 40px;
+    letter-spacing: 0.1em;
+}
+
+.meishiki-item.label {
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.meishiki-item.kanshi-cell {
+    position: relative;
+    padding: 1rem 0.5rem;
+}
+
+.kanshi-element-top {
+    position: absolute;
+    top: 5px;
+    left: 8px;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.kanshi-chars {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 5px 0;
+}
+
+.kanshi-element-bottom {
+    position: absolute;
+    bottom: 5px;
+    right: 8px;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.meishiki-item.value {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.day-pillar {
+    background: rgba(167, 139, 250, 0.05);
+}
+
+.energy-cell {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+}
+
+/* Analysis Section */
+.analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.analysis-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.analysis-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.analysis-card h4 {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.nature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.nature-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+.nature-desc,
+.analysis-small {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Kanshi Image */
+.image-card {
+    padding: 0 !important;
+    position: relative;
+    overflow: hidden;
+    min-height: 180px;
+}
+
+.image-card h4 {
+    position: absolute;
+    top: 0.75rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 2;
+    color: #fff;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+    pointer-events: none;
+}
+
+.kanshi-image-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.kanshi-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    display: block;
+}
+
+.image-card:hover .kanshi-image {
+    transform: scale(1.05);
+}
+
+/* Energy Circle */
+.energy-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+}
+
+.energy-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+/* Sub Cards */
+.card-sub {
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border-left: 2px solid var(--accent);
+    transition: background 0.3s ease;
+}
+
+.card-sub:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.card-sub h4 {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+#report-text {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+/* Table Grid layout for Tenchuzatsu & Da-yun */
+.tables-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 800px) {
+    .tables-grid {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+}
+
+/* Chushatsu Year Table */
+.chushatsu-years-section h4 {
+    margin-bottom: 0.75rem;
+}
+
+.chushatsu-legend {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.chushatsu-year-table {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.chushatsu-year-table::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chushatsu-year-table::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.chushatsu-year-table::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+}
+
+.cs-row {
+    display: grid;
+    grid-template-columns: 105px 40px 1fr 36px auto;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.8rem 0.75rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    transition: all 0.3s ease;
+}
+
+.cs-row:hover {
+    background: rgba(255, 255, 255, 0.04);
+    transform: translateX(2px);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.cs-row.cs-active {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.cs-row.cs-pre-active {
+    background: rgba(251, 146, 60, 0.08);
+    border-color: rgba(251, 146, 60, 0.25);
+}
+
+.cs-row.cs-current {
+    border-color: rgba(167, 139, 250, 0.5);
+}
+
+.cs-row.cs-active.cs-current {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.5);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+/* 大運表 (Da-yun Table) */
+.da-yun-legend {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.da-yun-table {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dy-row {
+    display: grid;
+    grid-template-columns: 85px 55px 120px 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 0.75rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    transition: all 0.3s ease;
+}
+
+.dy-row:hover {
+    background: rgba(255, 255, 255, 0.04);
+    transform: translateX(2px);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dy-row.dy-current {
+    border-color: rgba(167, 139, 250, 0.5);
+    background: rgba(167, 139, 250, 0.1);
+}
+
+.dy-age {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--accent);
+}
+
+.dy-kanshi {
+    font-size: 0.95rem;
+    font-weight: bold;
+}
+
+.dy-desc {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+/* レーダーチャート用領域（削除したバーの代わり） */
+.radar-chart-container {
+    position: relative;
+    width: 100%;
+    margin: 1rem auto;
+}
+
+/* ラベル列 */
+.cs-label {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.cs-label-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.cs-label-desc {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+/* ○△× 評価 */
+.cs-rating {
+    font-size: 1rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.cs-rating-great {
+    color: #34d399;
+}
+
+/* ◎ 緑 */
+.cs-rating-good {
+    color: #60a5fa;
+}
+
+/* ○ 青 */
+.cs-rating-neutral {
+    color: #fbbf24;
+}
+
+/* △ 黄 */
+.cs-rating-bad {
+    color: #f87171;
+}
+
+/* × 赤 */
+
+.cs-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+
+.cs-year {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.cs-row.cs-current .cs-year {
+    color: var(--accent);
+}
+
+.cs-chishi {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.cs-status {
+    display: flex;
+    gap: 0.35rem;
+    justify-content: flex-end;
+    align-items: center;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.cs-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.cs-badge.cs-on {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.cs-badge.cs-pre {
+    background: rgba(251, 146, 60, 0.2);
+    color: #fb923c;
+    border: 1px solid rgba(251, 146, 60, 0.4);
+}
+
+.cs-badge.cs-now {
+    background: rgba(167, 139, 250, 0.2);
+    color: var(--accent);
+    border: 1px solid rgba(167, 139, 250, 0.4);
+}
+
+
+footer {
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .meishiki-item {
+        padding: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+}
