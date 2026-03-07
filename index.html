@@ -23,9 +23,12 @@
     </div>
 
     <main class="container">
-        <!-- Header -->
         <section class="hero glass-panel">
             <h1 class="title" style="margin-bottom: 0;">四柱推命鑑定書</h1>
+            <a href="metaverse.html" class="btn-primary"
+                style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; margin-top:1.5rem; padding: 0.8rem 2rem; background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); text-decoration:none; font-weight:bold; border-radius:30px; box-shadow: 0 4px 15px rgba(161, 140, 209, 0.4); transition: transform 0.3s;">
+                <span style="font-size:1.2rem;">🌌</span> 新感覚 運勢メタバース（3D版）へ
+            </a>
         </section>
 
         <section class="card glass input-section">
@@ -276,6 +279,25 @@
                     </div>
                 </div>
 
+                <div class="theme-buttons-section card-sub" style="margin-bottom: 1.5rem; text-align: center;">
+                    <h4 style="margin-bottom: 1rem;">🔮 あなたへのメッセージ</h4>
+                    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                        <button type="button" id="btn-year-theme" class="btn-primary theme-btn"
+                            style="padding: 0.8rem 1.5rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(161, 140, 209, 0.4); max-width: 200px;"><span
+                                style="margin-right:0.5rem">📅</span>今年のテーマ</button>
+                        <button type="button" id="btn-month-theme" class="btn-primary theme-btn"
+                            style="padding: 0.8rem 1.5rem; border-radius: 8px; background: linear-gradient(135deg, #a18cd1 0%, #a18cd1 100%); max-width: 200px;"><span
+                                style="margin-right:0.5rem">🌙</span>今月のテーマ</button>
+                        <button type="button" id="btn-lucky-days" class="btn-primary theme-btn"
+                            style="padding: 0.8rem 1.5rem; border-radius: 8px; background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: #fff; max-width: 200px; box-shadow: 0 4px 15px rgba(253, 160, 133, 0.4);"><span
+                                style="margin-right:0.5rem">🌟</span>希望の光</button>
+                        <button type="button" id="btn-destiny-days" class="btn-primary theme-btn"
+                            style="padding: 0.8rem 1.5rem; border-radius: 8px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: #fff; max-width: 200px; box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);"><span
+                                style="margin-right:0.5rem">🔭</span>運命の特異日</button>
+
+                    </div>
+                </div>
+
                 <div class="personality-report card-sub">
                     <h4>総合鑑定書</h4>
                     <p id="report-text">準備中...</p>
@@ -285,6 +307,100 @@
             </div>
         </section>
     </main>
+
+    <!-- 希望の光（吉日）モーダル -->
+    <div id="lucky-days-modal" class="modal-overlay hidden">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 500px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="lucky-days-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="lucky-days-title"
+                style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem;">
+                🌟 希望の光（今月の吉日）
+            </h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                今月の中で、運勢の波が特に良い「青春」「飛躍」「絶好調」に該当する日をピックアップしました。行動を起こす目安にしてみてください。
+            </p>
+            <div id="lucky-days-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- JSで動的にリスト生成 -->
+            </div>
+            <div id="lucky-days-empty"
+                style="display: none; text-align: center; color: var(--text-secondary); padding: 2rem 0;">
+                今月は該当する日がありません。次の好機に向けて準備を整えましょう。
+            </div>
+        </div>
+    </div>
+
+    <!-- 運命の特異日モーダル -->
+    <div id="destiny-days-modal" class="modal-overlay hidden">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 500px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="destiny-days-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="destiny-days-title"
+                style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem;">
+                🔭 運命の特異日（向こう3ヶ月）
+            </h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                あなたの本質（日柱）と強く共鳴する特別な日です。<br>
+                <span style="color:#f472b6; font-weight:bold;">【律音】</span> 新しいスタートに最適な日<br>
+                <span style="color:#a78bfa; font-weight:bold;">【宿命大半会】</span> 大きな飛躍と発展が期待できる日<br>
+                <span style="color:#38bdf8; font-weight:bold;">【納音】</span> 因縁が解け、白紙に戻すリセットの日
+            </p>
+            <div id="destiny-days-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- JSで動的にリスト生成 -->
+            </div>
+            <div id="destiny-days-empty"
+                style="display: none; text-align: center; color: var(--text-secondary); padding: 2rem 0;">
+                この3ヶ月間は該当する特異日がありません。
+            </div>
+        </div>
+    </div>
+
+
+    <!-- テーマモーダル -->
+    <div id="theme-modal" class="modal-overlay hidden">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 500px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left;">
+            <button id="theme-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="theme-title"
+                style="margin-bottom: 0.5rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem;">
+            </h3>
+            <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                <span id="theme-badge" class="cs-badge"></span>
+                <span id="theme-rating" style="font-weight: bold; font-size: 1.3rem;"></span>
+            </div>
+
+            <div id="theme-star-info"
+                style="margin-bottom: 1.5rem; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255,255,255,0.1); display: none;">
+                <div style="display: flex; justify-content: space-around; text-align: center;">
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">巡る干支</div>
+                        <div id="theme-kanshi"
+                            style="font-size: 1.2rem; font-weight: bold; color: var(--text-primary); letter-spacing: 0.1em;">
+                            --</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">テーマ(通変星)
+                        </div>
+                        <div id="theme-tuhen" style="font-size: 1.1rem; font-weight: bold; color: #a78bfa;">--</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">エネルギー(十二運)
+                        </div>
+                        <div id="theme-unsei" style="font-size: 1.1rem; font-weight: bold; color: #34d399;">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <p id="theme-desc"
+                style="font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem; color: var(--accent); white-space: pre-wrap; line-height: 1.6;">
+            </p>
+            <p id="theme-message"
+                style="line-height: 1.8; color: var(--text-secondary); white-space: pre-wrap; font-size: 0.95rem;"></p>
+        </div>
+    </div>
 
     <footer>
         <p>&copy; 2026 四柱推命プレミアム鑑定 - 鳥海伯翠流メソッド</p>
@@ -296,6 +412,94 @@
          */
 
         // --- 定数・データ定義 ---
+
+        const CYCLE_DATA = [
+            { label: '忍耐', rating: '×', ratingClass: 'bad', desc: '天中殺: 1年目' },
+            { label: '陰徳', rating: '×', ratingClass: 'bad', desc: '天中殺: 2年目' },
+            { label: '修行', rating: '×', ratingClass: 'bad', desc: '天中殺: 3年目' },
+            { label: '夜明け', rating: '○', ratingClass: 'good', desc: '4年目' },
+            { label: '進化', rating: '○', ratingClass: 'good', desc: '5年目' },
+            { label: '決意', rating: '○', ratingClass: 'good', desc: '6年目' },
+            { label: '休息', rating: '×', ratingClass: 'bad', desc: '7年目' },
+            { label: '青春', rating: '◎', ratingClass: 'great', desc: '8年目' },
+            { label: '空転', rating: '××', ratingClass: 'bad', desc: '9年目' },
+            { label: '飛躍', rating: '◎◎', ratingClass: 'great', desc: '10年目' },
+            { label: '絶好調', rating: '◎◎', ratingClass: 'great', desc: '11年目' },
+            { label: '頂点', rating: '◎', ratingClass: 'great', desc: '12年目' }
+        ];
+
+        const THEME_MESSAGES = {
+            '木': {
+                0: '冬の土の中で静かに耐え忍ぶ時期。表立った行動は控え、内面的な成長と知識の吸収に専念しましょう。焦らず「根を張る」意識が後々の大きな飛躍に繋がります。',
+                1: '見返りを求めない裏方としての行動が運気を開きます。周囲のサポートに回り、あなたの持つ「優しさ」を惜しみなく分かち合うことで、強力な陰徳が積まれます。',
+                2: '過去のしがらみや不要なプライドを手放す修行の時。変化を恐れず、柔軟な心で新しい価値観を受け入れましょう。春の芽吹きはもうすぐそこです。',
+                3: '長い冬が明け、ついに温かな光が差し込み始めました。あなたの本来の持ち味である「向上心」を発揮し、新しい目標を立てて小さな一歩を踏み出しましょう。',
+                4: '枝葉がぐんぐん伸びるように、成長のスピードが加速します。周囲との調和を大切にしながら、積極的にコミュニケーションを取り、協力の輪を広げてください。',
+                5: '今後の方向性を決定づける重要な時期。「これだ！」と思う道があれば、迷わず決断し行動に移しましょう。あなたの真っすぐなエネルギーが道を切り開きます。',
+                6: '少しペースダウンして、心と体のメンテナンスを行う休息期。無理に前進しようとせず、自然に触れたり、好きな趣味に没頭したりしてリフレッシュを。',
+                7: '瑞々しい若葉のように、エネルギーに溢れた最高の時期です。失敗を恐れずに新しいチャレンジを重ねることで、素晴らしい出会いやチャンスを引き寄せます。',
+                8: '良かれと思った行動が裏目に出やすい空回り期。焦って結果を求めず、一度立ち止まって計画を見直す冷静さを持ちましょう。「待つこと」も大切な戦略です。',
+                9: 'これまでの努力が一気に花開く飛躍の時。自身の直感と実力を信じて、スケールの大きな目標に挑戦してください。あなたの存在が周囲を力強く牽引します。',
+                10: '運気は最高潮。大樹が豊かな果実を実らせるように、全てが思い通りに進みやすい絶好調期です。自信を持って表舞台に立ち、存分に実力を発揮してください。',
+                11: '12年のサイクルが一つの頂点を迎えました。これまでの成果に対する感謝を忘れず、得た豊かさや経験を周囲に還元していくことで、次のサイクルへの良い準備となります。'
+            },
+            '火': {
+                0: '炎を小さく保ち、じっくりと燃えるための薪を集める時期。無理な拡大は避け、足元を固めて自己のスキルアップや内省に時間を使ってください。',
+                1: '自分が目立つのではなく、誰かのために火を灯す陰徳の時。ボランティアや裏方作業に徹することで、あなたの心の炎がより純粋なものへと磨かれます。',
+                2: '予期せぬトラブルや試練を通じて、精神力が高まる修行期。感情的にならず、冷静に状況を見極めるクールな視点を持つことでブレイクスルーが起こります。',
+                3: '暗闇に朝陽が差し込む夜明け。あなたの内なる情熱が再び呼び覚まされます。直感を信じて、心がワクワクするような新しいプロジェクトを始動させましょう。',
+                4: '火勢が次第に強まり、運気が上昇・進化していく時期。持ち前の明るさと行動力で周囲を巻き込み、一気に理想に向かって突き進んでください。',
+                5: '強い意志を持って、一つの目標にフォーカスする決意の時。あれこれ手を広げるのをやめ、本当に燃えたいテーマを絞ることで爆発的な成果を生み出します。',
+                6: '燃え尽き症候群に注意が必要な休息期。熱を出しすぎず、ゆったりと過ごす時間を確保してください。芸術や音楽に触れることで良いインスピレーションが得られます。',
+                7: 'キャンプファイヤーの中心で踊るような、楽しくて刺激的な時期。持ち前のカリスマ性を発揮し、人との交流を大いに楽しんでください。インスピレーションが冴え渡ります。',
+                8: '情熱が空回りして、周囲との温度差が生まれやすい時期。自分のペースを押し付けず、一呼吸置いて相手の意見に耳を傾ける「余裕」を意識しましょう。',
+                9: '一気に炎が燃え上がり、周囲を圧倒するような飛躍の時。過去の制限を越えて、これまで不可能だと思っていたことにも果敢に挑んでください。大成功の予感です。',
+                10: '眩しい太陽のように、全てを照らし出す絶好調の時期。あなたのエネルギーが最高点に達します。主役として大いに輝き、思い描いたビジョンを現実のものにしてください。',
+                11: 'これまでの燃えさかる情熱が、穏やかで暖かい光へと変わる頂点の時。達成感と共に、培った経験や豊かさを周囲に分け与え、感謝の心で次のサイクルへ備えましょう。'
+            },
+            '土': {
+                0: '冬の乾いた大地のように、じっと春を待つ忍耐の時期。大きな勝負には出ず、地道な日常を大切にしながら、知識や教養という「養分」を蓄えることに専念しましょう。',
+                1: '目立たない場所で土台を固める陰徳の時。身の回りの整理整頓や、誰もやりたがらない地味な作業を率先して行うことで、あなたの大地により福が蓄積されます。',
+                2: '価値観の転換を迫られる修行の期間。過去の成功体験に固執せず、不要なものは思い切って手放すことで、より豊かな土壌へと生まれ変わる準備が整います。',
+                3: '凍てついた土が融け、新しい生命が芽吹き始める夜明け。あなたの持ち味である「安定感」を活かしながらも、少しだけ新しい分野へ足を踏み入れてみましょう。',
+                4: '大地に緑が広がるように、着実な進化と発展を遂げる時期。周囲からの信頼が厚くなり、大きな役割を任されるかもしれません。愛情を持って丁寧に取り組みましょう。',
+                5: 'ブレない強い意志で、確固たる土台を築き上げる決意の時。長期的な視点に立ち、「これを一生のライフワークにする」という覚悟を決めるのに最適なタイミングです。',
+                6: '心身の過労に注意し、リフレッシュが必要な休息期。土の性質を持つあなたは色々抱え込みがちです。たまには責任を手放し、自然豊かな場所で大地のエネルギーをチャージして。',
+                7: '豊かな大地に花々が咲き乱れるような素晴らしい時期。持ち前の包容力と社交性が最大限に発揮され、多くの人があなたのもとに集まります。人脈作りに最適です。',
+                8: '良かれと思ったお世話が過干渉になりやすく、人間関係が空回りしがちな時期。適度な距離感を保ち、「見守る愛」を意識することでトラブルを回避できます。',
+                9: 'これまでの地道な努力が大きな山となり、揺るぎない地位を確立する飛躍の時。スケールの大きな夢にも手が届きます。豊かな土壌から極上の作物を収穫しましょう。',
+                10: 'あなたの持つ包容力と安定感が最高に輝く絶好調期。全てを受け入れ、大勢の人を導くリーダーとして揺るぎない成果を上げることができます。大盤振る舞いが吉。',
+                11: '全てを内包し、完成された豊かな大地となる頂点の時。得られた富や人脈に感謝し、それを次の世代へと継承していくような利他的な活動が、さらなる運気を呼び込みます。'
+            },
+            '金': {
+                0: '原石がまだ厚い岩盤の中に眠っているような忍耐の時期。今は無理に自分をアピールせず、ひたすら内面を磨き、実力を蓄えるための自己研鑽に励みましょう。',
+                1: '見えないところで誰かのために尽くす陰徳の時。己の美学に従い、見返りを求めずに社会や他者に奉仕することで、あなたの魂の本質的な輝きが増していきます。',
+                2: '熱い火に打たれ、不純物を取り除かれる修行の期間。現状への不満や葛藤が生まれやすいですが、それはあなたがより純度の高い宝石へと研ぎ澄まされるためのプロセスです。',
+                3: '長く続いた試練が終わり、新たな可能性の光が見える夜明け。持ち前の鋭い直感と決断力を活かして、不要なものを断捨離し、本当に大切なものだけを選び取りましょう。',
+                4: 'これまでの経験が確かな自信へと変わり、大きく進化する時期。完璧主義になりすぎず、過程を楽しみながらスピーディーに行動することで、着実に成果が上がります。',
+                5: '迷いを断ち切り、鋼のような強い意志で進むべき道を定める決意の時。「これしかない」という確信が持てるはずです。目標に向かって一直線に突き進んでください。',
+                6: '張り詰めた緊張の糸を緩め、心身を休ませるべき休息期。鋭い刃も定期的な手入れが必要です。美しい音楽や芸術に触れ、疲れた心を優しく癒やしてあげましょう。',
+                7: '磨かれた宝石のように、あなたの魅力や才能がキラキラと輝き周囲を魅了する時期。スポットライトを浴びる機会が増えます。感性の赴くままに自由に楽しみましょう。',
+                8: '理想が高すぎて現実と噛み合わず、空回りしやすい時期。他者への批判精神が強くなりがちなので、相手の不完全さも受け入れる「心の余白」を持つことが大切です。',
+                9: 'これまでの苦労が報われ、一気に高く飛躍する時期。あなたの鋭い決断力と行動力が最大限に活かされ、長年の目標を見事に射止めることができるでしょう。',
+                10: '一点の曇りもない最高級の宝石として、圧倒的な存在感を放つ絶好調期です。これまでの努力が素晴らしい形で評価されます。堂々と美しく、頂点の景色を楽しんでください。',
+                11: '12年のサイクルを鮮やかに完遂する頂点の時。美しく整った結果に満足するだけでなく、共に歩んでくれた仲間への感謝を忘れず、豊かな実績を分かち合いましょう。'
+            },
+            '水': {
+                0: '冷たい氷の底に深く潜り、じっと春の雪解けを待つ忍耐の時期。無理に流れを変えようとせず、今はひたすら知識の泉を深く掘り下げ、内なる叡智を蓄えましょう。',
+                1: '乾いた大地を密かに潤す地下水のように、人知れず他者をサポートする陰徳の時。見えない優しさが巡り巡って、いずれあなたに大きな恵みをもたらします。',
+                2: '濁った水が濾過されるような修行の期間。人間関係での迷いや葛藤が生じやすいですが、何者にも染まらない本来の清らかさを取り戻すための大切なプロセスです。',
+                3: '氷が少しずつ溶け出し、新たな流れが生まれる夜明け。持ち前の柔軟性と適応力を活かして、新しい環境や価値観にスムーズに飛び込んでいきましょう。直感が冴えます。',
+                4: '小川が川岸の幅を広げながら進むように、運気が着実に進化・拡大していく時期。豊富な知識とアイデアを武器に、滞っていた物事を一気に前進させることができます。',
+                5: '豊かな水脈を見つけ出し、明確な方向へと流れを定める決意の時。あれこれと迷うのをやめ、心の奥底が本当に望んでいる目標に一直線に向かう覚悟を決めてください。',
+                6: '激しい流れから一時的に離れ、静かな湖面のように心身を波立たせない休息期。深くリラックスできる温泉に行ったり、一人の時間を長くとることでエネルギーが回復します。',
+                7: '自由に形を変える水のように、変化に富んだエキサイティングな時期。交友関係が広がり、インスピレーションが湧き出します。知的好奇心の赴くままに行動しましょう。',
+                8: 'あちこちに気を使いすぎてエネルギーが分散し、空回りしやすい時期。「全てを取りこぼさないように」という強迫観念を手放し、本当に重要なことだけに集中してください。',
+                9: '大きな河となって堂々と海へ流れ込むような、スケールの大きい飛躍の時。これまでの積み重ねが大きなうねりとなり、不可能に思えた壁も難なく突破できるでしょう。',
+                10: '全ての命を潤す豊かな大海原のように、影響力が最大になる絶好調の時期。溢れる情報と人脈を巧みに操り、思い通りの世界をつくり上げてください。最高の運気を楽しんで。',
+                11: '海から蒸発しまた雨となって降り注ぐような、サイクルの完成と次への還元の時。得た知識や豊かさを「恵みの雨」として周囲に降り注ぎ、次のステージへの準備を整えましょう。'
+            }
+        };
 
         const TENKAN = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
         const CHISHI = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
@@ -530,7 +734,7 @@
                         // 個人鑑定セクションを相性モード時はすべて非表示
                         const hidePairs = [
                             '.meishiki-container', '.tables-grid', '.image-card',
-                            '.analysis-grid', '.personality-report'
+                            '.analysis-grid', '.personality-report', '.theme-buttons-section'
                         ];
                         hidePairs.forEach(sel => {
                             const el = document.querySelector(sel);
@@ -772,9 +976,21 @@
         }
 
         function displayResult(name, date, m, daYun) {
+            // 相性モードで非表示にされた要素を再表示
+            const restorePairs = [
+                '.meishiki-container', '.tables-grid', '.image-card',
+                '.analysis-grid', '.personality-report', '.theme-buttons-section'
+            ];
+            restorePairs.forEach(sel => {
+                const el = document.querySelector(sel);
+                if (el) el.style.display = '';
+            });
+
             document.getElementById('result-user-name').textContent = `${name} 様`;
             document.getElementById('result-user-info').textContent = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 生まれ`;
             document.getElementById('chushatsu-value').textContent = m.chushatsu;
+
+            window.currentMeishiki = m;
 
             // 年柱
             document.getElementById('char-year').textContent = m.yearTenkan + m.yearChishi;
@@ -1022,20 +1238,7 @@
             const cycleStartIdx = CHISHI.indexOf(csStartChishi);
 
             // 12年サイクルのラベル定義（指定ルールに準拠）
-            const CYCLE_DATA = [
-                { label: '忍耐', rating: '×', ratingClass: 'bad', desc: '天中殺: 1年目' },    // 0: 1年目
-                { label: '陰徳', rating: '×', ratingClass: 'bad', desc: '天中殺: 2年目' },    // 1: 2年目
-                { label: '修行', rating: '×', ratingClass: 'bad', desc: '天中殺: 3年目' },    // 2: 3年目
-                { label: '夜明け', rating: '○', ratingClass: 'good', desc: '4年目' },        // 3: 4年目
-                { label: '進化', rating: '○', ratingClass: 'good', desc: '5年目' },          // 4: 5年目
-                { label: '決意', rating: '○', ratingClass: 'good', desc: '6年目' },          // 5: 6年目
-                { label: '休息', rating: '×', ratingClass: 'bad', desc: '7年目' },           // 6: 7年目
-                { label: '青春', rating: '◎', ratingClass: 'great', desc: '8年目' },        // 7: 8年目
-                { label: '空転', rating: '××', ratingClass: 'bad', desc: '9年目' },          // 8: 9年目
-                { label: '飛躍', rating: '◎◎', ratingClass: 'great', desc: '10年目' },      // 9: 10年目
-                { label: '絶好調', rating: '◎◎', ratingClass: 'great', desc: '11年目' },    // 10: 11年目
-                { label: '頂点', rating: '◎', ratingClass: 'great', desc: '12年目' },        // 11: 12年目
-            ];
+            // CYCLE_DATA はグローバル定数を使用
 
             // 年の地支を求める関数
             function getYearChishi(y) {
@@ -1498,10 +1701,419 @@
                         <p style="font-size:0.9rem; line-height:1.6; color:var(--text-light); margin:0;">${energyScore.desc}</p>
                     </div>
                 </div>
+
+                <!-- ペア・メタバースへのリンクボタン追加 -->
+                <div style="margin-top:2.5rem; text-align:center;">
+                    <button type="button" class="btn-primary" id="btn-pair-metaverse"
+                        data-namea="${nameA}" data-nikkana="${mA.dayTenkan}" data-nisshia="${mA.dayChishi}" 
+                        data-nameb="${nameB}" data-nikkanb="${mB.dayTenkan}" data-nisshib="${mB.dayChishi}"
+                        style="padding: 1rem 2rem; border-radius: 12px; font-size: 1.1rem; background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: #fff; box-shadow: 0 4px 15px rgba(161, 140, 209, 0.4);">
+                        <span style="margin-right:0.5rem">🌌</span>2人で運命の相性空間へダイブ
+                    </button>
+                    <p style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.8rem;">※2人の運勢エネルギーが混ざり合う特別な3D空間を体験できます</p>
+                </div>
             `;
 
             compSection.innerHTML = html;
         }
+
+        // --- 今年・今月のテーマ機能 ---
+        function getCyclePositionFromChishi(chishi, chushatsuStr, dayTenkan) {
+            const cs1 = chushatsuStr[0];
+            const cs1Idx = CHISHI.indexOf(cs1);
+            const preCS = CHISHI[(cs1Idx - 1 + 12) % 12];
+            const isYokan = ['甲', '丙', '戊', '庚', '壬'].includes(dayTenkan);
+            const csStartChishi = isYokan ? preCS : cs1;
+            const cycleStartIdx = CHISHI.indexOf(csStartChishi);
+            const chishiIdx = CHISHI.indexOf(chishi);
+            return (chishiIdx - cycleStartIdx + 12) % 12;
+        }
+
+        function getYearChishiObj(y) {
+            let idx = (y - 4) % 12;
+            if (idx < 0) idx += 12;
+            return CHISHI[idx];
+        }
+
+        const TUHEN_MESSAGES = {
+            '比肩': '【比肩の年/月】独立心と自我が強まる時期です。自分のペースを守り、目標に向かって真っ直ぐ進む力が湧いてきます。他人の意見に流されず、「自分はどうしたいか」を軸に決断すると吉です。',
+            '劫財': '【劫財の年/月】集団の中での行動力や競争心が刺激される時期です。仲間と協力して大きなスケールで物事に取り組むのに適しています。ただし、強引になりすぎないよう周囲への配慮を忘れずに。',
+            '食神': '【食神の年/月】心身ともにリラックスでき、衣食住の豊かさを楽しめるおおらかな時期です。好きなことや趣味に没頭し、素直に自分を表現することで運気が開けます。無理は禁物です。',
+            '傷官': '【傷官の年/月】感受性が非常に鋭くなり、美意識やクリエイティビティが高まる時期です。直感が冴え渡るので、違和感を感じた直感には従いましょう。人間関係での摩擦には少し注意が必要です。',
+            '偏財': '【偏財の年/月】人との交流が活発になり、ネットワークが広がる時期です。お金やモノも大きく動きます。周囲を楽しませるサービス精神を発揮することで、巡り巡って大きな豊かさを引き寄せます。',
+            '正財': '【正財の年/月】着実な努力が実を結び、安定感が増す時期です。仕事や家庭、蓄財など、地道にコツコツと積み上げることに適しています。誠実で真面目な姿勢が高く評価されます。',
+            '偏官': '【偏官の年/月】行動力と責任感が飛躍的に高まるチャレンジングな時期です。困難な状況にも果敢に立ち向かい、スピーディーに結果を出せます。働きすぎには注意して、時には休む勇気を。',
+            '正官': '【正官の年/月】社会的信用や評価が高まる、格式を重んじる時期です。ルールや約束を守り、品行方正に振る舞うことで強力な後援を得られます。仕事での昇進など、オフィシャルな喜び事が多いでしょう。',
+            '偏印': '【偏印の年/月】知的好奇心が旺盛になり、新しいジャンルへの関心が高まる時期です。常識に囚われない自由な発想やアイデアが生まれやすいです。海外や未知の世界に触れることで運気がアップします。',
+            '印綬': '【印綬の年/月】落ち着いて深く学ぶこと、知性を吸収することに適した時期です。名誉や伝統を重んじ、専門知識や資格取得に挑戦すると良い結果に繋がります。目上の人からの引き立ても期待できます。'
+        };
+
+        const UNSEI_MESSAGES = {
+            '胎': '（胎）新しいプロジェクトや趣味など、可能性の種が宿るタイミングです。色々準備してみましょう。',
+            '養': '（養）周囲の人から可愛がられ、助けを得やすいタイミングです。素直に甘えてみてください。',
+            '長生': '（長生）フレッシュなエネルギーに満ちています。初心者に戻って新しいことを吸収しましょう。',
+            '沐浴': '（沐浴）ロマンを追い求め、現状から少し飛び出してみたくなる不安定ながらも魅力的なエネルギーです。',
+            '冠帯': '（冠帯）少しずつ実力が認められ、表舞台に出る準備が整う華やかなエネルギーです。',
+            '建禄': '（建禄）地に足のついた安定したエネルギーです。手堅く着実に物事を進めるのに最適です。',
+            '帝旺': '（帝旺）エネルギーの頂点です。自信を持ってトップに立ち、周囲を力強く牽引してください。',
+            '衰': '（衰）経験に裏打ちされた落ち着きと知性が光るエネルギーです。一歩引いて全体を見渡しましょう。',
+            '病': '（病）インスピレーションや直感が冴え渡るエネルギーです。芸術や精神的な活動に向いています。',
+            '死': '（死）一つの物事をストイックに極めたり、内観したりするのに適した精神性の高いエネルギーです。',
+            '墓': '（墓）先祖や古いものに縁があり、一つのことを深く探求、または貯えるのに適したエネルギーです。',
+            '絶': '（絶）枠に捉われない圧倒的な直感とヒラメキのエネルギーです。常識外のアイデアが浮かびます。'
+        };
+
+        function getCurrentMonthChishi() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = now.getMonth() + 1;
+            const d = now.getDate();
+            let monthAdjusted = m;
+            let currentSetsuiriDay = SETSUIRI[m - 1];
+            if (d < currentSetsuiriDay) {
+                monthAdjusted--;
+                if (monthAdjusted === 0) monthAdjusted = 12;
+            }
+            return CHISHI[monthAdjusted % 12];
+        }
+
+        function openThemeModal(title, badge, badgeClass, cycleData, dayTenkan, kanshiStr = null) {
+            document.getElementById('theme-title').textContent = title;
+            const badgeEl = document.getElementById('theme-badge');
+            badgeEl.textContent = badge;
+            badgeEl.className = 'cs-badge ' + badgeClass;
+
+            const ratingEl = document.getElementById('theme-rating');
+            ratingEl.textContent = cycleData.rating;
+            ratingEl.className = 'cs-rating-' + cycleData.ratingClass;
+
+            const elementGroup = ELEMENT_MAP[dayTenkan].charAt(1);
+            const msg = THEME_MESSAGES[elementGroup][CYCLE_DATA.indexOf(cycleData)];
+
+            // 星の情報を表示、および総合メッセージの構築
+            const starInfoEl = document.getElementById('theme-star-info');
+            let baseMsg = msg; // 五行別の基本メッセージ
+
+            if (kanshiStr && kanshiStr.length === 2) {
+                const tTenkan = kanshiStr.charAt(0);
+                const tChishi = kanshiStr.charAt(1);
+
+                const tuhen = TUHEN_TABLE[dayTenkan][tTenkan];
+                const unsei = UNSEI_TABLE[dayTenkan][tChishi];
+
+                document.getElementById('theme-kanshi').textContent = kanshiStr;
+                document.getElementById('theme-tuhen').textContent = tuhen;
+                document.getElementById('theme-unsei').textContent = unsei;
+                starInfoEl.style.display = 'block';
+
+                // テーマ・エネルギーによるメッセージを結合
+                const tuhenText = TUHEN_MESSAGES[tuhen] || '';
+                const unseiText = UNSEI_MESSAGES[unsei] || '';
+
+                baseMsg = `${msg}\n\n💡 さらに詳しく見ると…\n${tuhenText}\n${unseiText}`;
+            } else {
+                starInfoEl.style.display = 'none';
+            }
+
+            document.getElementById('theme-desc').textContent = '【' + cycleData.label + '】期';
+            document.getElementById('theme-message').textContent = baseMsg;
+
+            document.getElementById('theme-modal').classList.remove('hidden');
+        }
+
+        function showYearTheme(m) {
+            const currentYear = new Date().getFullYear();
+
+            // 年干支を取得して通変星・十二運星を計算するために利用
+            let yearKanshiIndex = (currentYear - 4) % 60;
+            if (yearKanshiIndex < 0) yearKanshiIndex += 60;
+            const currentYearTenkan = TENKAN[yearKanshiIndex % 10];
+            const currentYearChishi = CHISHI[yearKanshiIndex % 12];
+            const currentYearKanshiStr = currentYearTenkan + currentYearChishi;
+
+            const pos = getCyclePositionFromChishi(currentYearChishi, m.chushatsu, m.dayTenkan);
+            const cycle = CYCLE_DATA[pos];
+            openThemeModal('今年のテーマ (' + currentYear + '年)', '今年', 'cs-now', cycle, m.dayTenkan, currentYearKanshiStr);
+        }
+
+        function showMonthTheme(m) {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1;
+
+            // 全体ロジックを利用して現在の日付に対する命式情報から月干支を取得
+            let monthAdjusted = currentMonth;
+            let currentSetsuiriDay = SETSUIRI[currentMonth - 1];
+            if (now.getDate() < currentSetsuiriDay) {
+                monthAdjusted--;
+                if (monthAdjusted === 0) monthAdjusted = 12;
+            }
+            // その年（立春またぎ考慮済みとする）の年干支グループから月干のオフセットを計算
+            let yearForMonthCalc = currentYear;
+            if (currentMonth < 2 || (currentMonth === 2 && now.getDate() < SETSUIRI[1])) yearForMonthCalc--;
+            let baseYearIndex = (yearForMonthCalc - 4) % 60;
+            if (baseYearIndex < 0) baseYearIndex += 60;
+            const monthTenkanOffset = [2, 4, 6, 8, 0];
+            const yearTenkanGroup = baseYearIndex % 10;
+
+            const currentMonthTenkanIndex = (monthTenkanOffset[yearTenkanGroup % 5] + (monthAdjusted - 2) + 10) % 10;
+            const currentMonthTenkan = TENKAN[currentMonthTenkanIndex];
+            const currentMonthChishi = CHISHI[monthAdjusted % 12];
+            const currentMonthKanshiStr = currentMonthTenkan + currentMonthChishi;
+
+            const mChishi = getCurrentMonthChishi(); // 既存関数での検証
+            const pos = getCyclePositionFromChishi(currentMonthChishi, m.chushatsu, m.dayTenkan);
+            const cycle = CYCLE_DATA[pos];
+            openThemeModal('今月のテーマ (' + currentMonth + '月)', '今月', 'cs-now', cycle, m.dayTenkan, currentMonthKanshiStr);
+        }
+
+        // 希望の光（今月の吉日ピックアップ）機能
+        function showLuckyDays(m) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const daysInMonth = new Date(year, month, 0).getDate();
+
+            const luckyDaysList = document.getElementById('lucky-days-list');
+            const luckyDaysEmpty = document.getElementById('lucky-days-empty');
+            luckyDaysList.innerHTML = '';
+
+            let foundLuckyDay = false;
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const date = new Date(year, month - 1, d);
+                // 日干支を計算 (baseDate: 1900-01-01 甲戌)
+                const utcDate = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+                const baseDate = Date.UTC(1900, 0, 1);
+                let diffDays = Math.floor((utcDate - baseDate) / (1000 * 60 * 60 * 24));
+                let dayKanshiIndex = (diffDays + 10) % 60;
+                if (dayKanshiIndex < 0) dayKanshiIndex += 60;
+
+                const dTenkan = TENKAN[dayKanshiIndex % 10];
+                const dChishi = CHISHI[dayKanshiIndex % 12];
+                const dKanshiStr = dTenkan + dChishi;
+
+                // 運勢サイクル位置を判定
+                const pos = getCyclePositionFromChishi(dChishi, m.chushatsu, m.dayTenkan);
+                const cycle = CYCLE_DATA[pos];
+
+                // 「青春(7)」「飛躍(9)」「絶好調(10)」のみピックアップ
+                if (pos === 7 || pos === 9 || pos === 10) {
+                    foundLuckyDay = true;
+
+                    const tuhen = TUHEN_TABLE[m.dayTenkan][dTenkan];
+                    const unsei = UNSEI_TABLE[m.dayTenkan][dChishi];
+
+                    // 日付の曜日を取得
+                    const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+
+                    let ratingBadgeColor = cycle.ratingClass === 'great' ? '#f59e0b' : '#3b82f6';
+                    if (pos === 10) ratingBadgeColor = '#ef4444'; // 絶好調は特別色
+
+                    const itemHtml = `
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+                                <div style="font-size: 1.1rem; font-weight: bold; color: var(--text-primary);">
+                                    ${month}月${d}日 <span style="font-size: 0.9rem; color: var(--text-secondary);">(${dayOfWeekStr})</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="background: ${ratingBadgeColor}20; color: ${ratingBadgeColor}; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; font-weight: bold; border: 1px solid ${ratingBadgeColor}50;">
+                                        ${cycle.label} ${cycle.rating}
+                                    </span>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                                <div><span style="color: var(--text-secondary);">巡る干支:</span> <span style="color: var(--text-primary); font-weight: bold;">${dKanshiStr}</span></div>
+                                <div><span style="color: var(--text-secondary);">テーマ:</span> <span style="color: #a78bfa; font-weight: bold;">${tuhen}</span></div>
+                                <div><span style="color: var(--text-secondary);">運勢:</span> <span style="color: #34d399; font-weight: bold;">${unsei}</span></div>
+                            </div>
+                        </div>
+                    `;
+                    luckyDaysList.insertAdjacentHTML('beforeend', itemHtml);
+                }
+            }
+
+            if (foundLuckyDay) {
+                luckyDaysList.style.display = 'flex';
+                luckyDaysEmpty.style.display = 'none';
+            } else {
+                luckyDaysList.style.display = 'none';
+                luckyDaysEmpty.style.display = 'block';
+            }
+
+            document.getElementById('lucky-days-modal').classList.remove('hidden');
+        }
+
+
+        // 運命の特異日（律音・大半会・納音）ピックアップ機能
+        // 運命の特異日（律音・大半会・納音）ピックアップ機能
+        function showDestinyDays(m) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+
+            // 今月、来月、再来月の3ヶ月を変数に保持
+            const targetMonths = [
+                { y: year, m: month },
+                { y: month === 12 ? year + 1 : year, m: month === 12 ? 1 : month + 1 },
+                { y: month >= 11 ? year + 1 : year, m: month >= 11 ? (month === 11 ? 1 : 2) : month + 2 }
+            ];
+
+            const destinyDaysList = document.getElementById('destiny-days-list');
+            const destinyDaysEmpty = document.getElementById('destiny-days-empty');
+            destinyDaysList.innerHTML = '';
+
+            let foundDestinyDay = false;
+
+            const uT = m.dayTenkan;
+            const uC = m.dayChishi;
+            const uCIdx = CHISHI.indexOf(uC);
+
+            targetMonths.forEach(tm => {
+                const daysInMonth = new Date(tm.y, tm.m, 0).getDate();
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const date = new Date(tm.y, tm.m - 1, d);
+                    // 日干支を計算
+                    const utcDate = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+                    const baseDate = Date.UTC(1900, 0, 1);
+                    let diffDays = Math.floor((utcDate - baseDate) / (1000 * 60 * 60 * 24));
+                    let dayKanshiIndex = (diffDays + 10) % 60;
+                    if (dayKanshiIndex < 0) dayKanshiIndex += 60;
+
+                    const dTenkan = TENKAN[dayKanshiIndex % 10];
+                    const dChishi = CHISHI[dayKanshiIndex % 12];
+
+                    if (dTenkan !== uT) continue; // 天干が異なる日はパス
+
+                    const dCIdx = CHISHI.indexOf(dChishi);
+                    let dType = '';
+                    let dColor = '';
+
+                    if (dChishi === uC) {
+                        dType = '律音';
+                        dColor = '#f472b6'; // Pink
+                    } else if (dCIdx === (uCIdx + 4) % 12 || dCIdx === (uCIdx + 8) % 12) {
+                        dType = '宿命大半会';
+                        dColor = '#a78bfa'; // Purple
+                    } else if (dCIdx === (uCIdx + 6) % 12) {
+                        dType = '納音';
+                        dColor = '#38bdf8'; // Blue
+                    } else {
+                        continue;
+                    }
+
+                    foundDestinyDay = true;
+                    const dKanshiStr = dTenkan + dChishi;
+                    const dayOfWeekStr = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+
+                    const itemHtml = `
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid ${dColor}50; border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; border-left: 4px solid ${dColor};">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">
+                                <div style="font-size: 1.1rem; font-weight: bold; color: var(--text-primary);">
+                                    ${tm.y}年${tm.m}月${d}日 <span style="font-size: 0.9rem; color: var(--text-secondary);">(${dayOfWeekStr})</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="background: ${dColor}20; color: ${dColor}; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.9rem; font-weight: bold; border: 1px solid ${dColor}50;">
+                                        ${dType}
+                                    </span>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                                <div><span style="color: var(--text-secondary);">巡る干支:</span> <span style="color: var(--text-primary); font-weight: bold;">${dKanshiStr}</span></div>
+                            </div>
+                        </div>
+                    `;
+                    destinyDaysList.insertAdjacentHTML('beforeend', itemHtml);
+                }
+            });
+
+            if (foundDestinyDay) {
+                destinyDaysList.style.display = 'flex';
+                destinyDaysEmpty.style.display = 'none';
+            } else {
+                destinyDaysList.style.display = 'none';
+                destinyDaysEmpty.style.display = 'block';
+            }
+
+            document.getElementById('destiny-days-modal').classList.remove('hidden');
+        }
+
+        document.getElementById('btn-year-theme').addEventListener('click', () => {
+            if (window.currentMeishiki) showYearTheme(window.currentMeishiki);
+            else alert("鑑定結果表示後に利用できます。");
+        });
+
+        document.getElementById('btn-month-theme').addEventListener('click', () => {
+            if (window.currentMeishiki) showMonthTheme(window.currentMeishiki);
+            else alert("鑑定結果表示後に利用できます。");
+        });
+
+        const btnLuckyDays = document.getElementById('btn-lucky-days');
+        if (btnLuckyDays) {
+            btnLuckyDays.addEventListener('click', () => {
+                if (window.currentMeishiki) showLuckyDays(window.currentMeishiki);
+                else alert("鑑定結果表示後に利用できます。");
+            });
+        }
+
+        const btnDestinyDays = document.getElementById('btn-destiny-days');
+        if (btnDestinyDays) {
+            btnDestinyDays.addEventListener('click', () => {
+                if (window.currentMeishiki) showDestinyDays(window.currentMeishiki);
+                else alert("鑑定結果表示後に利用できます。");
+            });
+        }
+
+
+
+        document.getElementById('theme-modal-close').addEventListener('click', () => {
+            document.getElementById('theme-modal').classList.add('hidden');
+        });
+
+        document.getElementById('theme-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'theme-modal') {
+                document.getElementById('theme-modal').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('lucky-days-modal-close').addEventListener('click', () => {
+            document.getElementById('lucky-days-modal').classList.add('hidden');
+        });
+
+        document.getElementById('lucky-days-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'lucky-days-modal') {
+                document.getElementById('lucky-days-modal').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('destiny-days-modal-close').addEventListener('click', () => {
+            document.getElementById('destiny-days-modal').classList.add('hidden');
+        });
+
+        document.getElementById('destiny-days-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'destiny-days-modal') {
+                document.getElementById('destiny-days-modal').classList.add('hidden');
+            }
+        });
+
+
+        // ペア・メタバース遷移イベントの委譲（動的生成ボタンのためdocumentにアタッチ）
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('#btn-pair-metaverse');
+            if (btn) {
+                const params = new URLSearchParams({
+                    mode: 'pair',
+                    nameA: btn.dataset.namea,
+                    nikkanA: btn.dataset.nikkana,
+                    nisshiA: btn.dataset.nisshia,
+                    nameB: btn.dataset.nameb,
+                    nikkanB: btn.dataset.nikkanb,
+                    nisshiB: btn.dataset.nisshib
+                });
+                window.location.href = 'metaverse.html?' + params.toString();
+            }
+        });
+
     </script>
 </body>
 
