@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>運勢メタバース | 四柱推命</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="metaverse.css">
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+    <!-- 3D Environment -->
+    <div id="canvas-container"></div>
+
+
+
+    <!-- UI Overlay for Avatar and Information -->
+    <div id="ui-overlay" class="hidden">
+        <div class="info-panel glass" style="display: none;">
+            <h2 id="env-title">--</h2>
+            <p id="env-desc">--</p>
+            <div class="stats">
+                <div><span>日干 (空間テーマ)</span> <strong id="stat-nikkan"></strong></div>
+                <div><span>日支 (あなたのアバター)</span> <strong id="stat-nisshi"></strong></div>
+            </div>
+        </div>
+
+        <!-- Top Theme Display -->
+        <div id="top-theme-display"
+            style="position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); z-index: 100; pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-align: center;">
+            <div id="display-year-theme" class="glass-panel"
+                style="padding: 0.8rem 2rem; border-radius: 30px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: opacity 0.5s;">
+                <span
+                    style="font-size: 0.85rem; color: #fbbf24; margin-right: 0.5rem; font-weight: bold; letter-spacing: 0.05em;">今年のテーマ</span>
+                <span id="top-year-text" style="font-size: 1.1rem; color: #fff; font-weight: bold;">--</span>
+            </div>
+            <div id="display-month-theme" class="glass-panel"
+                style="padding: 0.6rem 1.8rem; border-radius: 30px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: opacity 0.5s;">
+                <span
+                    style="font-size: 0.8rem; color: #a18cd1; margin-right: 0.5rem; font-weight: bold; letter-spacing: 0.05em;">今月のテーマ</span>
+                <span id="top-month-text" style="font-size: 1rem; color: #e2e8f0; font-weight: bold;">--</span>
+            </div>
+        </div>
+
+        <!-- Avatar in Space -->
+        <div id="avatar-container">
+            <div id="avatar-ring" class="avatar-ring"></div>
+            <div id="avatar-emoji">✨</div>
+            <div class="avatar-info">
+                <span id="avatar-gender" class="gender-icon"></span>
+                <span id="avatar-name">Guest</span>
+            </div>
+        </div>
+
+        <div
+            style="position: absolute; top: 2rem; right: 2rem; display: flex; gap: 1rem; z-index: 100; pointer-events: none;">
+            <button type="button" id="btn-appraisal" class="btn-primary"
+                style="pointer-events: auto; padding: 0.3rem 0.8rem; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">📄
+                鑑定書</button>
+            <button type="button" id="btn-compatibility" class="btn-primary"
+                style="pointer-events: auto; padding: 0.3rem 0.8rem; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; background: linear-gradient(135deg, #fbc2eb 0%, #a18cd1 100%);">👥
+                別の人との相性を占う</button>
+            <button type="button" id="btn-settings" class="btn-secondary glass"
+                style="pointer-events: auto; padding: 0.5rem 1.5rem; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center;">⚙️
+                設定変更</button>
+            <a href="index.html" id="btn-back" class="btn-secondary glass"
+                style="pointer-events: auto; text-decoration:none; padding: 0.5rem 1.5rem; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;">鑑定へ戻る</a>
+        </div>
+
+        <!-- 仕事への扉 -->
+        <div id="door-work" class="door-container">
+            <div class="mystic-door"></div>
+            <div class="door-label">仕事面</div>
+        </div>
+
+        <!-- プライベートへの扉 -->
+        <div id="door-private" class="door-private">
+            <div class="mystic-door private"></div>
+            <div class="door-label">プライベート面</div>
+        </div>
+
+        <!-- 運勢カレンダー扉 -->
+        <div id="door-calendar">
+            <div class="mystic-door calendar">
+                <div class="door-glow"></div>
+                <div class="door-symbol">📅</div>
+            </div>
+            <div class="door-label">運勢カレンダー</div>
+        </div>
+
+        <!-- テーマボタン -->
+        <div class="theme-buttons"
+            style="pointer-events: auto; position: absolute; bottom: 2rem; width: 100%; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; padding: 0 1rem;">
+            <button type="button" id="btn-year-theme" class="btn-primary theme-btn"
+                style="padding: 0.8rem 1.5rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(161, 140, 209, 0.4); max-width: 200px;"><span
+                    style="margin-right:0.5rem">📅</span>今年のテーマ</button>
+            <button type="button" id="btn-month-theme" class="btn-primary theme-btn"
+                style="padding: 0.8rem 1.5rem; border-radius: 8px; background: linear-gradient(135deg, #a18cd1 0%, #a18cd1 100%); max-width: 200px;"><span
+                    style="margin-right:0.5rem">🌙</span>今月のテーマ</button>
+            <button type="button" id="btn-lucky-days" class="btn-primary theme-btn"
+                style="padding: 0.8rem 1.5rem; border-radius: 8px; background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: #fff; max-width: 200px; box-shadow: 0 4px 15px rgba(253, 160, 133, 0.4);"><span
+                    style="margin-right:0.5rem">🌟</span>希望の光</button>
+            <button type="button" id="btn-warning-days" class="btn-primary theme-btn"
+                style="padding: 0.8rem 1.5rem; border-radius: 8px; background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: #fff; max-width: 200px; box-shadow: 0 4px 15px rgba(161, 140, 209, 0.4);"><span
+                    style="margin-right:0.5rem">🌧️</span>静寂の時</button>
+            <button type="button" id="btn-summon-guardian" class="btn-primary theme-btn"
+                style="padding: 0.8rem 1.5rem; border-radius: 8px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #fff; max-width: 200px; box-shadow: 0 4px 15px rgba(67, 233, 123, 0.4);"><span
+                    style="margin-right:0.5rem">🛡️</span>守護神を召喚</button>
+        </div>
+    </div>
+
+    <!-- Gateway UI -->
+    <div id="gateway" class="gateway-container">
+        <div class="glass-panel gateway-card">
+            <h1 class="title" style="font-size: 2rem;">🌌 運勢メタバース</h1>
+            <p style="text-align: center; margin-bottom: 2rem; color: var(--text-secondary);">
+                生年月日に基づいた、あなただけの仮想精神空間へダイブします。<br>日干が空間を、日支がアバターを形作ります。</p>
+
+            <form id="metaverse-form">
+                <div class="form-group">
+                    <label for="mv-name">お名前</label>
+                    <input type="text" id="mv-name" placeholder="例：山田 太郎" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>生年月日</label>
+                        <div class="birthday-selects">
+                            <select id="mv-year" required>
+                                <option value="">年</option>
+                            </select>
+                            <select id="mv-month" required>
+                                <option value="">月</option>
+                                <option value="1">1月</option>
+                                <option value="2">2月</option>
+                                <option value="3">3月</option>
+                                <option value="4">4月</option>
+                                <option value="5">5月</option>
+                                <option value="6">6月</option>
+                                <option value="7">7月</option>
+                                <option value="8">8月</option>
+                                <option value="9">9月</option>
+                                <option value="10">10月</option>
+                                <option value="11">11月</option>
+                                <option value="12">12月</option>
+                            </select>
+                            <select id="mv-day" required>
+                                <option value="">日</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>性別</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="mv-gender" value="male" checked>
+                                <span>男性</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="mv-gender" value="female">
+                                <span>女性</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary"
+                    style="margin-top:1.5rem; width:100%; box-shadow: 0 0 20px rgba(161, 140, 209, 0.5);">空間へダイブ</button>
+                <div style="margin-top:1.5rem; text-align:center;">
+                    <a href="index.html" class="btn-secondary"
+                        style="text-decoration:none; display:inline-block; font-size:0.9rem;">← 通常の鑑定に戻る</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 希望の光（吉日・特異日）モーダル -->
+    <div id="lucky-days-modal" class="modal-overlay hidden" style="z-index: 2000;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 500px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="lucky-days-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="lucky-days-title"
+                style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem;">
+                🌟 希望の光（向こう3ヶ月の吉日）
+            </h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                向こう3ヶ月の中で、運勢の波が良い日（<span style="color:#f59e0b; font-weight:bold;">青春・絶好調</span> 等）や、あなたと強く共鳴する特別な日（<span
+                    style="color:#f472b6; font-weight:bold;">律音</span>・<span
+                    style="color:#a78bfa; font-weight:bold;">宿命大半会</span>）をピックアップしました。行動を起こす目安にしてみてください。
+            </p>
+            <div id="lucky-days-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- JSで動的にリスト生成 -->
+            </div>
+            <div id="lucky-days-empty"
+                style="display: none; text-align: center; color: var(--text-secondary); padding: 2rem 0;">
+                向こう3ヶ月は該当する日がありません。次の好機に向けて準備を整えましょう。
+            </div>
+        </div>
+    </div>
+
+    <!-- 警戒日（天中殺・休息・空転・納音）モーダル -->
+    <div id="warning-days-modal" class="modal-overlay hidden" style="z-index: 2000;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 500px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="warning-days-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="warning-days-title"
+                style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem;">
+                🌧️ 静寂の時（向こう3ヶ月の警戒日）
+            </h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                向こう3ヶ月の中で、少しペースダウンが必要な日（<span style="color:#ef4444; font-weight:bold;">天中殺・空転</span>）、心身を休めるべき日（<span
+                    style="color:#8b5cf6; font-weight:bold;">休息</span>）、または因縁が解けリセットされる日（<span
+                    style="color:#38bdf8; font-weight:bold;">納音</span>）をピックアップしました。無理に出歩かず、自分を見つめ直す時間にあててください。
+            </p>
+            <div id="warning-days-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- JSで動的にリスト生成 -->
+            </div>
+            <div id="warning-days-empty"
+                style="display: none; text-align: center; color: var(--text-secondary); padding: 2rem 0;">
+                向こう3ヶ月は該当する日がありません。
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- 守護神メッセージモーダル -->
+    <div id="guardian-modal" class="modal-overlay hidden" style="z-index: 2000;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 400px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: center;">
+            <button id="guardian-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <div id="guardian-icon"
+                style="font-size: 4rem; margin-bottom: 1rem; filter: drop-shadow(0 0 20px rgba(255,255,255,0.6));">🛡️
+            </div>
+            <h3 id="guardian-title" style="margin-bottom: 0.5rem; font-size: 1.3rem; color: #43e97b;">
+                あなたの守護神
+            </h3>
+            <p id="guardian-desc"
+                style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">
+                --
+            </p>
+            <div
+                style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-size: 0.8rem; color: #38f9d7; margin-bottom: 0.5rem; font-weight: bold;">💡 今日の開運アクション
+                </div>
+                <div id="guardian-action" style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.5;">--
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 日ごとアドバイスモーダル -->
+    <div id="daily-advice-modal" class="modal-overlay hidden" style="z-index: 2500;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 450px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="daily-advice-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="da-date-title"
+                style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem;">
+                --
+            </h3>
+
+            <div
+                style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 1.5rem; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255,255,255,0.1);">
+                <div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">巡る干支</div>
+                    <div id="da-kanshi"
+                        style="font-size: 1.2rem; font-weight: bold; color: var(--text-primary); letter-spacing: 0.1em;">
+                        --</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">通変星</div>
+                    <div id="da-tuhen" style="font-size: 1.1rem; font-weight: bold; color: #a78bfa;">--</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">十二運星</div>
+                    <div id="da-unsei" style="font-size: 1.1rem; font-weight: bold; color: #34d399;">--</div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <div style="font-size: 0.95rem; color: #fcd34d; font-weight:bold; margin-bottom:0.5rem;">💡
+                    今日のポイント・気をつけるべきこと</div>
+                <div id="da-message"
+                    style="font-size: 0.95rem; color: var(--text-primary); line-height: 1.6; white-space: pre-wrap;">--
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <button type="button" class="btn-primary" id="da-close-btn"
+                    style="padding: 0.6rem 2rem; box-shadow: 0 4px 10px rgba(161, 140, 209, 0.4); border-radius: 8px;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 仕事運勢モーダル -->
+    <div id="work-fortune-modal" class="modal-overlay hidden" style="z-index: 2000;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 600px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="work-fortune-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="work-fortune-title"
+                style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                💼 仕事面での才能・環境
+            </h3>
+
+            <div
+                style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 1.5rem;">
+                <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">■
+                    あなたの命式（仕事に関わる重要な星）</div>
+                <div id="wf-meishiki"
+                    style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 1rem; color: var(--text-primary);">
+                    <!-- JSで動的に生成 -->
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="color: #38bdf8; margin-bottom: 0.8rem; font-size: 1.1rem;">【仕事における最適な環境と活かし方】</h4>
+                <div id="wf-advice"
+                    style="font-size: 0.95rem; line-height: 1.8; color: var(--text-primary); white-space: pre-wrap;">
+                    <!-- JSで動的に生成 -->
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top: 2rem;">
+                <button type="button" class="btn-primary" id="wf-close-btn"
+                    style="padding: 0.6rem 2rem; box-shadow: 0 4px 10px rgba(161, 140, 209, 0.4); border-radius: 8px;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- プライベート運勢モーダル -->
+    <div id="private-fortune-modal" class="modal-overlay hidden" style="z-index: 2000;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 600px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="private-fortune-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="private-fortune-title"
+                style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; display: flex; align-items: center; justify-content: flex-start; gap: 0.5rem;">
+                <span style="font-size: 1.5rem;">🕊️</span> プライベート面での傾向
+            </h3>
+
+            <div
+                style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 1.5rem;">
+                <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">■
+                    あなたの命式（プライベートに関わる重要な星）</div>
+                <div id="pf-meishiki"
+                    style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 1rem; color: var(--text-primary);">
+                    <!-- JSで動的に生成 -->
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="color: #f472b6; margin-bottom: 0.8rem; font-size: 1.1rem;">【プライベートでの心の動き・気をつける点】</h4>
+                <div id="pf-advice"
+                    style="font-size: 0.95rem; line-height: 1.8; color: var(--text-primary); white-space: pre-wrap;">
+                    <!-- JSで動的に生成 -->
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top: 2rem;">
+                <button type="button" class="btn-primary" id="pf-close-btn"
+                    style="padding: 0.6rem 2rem; background: linear-gradient(135deg, #f472b6 0%, #8b5cf6 100%); box-shadow: 0 4px 10px rgba(244, 114, 182, 0.4); border-radius: 8px;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 運勢カレンダーモーダル（z-indexを増やして前面に） -->
+    <div id="calendar-modal" class="modal-overlay hidden" style="z-index: 2500;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 800px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="calendar-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3
+                style="color: #fbbf24; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; display: flex; align-items: center; justify-content: flex-start; gap: 0.5rem; font-size: 1.4rem;">
+                <span style="font-size: 1.5rem;">📅</span> 運勢カレンダー
+            </h3>
+            <p style="text-align: left; font-size: 0.9rem; margin-bottom: 1.5rem; color: var(--text-secondary);">
+                今後3ヶ月の「希望の光（吉日）」と「静寂の日（注意日）」が一覧できます。<br>マークのついた日付をクリックすると詳細が表示されます。
+            </p>
+
+            <div id="calendar-container" style="display: flex; flex-direction: column; gap: 2rem;">
+                <!-- JSで月ごとのカレンダーを生成 -->
+            </div>
+
+            <!-- カレンダー詳細表示エリア部分 -->
+            <div id="calendar-detail-area" class="hidden"
+                style="margin-top: 2rem; padding: 1.5rem; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; text-align: left;">
+                <h3 id="cal-detail-date"
+                    style="color: #4facfe; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; font-size: 1.2rem;">
+                </h3>
+                <div id="cal-detail-content" style="line-height: 1.6; font-size: 0.95rem;"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="button" id="calendar-close-btn" class="btn-primary"
+                    style="background: linear-gradient(135deg, #fbbf24, #f59e0b); padding: 0.6rem 2rem; border-radius: 8px;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 希望の光（吉日・特異日）モーダル -->
+    <div id="lucky-days-modal" class="modal-overlay hidden" style="z-index: 2000;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 500px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="lucky-days-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="lucky-days-title"
+                style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem;">
+                🌟 希望の光（向こう3ヶ月の吉日）
+            </h3>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                向こう3ヶ月の中で、運勢の波が良い日（<span style="color:#f59e0b; font-weight:bold;">青春・絶好調</span> 等）や、あなたと強く共鳴する特別な日（<span
+                    style="color:#f472b6; font-weight:bold;">律音</span>・<span
+                    style="color:#a78bfa; font-weight:bold;">宿命大半会</span>）をピックアップしました。行動を起こす目安にしてみてください。
+            </p>
+            <div id="lucky-days-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- JSで動的にリスト生成 -->
+            </div>
+            <div id="lucky-days-empty"
+                style="display: none; text-align: center; color: var(--text-secondary); padding: 2rem 0;">
+                向こう3ヶ月は該当する日がありません。次の好機に向けて準備を整えましょう。
+            </div>
+        </div>
+        <button id="calendar-close-btn" class="btn-secondary glass" style="padding: 0.8rem 2.5rem;">閉じる</button>
+    </div>
+    </div>
+    </div>
+
+    <!-- 鑑定書モーダル -->
+    <div id="appraisal-modal" class="hidden"
+        style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem;">
+        <div
+            style="background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; width: 100%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+            <div
+                style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3);">
+                <h3
+                    style="margin: 0; font-size: 1.1rem; color: #fbc2eb; display: flex; align-items: center; gap: 0.5rem;">
+                    📄 個人の星回り (命式)</h3>
+                <button id="appraisal-modal-close"
+                    style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div id="appraisal-content-container"
+                style="padding: 1.5rem; overflow-y: auto; flex: 1; font-family: 'Noto Sans JP', sans-serif;">
+                <!-- 鑑定書内容がここに動的に生成されます -->
+            </div>
+            <div
+                style="padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; background: rgba(0,0,0,0.3);">
+                <button id="appraisal-close-btn" class="btn-secondary glass"
+                    style="padding: 0.6rem 2rem; border-radius: 20px;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 相性鑑定モーダル -->
+    <div id="compatibility-modal" class="hidden"
+        style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem;">
+        <div
+            style="background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; width: 100%; max-width: 900px; max-height: 95vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+            <div
+                style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3);">
+                <h3
+                    style="margin: 0; font-size: 1.1rem; color: #fbc2eb; display: flex; align-items: center; gap: 0.5rem;">
+                    👥 別の人との相性を占う</h3>
+                <button id="compatibility-modal-close"
+                    onclick="document.getElementById('compatibility-modal').classList.add('hidden')"
+                    style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; z-index:2200; position:relative;">&times;</button>
+            </div>
+
+            <div id="compatibility-form-container"
+                style="padding: 1.5rem; overflow-y: auto; flex: 1; font-family: 'Noto Sans JP', sans-serif;">
+                <p style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 1rem;">占いたいお相手の情報を入力してください。</p>
+                <form id="metaverse-compatibility-form"
+                    style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="comp-name"
+                            style="display:block; margin-bottom:0.3rem; color:#e2e8f0; font-size:0.9rem;">お相手のお名前</label>
+                        <input type="text" id="comp-name" placeholder="例: 太郎"
+                            style="width:100%; padding:0.6rem; border-radius:6px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.2); color:#fff;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label
+                            style="display:block; margin-bottom:0.3rem; color:#e2e8f0; font-size:0.9rem;">お相手の生年月日</label>
+                        <div style="display:flex; gap:0.5rem;">
+                            <!-- 年 -->
+                            <div style="flex:2; position:relative;">
+                                <select id="comp-year"
+                                    style="width:100%; padding:0.6rem; border-radius:6px; background:rgba(0,0,0,0.8); border:1px solid rgba(255,255,255,0.4); color:#fff; appearance:auto; cursor:pointer; position:relative; z-index:2100;">
+                                    <option value="">年</option>
+                                </select>
+                            </div>
+                            <!-- 月 -->
+                            <div style="flex:1; position:relative;">
+                                <select id="comp-month"
+                                    style="width:100%; padding:0.6rem; border-radius:6px; background:rgba(0,0,0,0.8); border:1px solid rgba(255,255,255,0.4); color:#fff; appearance:auto; cursor:pointer; position:relative; z-index:2100;">
+                                    <option value="1">1月</option>
+                                    <option value="2">2月</option>
+                                    <option value="3">3月</option>
+                                    <option value="4">4月</option>
+                                    <option value="5">5月</option>
+                                    <option value="6">6月</option>
+                                    <option value="7">7月</option>
+                                    <option value="8">8月</option>
+                                    <option value="9">9月</option>
+                                    <option value="10">10月</option>
+                                    <option value="11">11月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                            </div>
+                            <!-- 日 -->
+                            <div style="flex:1; position:relative;">
+                                <select id="comp-day"
+                                    style="width:100%; padding:0.6rem; border-radius:6px; background:rgba(0,0,0,0.8); border:1px solid rgba(255,255,255,0.4); color:#fff; appearance:auto; cursor:pointer; position:relative; z-index:2100;">
+                                    <option value="">日</option>
+                                    <!-- jsで生成 -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label
+                            style="display:block; margin-bottom:0.3rem; color:#e2e8f0; font-size:0.9rem;">お相手の性別</label>
+                        <div style="display:flex; gap:1rem;">
+                            <label style="color:#fff;"><input type="radio" name="comp-gender" value="female" checked>
+                                女性</label>
+                            <label style="color:#fff;"><input type="radio" name="comp-gender" value="male"> 男性</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary"
+                        style="width: 100%; padding: 0.8rem; border-radius: 8px; font-weight: bold;">相性を鑑定する</button>
+                </form>
+
+                <div id="compatibility-result-container" class="hidden" style="margin-top: 2rem;">
+                    <!-- 相性結果がここに生成されます -->
+                </div>
+            </div>
+
+            <div
+                style="padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; background: rgba(0,0,0,0.3); position:relative; z-index:2200;">
+                <button id="compatibility-close-btn" class="btn-secondary glass"
+                    onclick="document.getElementById('compatibility-modal').classList.add('hidden')"
+                    style="padding: 0.6rem 2rem; border-radius: 20px;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- テーマ詳細モーダル -->
+    <div id="theme-modal" class="modal-overlay hidden">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 500px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; z-index: 2000;">
+            <button id="theme-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="theme-title"
+                style="margin-bottom: 0.5rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem;">
+            </h3>
+            <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                <span id="theme-badge" class="cs-badge"></span>
+                <span id="theme-rating" style="font-weight: bold; font-size: 1.3rem;"></span>
+            </div>
+
+            <div id="theme-star-info"
+                style="margin-bottom: 1.5rem; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255,255,255,0.1); display: none;">
+                <div style="display: flex; justify-content: space-around; text-align: center;">
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">巡る干支</div>
+                        <div id="theme-kanshi"
+                            style="font-size: 1.2rem; font-weight: bold; color: var(--text-primary); letter-spacing: 0.1em;">
+                            --</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">テーマ(通変星)
+                        </div>
+                        <div id="theme-tuhen" style="font-size: 1.1rem; font-weight: bold; color: #a78bfa;">--</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem;">エネルギー(十二運)
+                        </div>
+                        <div id="theme-unsei" style="font-size: 1.1rem; font-weight: bold; color: #34d399;">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <p id="theme-desc"
+                style="font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem; color: var(--accent); white-space: pre-wrap; line-height: 1.6;">
+            </p>
+            <p id="theme-message"
+                style="line-height: 1.8; color: var(--text-secondary); white-space: pre-wrap; font-size: 0.95rem;"></p>
+        </div>
+    </div>
+
+    <!-- 鑑定書モーダル -->
+    <div id="appraisal-modal" class="modal-overlay hidden" style="z-index: 3000;">
+        <div class="glass-panel modal-content"
+            style="width: 95%; max-width: 800px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 90vh; overflow-y: auto; background: rgba(15, 15, 25, 0.85); backdrop-filter: blur(15px);">
+            <button id="appraisal-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="appraisal-title"
+                style="margin-bottom: 1rem; font-size: 1.6rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                📄 鑑定書・命式表
+            </h3>
+
+            <!-- ここに index.html と同等の命式表とパラメーターを流し込むコンテナ -->
+            <div id="appraisal-content-container">
+                <div style="text-align: center; color: var(--text-secondary); padding: 2rem 0;">
+                    命式データを生成しています...
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top: 2rem;">
+                <button type="button" class="btn-primary" id="appraisal-close-btn"
+                    style="padding: 0.6rem 2rem; background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); box-shadow: 0 4px 10px rgba(161, 140, 209, 0.4); border-radius: 8px;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 音楽やSEを追加する場合はここに Audio 要素 -->
+
+    <script src="metaverse.js"></script>
+</body>
+
+</html>
