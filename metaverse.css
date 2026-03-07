@@ -1,0 +1,525 @@
+/* metaverse.css */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+}
+
+#canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    /* Below UI */
+    transition: opacity 2s ease, transform 0.1s ease-out;
+}
+
+.gateway-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #05050a 100%);
+    transition: opacity 1.5s ease, visibility 1.5s ease;
+}
+
+.gateway-container.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.gateway-card {
+    width: 90%;
+    max-width: 500px;
+    padding: 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* UI Overlay */
+#ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    pointer-events: none;
+    /* Let clicks pass to 3D except for buttons */
+}
+
+#ui-overlay.hidden {
+    display: none;
+}
+
+/* カスタムモーダルはui-overlayのpointer-events:noneを上書きする */
+#appraisal-modal:not(.hidden),
+#compatibility-modal:not(.hidden) {
+    pointer-events: auto !important;
+}
+
+#appraisal-modal:not(.hidden) *,
+#compatibility-modal:not(.hidden) * {
+    pointer-events: auto;
+}
+
+.info-panel {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    width: 320px;
+    padding: 1.5rem;
+    pointer-events: auto;
+    border-left: 4px solid var(--accent);
+    background: rgba(15, 15, 25, 0.4);
+    animation: slideInLeft 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.info-panel h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.info-panel p {
+    margin: 0 0 1.5rem 0;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    font-size: 0.95rem;
+}
+
+.stats div {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.4rem;
+    align-items: center;
+}
+
+.stats strong {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+/* Avatar Representation */
+#avatar-container {
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    animation: avatarFloat 4s ease-in-out infinite;
+}
+
+#avatar-container:hover {
+    transform: translateX(-50%) scale(1.05);
+}
+
+#avatar-emoji {
+    font-size: 6rem;
+    position: relative;
+    z-index: 2;
+    transition: filter 0.5s ease;
+    /* Default shadow, overridden by JS */
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+}
+
+.real-avatar {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.8));
+    animation: realAvatarBreathe 6s ease-in-out infinite;
+}
+
+.door-symbol {
+    font-size: 2.5rem;
+    z-index: 2;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
+    animation: float 3s ease-in-out infinite;
+}
+
+.door-label {
+    font-size: 0.9rem;
+    color: #e2e8f0;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+/* カレンダー関連スタイル */
+.calendar-month-block {
+    margin-bottom: 2rem;
+}
+
+.calendar-month-title {
+    font-size: 1.2rem;
+    color: #fbbf24;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+    padding-bottom: 0.5rem;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+}
+
+.calendar-day-header {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    padding: 0.2rem 0;
+}
+
+.calendar-day-cell {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 0.5rem;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.calendar-day-cell:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.calendar-day-cell.today {
+    border: 2px solid #4facfe;
+    background: rgba(79, 172, 254, 0.15);
+    box-shadow: inset 0 0 10px rgba(79, 172, 254, 0.3);
+}
+
+.calendar-day-cell.empty {
+    background: transparent;
+    border: none;
+    cursor: default;
+}
+
+.calendar-day-cell.empty:hover {
+    transform: none;
+    background: transparent;
+}
+
+.cal-date {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+}
+
+.cal-kanshi {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+}
+
+.cal-mark {
+    font-size: 0.8rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.cal-mark.lucky {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.5);
+}
+
+.cal-mark.warning {
+    background: rgba(244, 114, 182, 0.2);
+    color: #f472b6;
+    border: 1px solid rgba(244, 114, 182, 0.5);
+}
+
+.cal-mark.caution {
+    background: rgba(220, 38, 38, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(220, 38, 38, 0.5);
+    font-weight: bold;
+}
+
+.cal-mark.super-lucky {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.8), rgba(245, 158, 11, 0.8));
+    color: #fff;
+    border: 1px solid #f59e0b;
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+    font-weight: bold;
+    animation: realAvatarBreathe 3s infinite;
+}
+
+.cal-mark.super-warning {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.8), rgba(185, 28, 28, 0.8));
+    color: #fff;
+    border: 1px solid #b91c1c;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+    font-weight: bold;
+}
+
+.cal-mark.neutral {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+@keyframes realAvatarBreathe {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.03);
+    }
+}
+
+.avatar-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150px;
+    height: 150px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    animation: spin 15s linear infinite;
+    z-index: 1;
+    transition: box-shadow 0.5s ease, border-color 0.5s ease;
+}
+
+@keyframes spin {
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes avatarFloat {
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(-20px);
+    }
+}
+
+.avatar-info {
+    margin-top: 1.5rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 0.6rem 2rem;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+
+
+/* Job Door (仕事への扉) */
+.door-container {
+    position: absolute;
+    top: 30%;
+    right: 5%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+    pointer-events: auto;
+    z-index: 60;
+}
+
+.door-container:hover {
+    transform: translateY(-50%) scale(1.08);
+    filter: brightness(1.2);
+}
+
+/* Private Door (プライベートへの扉) */
+.door-private {
+    position: absolute;
+    top: 55%;
+    right: 5%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+    pointer-events: auto;
+    z-index: 60;
+}
+
+.door-private:hover {
+    transform: translateY(-50%) scale(1.08);
+    filter: brightness(1.2);
+}
+
+/* 運勢カレンダー扉用ラップ */
+#door-calendar {
+    position: absolute;
+    top: 80%;
+    right: 5%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+    pointer-events: auto;
+    z-index: 60;
+}
+
+#door-calendar:hover {
+    transform: translateY(-50%) scale(1.08);
+    filter: brightness(1.2);
+}
+
+.mystic-door {
+    width: 80px;
+    height: 120px;
+    background: linear-gradient(180deg, rgba(20, 20, 40, 0.8), rgba(40, 40, 80, 0.9));
+    border: 2px solid #4facfe;
+    border-radius: 40px 40px 0 0;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mystic-door.private {
+    background: linear-gradient(180deg, rgba(40, 20, 40, 0.8), rgba(80, 40, 70, 0.9));
+    border: 2px solid #f472b6;
+    box-shadow: 0 0 15px rgba(244, 114, 182, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.mystic-door.calendar {
+    background: linear-gradient(180deg, rgba(40, 30, 10, 0.8), rgba(80, 60, 20, 0.9));
+    border: 2px solid #fbbf24;
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.4), inset 0 0 20px rgba(251, 191, 36, 0.4);
+}
+
+.mystic-door:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 0 30px rgba(79, 172, 254, 0.8), inset 0 0 20px rgba(79, 172, 254, 0.4);
+}
+
+.mystic-door.private:hover {
+    box-shadow: 0 0 30px rgba(244, 114, 182, 0.8), inset 0 0 20px rgba(244, 114, 182, 0.4);
+}
+
+.mystic-door.calendar:hover {
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.8), inset 0 0 20px rgba(251, 191, 36, 0.4);
+}
+
+.mystic-door.private::after {
+    content: '🏠';
+}
+
+.mystic-door.calendar::after {
+    content: none;
+    display: none;
+}
+
+.mystic-door::after {
+    content: '💼';
+    font-size: 2.5rem;
+    position: absolute;
+    animation: float-emoji 3s infinite ease-in-out;
+}
+
+.door-label {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid #38bdf8;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.door-private .door-label {
+    border-color: #f472b6;
+}
+
+@keyframes float-emoji {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
