@@ -337,50 +337,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 相性鑑定モーダルの表示イベントと初期化
-    const btnComp = document.getElementById('btn-compatibility');
-    const modalComp = document.getElementById('compatibility-modal');
-    const closeCompBtn = document.getElementById('compatibility-modal-close');
-    const closeCompBtn2 = document.getElementById('compatibility-close-btn');
+    // 相性鑑定モーダルの関連コードは削除済み（不要）
 
-    // 起動時に初期化しておく（iOS Safariで空のselectへの動的追加バグを防ぐため）
-    initCompFormSelects();
-
-    if (btnComp) {
-        btnComp.addEventListener('click', () => {
-            document.getElementById('compatibility-result-container').classList.add('hidden');
-            modalComp.classList.remove('hidden');
-        });
-    }
-
-    // イベント委任でClose系ボタンを一括管理（closest()で子要素クリックにも対応）
-    if (modalComp) {
-        modalComp.addEventListener('click', (e) => {
-            // ボタン自体またはその子要素がクリックされた場合も拾う
-            if (
-                e.target.closest('#compatibility-modal-close') ||
-                e.target.closest('#compatibility-close-btn')
-            ) {
-                modalComp.classList.add('hidden');
-            } else if (e.target === modalComp) {
-                // 背景クリックでも閉じる
-                modalComp.classList.add('hidden');
-            }
-        });
-    }
-
-    // 相性鑑定フォームの送信イベント
-    const compForm = document.getElementById('metaverse-compatibility-form');
-    if (compForm) {
-        compForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            handleCompatibilityCheck();
-        });
-    }
 
     // テーマモーダルのイベント設定
-    document.getElementById('btn-year-theme').addEventListener('click', showYearTheme);
-    document.getElementById('btn-month-theme').addEventListener('click', showMonthTheme);
+    const btnYearTheme = document.getElementById('btn-year-theme');
+    if (btnYearTheme) btnYearTheme.addEventListener('click', showYearTheme);
+
+    const btnMonthTheme = document.getElementById('btn-month-theme');
+    if (btnMonthTheme) btnMonthTheme.addEventListener('click', showMonthTheme);
 
     const btnLuckyDays = document.getElementById('btn-lucky-days');
     if (btnLuckyDays) {
@@ -392,17 +357,21 @@ document.addEventListener('DOMContentLoaded', () => {
         btnWarningDays.addEventListener('click', showWarningDays);
     }
 
-
-
-    document.getElementById('theme-modal-close').addEventListener('click', () => {
-        document.getElementById('theme-modal').classList.add('hidden');
-    });
-
-    document.getElementById('theme-modal').addEventListener('click', (e) => {
-        if (e.target.id === 'theme-modal') {
+    const themeModalClose = document.getElementById('theme-modal-close');
+    if (themeModalClose) {
+        themeModalClose.addEventListener('click', () => {
             document.getElementById('theme-modal').classList.add('hidden');
-        }
-    });
+        });
+    }
+
+    const themeModal = document.getElementById('theme-modal');
+    if (themeModal) {
+        themeModal.addEventListener('click', (e) => {
+            if (e.target.id === 'theme-modal') {
+                themeModal.classList.add('hidden');
+            }
+        });
+    }
 
     const luckyDaysModalClose = document.getElementById('lucky-days-modal-close');
     if (luckyDaysModalClose) {
@@ -1178,7 +1147,12 @@ function diveIntoMetaverse(name, gender, m) {
         chushatsu: m.chushatsu,
         fullMeishiki: m,
         name: name,
-        gender: gender
+        gender: gender,
+        // 年柱・月柱データも保存（仕事・プライベート運勢モーダル用）
+        yT: m.yearTenkan,
+        yC: m.yearChishi,
+        mT: m.monthTenkan,
+        mC: m.monthChishi
     };
 
     const theme = ENV_THEMES[dayTenkan];

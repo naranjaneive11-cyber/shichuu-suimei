@@ -23,7 +23,7 @@
 
 
     <!-- UI Overlay for Avatar and Information -->
-    <div id="ui-overlay" class="hidden">
+    <div id="ui-overlay" class="hidden" style="pointer-events: none;">
         <div class="info-panel glass" style="display: none;">
             <h2 id="env-title">--</h2>
             <p id="env-desc">--</p>
@@ -66,7 +66,7 @@
                 style="pointer-events: auto; padding: 0.3rem 0.8rem; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">📄
                 鑑定書</button>
             <button type="button" id="btn-compatibility" class="btn-primary"
-                style="pointer-events: auto; padding: 0.3rem 0.8rem; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; background: linear-gradient(135deg, #fbc2eb 0%, #a18cd1 100%);">👥
+                style="display: none !important; pointer-events: auto; padding: 0.3rem 0.8rem; font-size: 0.8rem; cursor: pointer; align-items: center; background: linear-gradient(135deg, #fbc2eb 0%, #a18cd1 100%);">👥
                 別の人との相性を占う</button>
             <button type="button" id="btn-settings" class="btn-secondary glass"
                 style="pointer-events: auto; padding: 0.5rem 1.5rem; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center;">⚙️
@@ -202,6 +202,11 @@
                 style="display: none; text-align: center; color: var(--text-secondary); padding: 2rem 0;">
                 向こう3ヶ月は該当する日がありません。次の好機に向けて準備を整えましょう。
             </div>
+            <div style="text-align:center; margin-top: 1.5rem;">
+                <button type="button" class="btn-primary"
+                    onclick="document.getElementById('lucky-days-modal').classList.add('hidden')"
+                    style="padding: 0.6rem 2rem; box-shadow: 0 4px 10px rgba(161, 140, 209, 0.4); border-radius: 8px;">閉じる</button>
+            </div>
         </div>
     </div>
 
@@ -226,6 +231,11 @@
             <div id="warning-days-empty"
                 style="display: none; text-align: center; color: var(--text-secondary); padding: 2rem 0;">
                 向こう3ヶ月は該当する日がありません。
+            </div>
+            <div style="text-align:center; margin-top: 1.5rem;">
+                <button type="button" class="btn-primary"
+                    onclick="document.getElementById('warning-days-modal').classList.add('hidden')"
+                    style="padding: 0.6rem 2rem; box-shadow: 0 4px 10px rgba(161, 140, 209, 0.4); border-radius: 8px;">閉じる</button>
             </div>
         </div>
     </div>
@@ -254,6 +264,11 @@
                 </div>
                 <div id="guardian-action" style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.5;">--
                 </div>
+            </div>
+            <div style="text-align:center; margin-top: 1.5rem;">
+                <button type="button" class="btn-primary"
+                    onclick="document.getElementById('guardian-modal').classList.add('hidden')"
+                    style="padding: 0.6rem 2rem; box-shadow: 0 4px 10px rgba(67, 233, 123, 0.4); border-radius: 8px;">閉じる</button>
             </div>
         </div>
     </div>
@@ -408,47 +423,20 @@
         </div>
     </div>
 
-    <!-- 希望の光（吉日・特異日）モーダル -->
-    <div id="lucky-days-modal" class="modal-overlay hidden" style="z-index: 2000;">
-        <div class="glass-panel modal-content"
-            style="width: 90%; max-width: 500px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
-            <button id="lucky-days-modal-close"
-                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
-            <h3 id="lucky-days-title"
-                style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem;">
-                🌟 希望の光（向こう3ヶ月の吉日）
-            </h3>
-            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
-                向こう3ヶ月の中で、運勢の波が良い日（<span style="color:#f59e0b; font-weight:bold;">青春・絶好調</span> 等）や、あなたと強く共鳴する特別な日（<span
-                    style="color:#f472b6; font-weight:bold;">律音</span>・<span
-                    style="color:#a78bfa; font-weight:bold;">宿命大半会</span>）をピックアップしました。行動を起こす目安にしてみてください。
-            </p>
-            <div id="lucky-days-list" style="display: flex; flex-direction: column; gap: 1rem;">
-                <!-- JSで動的にリスト生成 -->
-            </div>
-            <div id="lucky-days-empty"
-                style="display: none; text-align: center; color: var(--text-secondary); padding: 2rem 0;">
-                向こう3ヶ月は該当する日がありません。次の好機に向けて準備を整えましょう。
-            </div>
-        </div>
-        <button id="calendar-close-btn" class="btn-secondary glass" style="padding: 0.8rem 2.5rem;">閉じる</button>
-    </div>
-    </div>
-    </div>
 
     <!-- 鑑定書モーダル -->
-    <div id="appraisal-modal" class="hidden"
+    <div id="appraisal-modal" class="modal-overlay hidden"
         style="pointer-events: auto; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem;">
         <div
             style="background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; width: 100%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
             <div
-                style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3);">
+                style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); position: relative; z-index: 2200;">
                 <h3
                     style="margin: 0; font-size: 1.1rem; color: #fbc2eb; display: flex; align-items: center; gap: 0.5rem;">
                     📄 個人の星回り (命式)</h3>
                 <button id="appraisal-modal-close"
                     onclick="document.getElementById('appraisal-modal').classList.add('hidden')"
-                    style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+                    style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; pointer-events: auto;">&times;</button>
             </div>
             <div id="appraisal-content-container"
                 style="padding: 1.5rem; overflow-y: auto; flex: 1; font-family: 'Noto Sans JP', sans-serif;">
@@ -458,98 +446,6 @@
                 style="padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; background: rgba(0,0,0,0.3); pointer-events: auto;">
                 <button id="appraisal-close-btn" class="btn-secondary glass"
                     onclick="document.getElementById('appraisal-modal').classList.add('hidden')"
-                    style="padding: 0.6rem 2rem; border-radius: 20px;">閉じる</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 相性鑑定モーダル -->
-    <div id="compatibility-modal" class="hidden"
-        style="pointer-events: auto; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1rem;">
-        <div
-            style="background: rgba(30, 41, 59, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; width: 100%; max-width: 900px; max-height: 95vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
-            <div
-                style="padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3);">
-                <h3
-                    style="margin: 0; font-size: 1.1rem; color: #fbc2eb; display: flex; align-items: center; gap: 0.5rem;">
-                    👥 別の人との相性を占う</h3>
-                <button id="compatibility-modal-close"
-                    onclick="document.getElementById('compatibility-modal').classList.add('hidden')"
-                    style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; z-index:2200; position:relative;">&times;</button>
-            </div>
-
-            <div id="compatibility-form-container"
-                style="padding: 1.5rem; overflow-y: auto; flex: 1; font-family: 'Noto Sans JP', sans-serif;">
-                <p style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 1rem;">占いたいお相手の情報を入力してください。</p>
-                <form id="metaverse-compatibility-form"
-                    style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                    <div class="form-group" style="margin-bottom: 1rem;">
-                        <label for="comp-name"
-                            style="display:block; margin-bottom:0.3rem; color:#e2e8f0; font-size:0.9rem;">お相手のお名前</label>
-                        <input type="text" id="comp-name" placeholder="例: 太郎"
-                            style="width:100%; padding:0.6rem; border-radius:6px; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.2); color:#fff;">
-                    </div>
-                    <div class="form-group" style="margin-bottom: 1rem;">
-                        <label
-                            style="display:block; margin-bottom:0.3rem; color:#e2e8f0; font-size:0.9rem;">お相手の生年月日</label>
-                        <div style="display:flex; gap:0.5rem;">
-                            <!-- 年 -->
-                            <div style="flex:2; position:relative;">
-                                <select id="comp-year"
-                                    style="width:100%; padding:0.6rem; border-radius:6px; background:rgba(0,0,0,0.8); border:1px solid rgba(255,255,255,0.4); color:#fff; appearance:auto; cursor:pointer; position:relative; z-index:2100;">
-                                    <option value="">年</option>
-                                </select>
-                            </div>
-                            <!-- 月 -->
-                            <div style="flex:1; position:relative;">
-                                <select id="comp-month"
-                                    style="width:100%; padding:0.6rem; border-radius:6px; background:rgba(0,0,0,0.8); border:1px solid rgba(255,255,255,0.4); color:#fff; appearance:auto; cursor:pointer; position:relative; z-index:2100;">
-                                    <option value="1">1月</option>
-                                    <option value="2">2月</option>
-                                    <option value="3">3月</option>
-                                    <option value="4">4月</option>
-                                    <option value="5">5月</option>
-                                    <option value="6">6月</option>
-                                    <option value="7">7月</option>
-                                    <option value="8">8月</option>
-                                    <option value="9">9月</option>
-                                    <option value="10">10月</option>
-                                    <option value="11">11月</option>
-                                    <option value="12">12月</option>
-                                </select>
-                            </div>
-                            <!-- 日 -->
-                            <div style="flex:1; position:relative;">
-                                <select id="comp-day"
-                                    style="width:100%; padding:0.6rem; border-radius:6px; background:rgba(0,0,0,0.8); border:1px solid rgba(255,255,255,0.4); color:#fff; appearance:auto; cursor:pointer; position:relative; z-index:2100;">
-                                    <option value="">日</option>
-                                    <!-- jsで生成 -->
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 1.5rem;">
-                        <label
-                            style="display:block; margin-bottom:0.3rem; color:#e2e8f0; font-size:0.9rem;">お相手の性別</label>
-                        <div style="display:flex; gap:1rem;">
-                            <label style="color:#fff;"><input type="radio" name="comp-gender" value="female" checked>
-                                女性</label>
-                            <label style="color:#fff;"><input type="radio" name="comp-gender" value="male"> 男性</label>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-primary"
-                        style="width: 100%; padding: 0.8rem; border-radius: 8px; font-weight: bold;">相性を鑑定する</button>
-                </form>
-
-                <div id="compatibility-result-container" class="hidden" style="margin-top: 2rem;">
-                    <!-- 相性結果がここに生成されます -->
-                </div>
-            </div>
-
-            <div
-                style="padding: 1rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; background: rgba(0,0,0,0.3); position:relative; z-index:2200;">
-                <button id="compatibility-close-btn" class="btn-secondary glass"
-                    onclick="document.getElementById('compatibility-modal').classList.add('hidden')"
                     style="padding: 0.6rem 2rem; border-radius: 20px;">閉じる</button>
             </div>
         </div>
@@ -596,6 +492,11 @@
             </p>
             <p id="theme-message"
                 style="line-height: 1.8; color: var(--text-secondary); white-space: pre-wrap; font-size: 0.95rem;"></p>
+            <div style="text-align:center; margin-top: 1.5rem;">
+                <button type="button" class="btn-primary"
+                    onclick="document.getElementById('theme-modal').classList.add('hidden')"
+                    style="padding: 0.6rem 2rem; box-shadow: 0 4px 10px rgba(161, 140, 209, 0.4); border-radius: 8px;">閉じる</button>
+            </div>
         </div>
     </div>
 

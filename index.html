@@ -2066,35 +2066,53 @@
 
 
 
-        document.getElementById('theme-modal-close').addEventListener('click', () => {
-            document.getElementById('theme-modal').classList.add('hidden');
-        });
-
-        document.getElementById('theme-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'theme-modal') {
+        const themeModalClose = document.getElementById('theme-modal-close');
+        if (themeModalClose) {
+            themeModalClose.addEventListener('click', () => {
                 document.getElementById('theme-modal').classList.add('hidden');
-            }
-        });
+            });
+        }
 
-        document.getElementById('lucky-days-modal-close').addEventListener('click', () => {
-            document.getElementById('lucky-days-modal').classList.add('hidden');
-        });
+        const themeModal = document.getElementById('theme-modal');
+        if (themeModal) {
+            themeModal.addEventListener('click', (e) => {
+                if (e.target.id === 'theme-modal') {
+                    themeModal.classList.add('hidden');
+                }
+            });
+        }
 
-        document.getElementById('lucky-days-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'lucky-days-modal') {
+        const luckyDaysModalClose = document.getElementById('lucky-days-modal-close');
+        if (luckyDaysModalClose) {
+            luckyDaysModalClose.addEventListener('click', () => {
                 document.getElementById('lucky-days-modal').classList.add('hidden');
-            }
-        });
+            });
+        }
 
-        document.getElementById('destiny-days-modal-close').addEventListener('click', () => {
-            document.getElementById('destiny-days-modal').classList.add('hidden');
-        });
+        const luckyDaysModal = document.getElementById('lucky-days-modal');
+        if (luckyDaysModal) {
+            luckyDaysModal.addEventListener('click', (e) => {
+                if (e.target.id === 'lucky-days-modal') {
+                    luckyDaysModal.classList.add('hidden');
+                }
+            });
+        }
 
-        document.getElementById('destiny-days-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'destiny-days-modal') {
+        const destinyDaysModalClose = document.getElementById('destiny-days-modal-close');
+        if (destinyDaysModalClose) {
+            destinyDaysModalClose.addEventListener('click', () => {
                 document.getElementById('destiny-days-modal').classList.add('hidden');
-            }
-        });
+            });
+        }
+
+        const destinyDaysModal = document.getElementById('destiny-days-modal');
+        if (destinyDaysModal) {
+            destinyDaysModal.addEventListener('click', (e) => {
+                if (e.target.id === 'destiny-days-modal') {
+                    destinyDaysModal.classList.add('hidden');
+                }
+            });
+        }
 
 
         // ペア・メタバース遷移イベントの委譲（動的生成ボタンのためdocumentにアタッチ）

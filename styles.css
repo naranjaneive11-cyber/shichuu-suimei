@@ -300,10 +300,7 @@ select option {
 }
 
 .modal-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
-    display: flex;
-    /* keep flex structure */
+    display: none !important;
 }
 
 .modal-content {
