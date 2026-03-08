@@ -627,28 +627,40 @@ html {
         left: 0 !important;
         right: 0 !important;
         width: 100% !important;
+        height: 3rem !important;
+        /* 高さ固定でボタンが溢れないように */
         display: flex !important;
         flex-direction: row !important;
+        align-items: center !important;
         justify-content: center !important;
         flex-wrap: nowrap !important;
         gap: 0.4rem !important;
-        padding: 0.45rem 0.5rem !important;
-        background: rgba(0, 0, 0, 0.75) !important;
-        backdrop-filter: blur(8px) !important;
+        padding: 0.3rem 0.5rem !important;
+        background: rgba(0, 0, 0, 0.8) !important;
+        backdrop-filter: blur(10px) !important;
         box-sizing: border-box !important;
         z-index: 210 !important;
+        overflow: hidden !important;
     }
 
+    /* ボタンのinline display:flex / width:100% を強制上書き */
     #btn-appraisal,
     #btn-settings,
     #btn-back {
+        display: inline-flex !important;
+        /* inline-flex で自動幅 */
         width: auto !important;
-        /* .btn-primary の width:100% を上書き */
-        flex: 0 1 auto !important;
-        padding: 0.4rem 0.7rem !important;
-        font-size: 0.72rem !important;
+        max-width: 30% !important;
+        flex: 0 0 auto !important;
+        padding: 0.35rem 0.6rem !important;
+        font-size: 0.69rem !important;
         white-space: nowrap !important;
         min-width: 0 !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
     /* --- テーマボタン5個: 操作バーの直上に2列配置 --- */
