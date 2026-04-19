@@ -385,7 +385,7 @@ html {
 /* Job Door (仕事への扉) */
 .door-container {
     position: absolute;
-    top: 30%;
+    top: 20%;
     right: 15%;
     transform: translateY(-50%);
     display: flex;
@@ -406,7 +406,7 @@ html {
 /* Private Door (プライベートへの扉) */
 .door-private {
     position: absolute;
-    top: 55%;
+    top: 45%;
     right: 8%;
     transform: translateY(-50%);
     display: flex;
@@ -427,7 +427,7 @@ html {
 /* 運勢カレンダー扉用ラップ */
 #door-calendar {
     position: absolute;
-    top: 80%;
+    top: 70%;
     right: 15%;
     transform: translateY(-50%);
     display: flex;
@@ -489,7 +489,7 @@ html {
 /* 相性の空間扉 */
 .door-compatibility {
     position: absolute;
-    top: 55%;
+    top: 45%;
     left: 8%;
     transform: translateY(-50%);
     display: flex;
@@ -524,7 +524,7 @@ html {
 /* 恋愛への扉 */
 .door-romance {
     position: absolute;
-    top: 30%;
+    top: 20%;
     left: 15%;
     transform: translateY(-50%);
     display: flex;
@@ -560,7 +560,7 @@ html {
 /* 万物の空間扉 */
 .door-all-elements {
     position: absolute;
-    top: 80%;
+    top: 70%;
     left: 15%;
     transform: translateY(-50%);
     display: flex;
@@ -726,9 +726,9 @@ html {
         height: 120px !important;
     }
 
-    /* --- 下段扉3つ: 画面の75%付近に横一列 --- */
+    /* --- 下段扉3つ: 画面の65%付近に横一列 --- */
     .door-container {
-        top: 75% !important;
+        top: 65% !important;
         bottom: auto !important;
         left: 7% !important;
         right: auto !important;
@@ -736,7 +736,7 @@ html {
     }
 
     .door-private {
-        top: 75% !important;
+        top: 65% !important;
         bottom: auto !important;
         left: 50% !important;
         right: auto !important;
@@ -744,28 +744,28 @@ html {
     }
 
     #door-calendar {
-        top: 75% !important;
+        top: 65% !important;
         bottom: auto !important;
         right: 7% !important;
         left: auto !important;
         transform: none !important;
     }
 
-    /* --- 上段扉3つ: 画面の55%付近に横一列 --- */
+    /* --- 上段扉3つ: 画面の45%付近に横一列 --- */
     .door-compatibility {
-        top: 55% !important;
+        top: 45% !important;
         left: 20% !important;
         transform: translateX(-50%) !important;
     }
 
     .door-romance {
-        top: 55% !important;
+        top: 45% !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
     }
 
     .door-all-elements {
-        top: 55% !important;
+        top: 45% !important;
         left: 80% !important;
         transform: translateX(-50%) !important;
     }
