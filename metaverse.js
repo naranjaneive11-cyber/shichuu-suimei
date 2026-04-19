@@ -6,6 +6,9 @@
 const TENKAN = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
 const CHISHI = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
 
+// 蔵干（本気）データ
+const ZOKAN_HONKI = { '子': '癸', '丑': '己', '寅': '甲', '卯': '乙', '辰': '戊', '巳': '丙', '午': '丁', '未': '己', '申': '庚', '酉': '辛', '戌': '戊', '亥': '壬' };
+
 // テーマ用の追加データ
 const SETSUIRI = [5, 4, 6, 5, 5, 6, 7, 7, 8, 8, 7, 7];
 
@@ -457,6 +460,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 恋愛運勢扉のイベント設定
+    const doorRomance = document.getElementById('door-romance');
+    if (doorRomance) {
+        doorRomance.addEventListener('click', showRomanceFortuneModal);
+    }
+    const rfModalClose = document.getElementById('romance-fortune-modal-close');
+    if (rfModalClose) {
+        rfModalClose.addEventListener('click', () => {
+            document.getElementById('romance-fortune-modal').classList.add('hidden');
+        });
+    }
+    const rfCloseBtn = document.getElementById('rf-close-btn');
+    if (rfCloseBtn) {
+        rfCloseBtn.addEventListener('click', () => {
+            document.getElementById('romance-fortune-modal').classList.add('hidden');
+        });
+    }
+    const rfModal = document.getElementById('romance-fortune-modal');
+    if (rfModal) {
+        rfModal.addEventListener('click', (e) => {
+            if (e.target.id === 'romance-fortune-modal') {
+                document.getElementById('romance-fortune-modal').classList.add('hidden');
+            }
+        });
+    }
+
 
 
     // 設定変更ボタン（自動ログインデータをクリアしてGatewayに戻る）
@@ -484,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.currentMetaverseData) {
                 summonGuardian(window.currentMetaverseData.dayTenkan);
             } else {
-                alert("鑑定結果表示後に利用できます。");
+                alert("Stargazer結果表示後に利用できます。");
             }
         });
     }
@@ -550,6 +579,39 @@ document.addEventListener('DOMContentLoaded', () => {
         calModal.addEventListener('click', (e) => {
             if (e.target.id === 'calendar-modal') {
                 document.getElementById('calendar-modal').classList.add('hidden');
+            }
+        });
+    }
+
+    // 相性の空間扉のイベント設定
+    const doorCompatibility = document.getElementById('door-compatibility');
+    if (doorCompatibility) {
+        doorCompatibility.addEventListener('click', () => {
+            document.getElementById('compatibility-modal').classList.remove('hidden');
+            document.getElementById('compatibility-result-container').classList.add('hidden');
+            document.getElementById('compatibility-form-container').classList.remove('hidden');
+            document.getElementById('compatibility-title').classList.remove('hidden');
+            initCompFormSelects(); // 相手の生年月日セレクトを初期化
+        });
+    }
+
+    const compModalClose = document.getElementById('compatibility-modal-close');
+    if (compModalClose) {
+        compModalClose.addEventListener('click', () => {
+            document.getElementById('compatibility-modal').classList.add('hidden');
+        });
+    }
+
+    const btnCalcComp = document.getElementById('btn-calc-comp');
+    if (btnCalcComp) {
+        btnCalcComp.addEventListener('click', handleCompatibilityCheck);
+    }
+
+    const compModal = document.getElementById('compatibility-modal');
+    if (compModal) {
+        compModal.addEventListener('click', (e) => {
+            if (e.target.id === 'compatibility-modal') {
+                document.getElementById('compatibility-modal').classList.add('hidden');
             }
         });
     }
@@ -1077,9 +1139,78 @@ function handleCompatibilityCheck() {
     }
     score += eScore;
 
+    // --- 特殊縁ボーナス ---
+    let specialBondsHtml = '';
+
+    // 律音判定
+    if (mA.dayTenkan === mB.dayTenkan && mA.dayChishi === mB.dayChishi) {
+        score += 30;
+        specialBondsHtml += `
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(244,114,182,0.15); border-left: 4px solid #f472b6; border-radius: 4px; text-align: left;">
+                <div style="color: #fbc2eb; font-weight: bold; margin-bottom: 0.3rem;">🔮 律音（日柱同士）: +30%</div>
+                <div style="font-size: 0.85rem; color: #cbd5e1;">お互いの日柱が完全に一致するごく稀な宿命的縁。鏡のように似た魂を持ち、深い共鳴と共感が生まれます。</div>
+            </div>`;
+    } else if (mA.dayTenkan === mB.monthTenkan && mA.dayChishi === mB.monthChishi) {
+        score += 10;
+        specialBondsHtml += `
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(244,114,182,0.15); border-left: 4px solid #f472b6; border-radius: 4px; text-align: left;">
+                <div style="color: #fbc2eb; font-weight: bold; margin-bottom: 0.3rem;">🔮 律音（日柱×月柱）: +10%</div>
+                <div style="font-size: 0.85rem; color: #cbd5e1;">あなたの本質（日柱）とお相手の社会性（月柱）が一致する縁。相手の活躍を見守りサポートしあえる関係です。</div>
+            </div>`;
+    }
+
+    // 宿命大半会判定
+    const SANGO_GROUPS = [['申', '子', '辰'], ['亥', '卯', '未'], ['寅', '午', '戌'], ['巳', '酉', '丑']];
+    let isDaihankaiDay = false;
+    let isDaihankaiMonth = false;
+    for (const g of SANGO_GROUPS) {
+        if (mA.dayTenkan === mB.dayTenkan && g.includes(mA.dayChishi) && g.includes(mB.dayChishi) && mA.dayChishi !== mB.dayChishi) {
+            isDaihankaiDay = true;
+            break;
+        }
+        if (mA.dayTenkan === mB.monthTenkan && g.includes(mA.dayChishi) && g.includes(mB.monthChishi) && mA.dayChishi !== mB.monthChishi) {
+            isDaihankaiMonth = true;
+            break;
+        }
+    }
+    
+    if (isDaihankaiDay) {
+        score += 40;
+        specialBondsHtml += `
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(167,139,250,0.15); border-left: 4px solid #a78bfa; border-radius: 4px; text-align: left;">
+                <div style="color: #c4b5fd; font-weight: bold; margin-bottom: 0.3rem;">⭐ 宿命大半会（日柱同士）: +40%</div>
+                <div style="font-size: 0.85rem; color: #cbd5e1;">日干が同じで、日支が三合する宿命的縁です。共にいるとお互いの枠を超えた非日常的な大きな発展と飛躍が期待できます。</div>
+            </div>`;
+    } else if (isDaihankaiMonth) {
+        score += 20;
+        specialBondsHtml += `
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(167,139,250,0.15); border-left: 4px solid #a78bfa; border-radius: 4px; text-align: left;">
+                <div style="color: #c4b5fd; font-weight: bold; margin-bottom: 0.3rem;">⭐ 宿命大半会（日柱×月柱）: +20%</div>
+                <div style="font-size: 0.85rem; color: #cbd5e1;">あなたの日柱とお相手の月柱が三合する縁。一緒に社会的な目標や夢に向かってスケール大きく進むことができる関係です。</div>
+            </div>`;
+    }
+
+    // 納音判定
+    const CHU_MAP = { '子': '午', '午': '子', '丑': '未', '未': '丑', '寅': '申', '申': '寅', '卯': '酉', '酉': '卯', '辰': '戌', '戌': '辰', '巳': '亥', '亥': '巳' };
+    if (mA.dayTenkan === mB.dayTenkan && CHU_MAP[mA.dayChishi] === mB.dayChishi) {
+        score -= 20;
+        specialBondsHtml += `
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(56,189,248,0.15); border-left: 4px solid #38bdf8; border-radius: 4px; text-align: left;">
+                <div style="color: #7dd3fc; font-weight: bold; margin-bottom: 0.3rem;">⚡ 納音（日柱同士）: -20%</div>
+                <div style="font-size: 0.85rem; color: #cbd5e1;">日干が同じで日支が冲となる縁です。強烈に惹かれ合いますが、物事が白紙に戻りやすい組み合わせ。適度な距離感が大切です。</div>
+            </div>`;
+    } else if (mA.dayTenkan === mB.monthTenkan && CHU_MAP[mA.dayChishi] === mB.monthChishi) {
+        score -= 10;
+        specialBondsHtml += `
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(56,189,248,0.15); border-left: 4px solid #38bdf8; border-radius: 4px; text-align: left;">
+                <div style="color: #7dd3fc; font-weight: bold; margin-bottom: 0.3rem;">⚡ 納音（日柱×月柱）: -10%</div>
+                <div style="font-size: 0.85rem; color: #cbd5e1;">あなたの本質とお相手の社会的役割が冲となる縁。惹かれ合いますが、お互いの価値観の違いを認め合う必要があります。</div>
+            </div>`;
+    }
+
     const resultContainer = document.getElementById('compatibility-result-container');
     resultContainer.innerHTML = `
-        <h4 style="color: #6ee7b7; font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 1px dashed rgba(110, 231, 183, 0.3); padding-bottom: 0.5rem;">💞 相性鑑定結果</h4>
+        <h4 style="color: #6ee7b7; font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 1px dashed rgba(110, 231, 183, 0.3); padding-bottom: 0.5rem;">💞 相性Stargazer結果</h4>
         <div style="display:flex; justify-content:space-between; margin-bottom: 1.5rem; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
             <div style="flex:1; text-align:center;">
                 <div style="color:#94a3b8; font-size:0.9rem;">${nameA}</div>
@@ -1095,6 +1226,7 @@ function handleCompatibilityCheck() {
         <div style="text-align:center; margin-bottom: 1.5rem;">
             <div style="font-size: 0.9rem; color: #cbd5e1;">総合相性スコア</div>
             <div style="font-size: 3rem; font-weight: bold; color: ${score >= 70 ? '#f472b6' : (score >= 40 ? '#facc15' : '#94a3b8')};">${score}%</div>
+            ${specialBondsHtml}
         </div>
 
         <table style="width: 100%; border-collapse: collapse; text-align: left; background: rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden;">
@@ -1124,11 +1256,80 @@ function handleCompatibilityCheck() {
                 <td style="padding: 0.8rem; font-size: 0.85rem; color:#cbd5e1;">あなた(${eA}) vs お相手(${eB})<br>スコア傾向に基づく相性</td>
             </tr>
         </table>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <button type="button" class="btn-primary" onclick="window.saveAppraisedPerson('${nameB}', '${mB.dayTenkan}', '${mB.dayChishi}', ${yB}, ${mB_val}, ${dB})" 
+                style="padding: 0.6rem 2rem; border-radius: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);">💾 この人を神域に保存する</button>
+        </div>
     `;
     resultContainer.classList.remove('hidden');
-    // 下までスクロール
-    document.getElementById('compatibility-form-container').scrollTo(0, document.getElementById('compatibility-form-container').scrollHeight);
+    // 結果表示部分へスクロール
+    resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+// 相性鑑定した人を万物の神域に保存する機能
+window.saveAppraisedPerson = function(name, tenkan, chishi, y, m, d) {
+    let saved = JSON.parse(localStorage.getItem('metaverse_saved_people') || '[]');
+    if (!saved.some(p => p.name === name && p.tenkan === tenkan)) {
+        saved.push({ name, tenkan, chishi, y, m, d, savedAt: new Date().toISOString() });
+        localStorage.setItem('metaverse_saved_people', JSON.stringify(saved));
+        alert(`${name} さんを万物の神域（${tenkan} の領域）に保存しました！`);
+    } else {
+        alert(`${name} さんは既に保存されています。`);
+    }
+};
+
+window.deleteSavedPerson = function(name, tenkan) {
+    if (!confirm(`${name} さんを神域からの登録から削除してもよろしいですか？`)) return;
+    let saved = JSON.parse(localStorage.getItem('metaverse_saved_people') || '[]');
+    saved = saved.filter(p => !(p.name === name && p.tenkan === tenkan));
+    localStorage.setItem('metaverse_saved_people', JSON.stringify(saved));
+    
+    // リストの再描画
+    const node = document.querySelector(`.element-node[data-stem="\${tenkan}"]`);
+    if (node) {
+        node.dataset.dragged = 'false';
+        node.click();
+    }
+};
+
+
+window.recheckCompatibility = function(encodedPerson) {
+    const p = JSON.parse(decodeURIComponent(encodedPerson));
+    if (!p.y || !p.m || !p.d) {
+        alert("過去に保存されたデータのため、再度Stargazerが必要です。");
+        return;
+    }
+    
+    // Close the current element-group-modal
+    document.getElementById('element-group-modal').classList.add('hidden');
+    
+    // Open the compatibility modal
+    document.getElementById('compatibility-modal').classList.remove('hidden');
+    
+    // Ensure the selects are populated
+    initCompFormSelects(); 
+    
+    // Put values in the inputs
+    document.getElementById('comp-name').value = p.name;
+    
+    document.getElementById('comp-year').value = p.y;
+    document.getElementById('comp-year').dispatchEvent(new Event('change'));
+    
+    document.getElementById('comp-month').value = p.m;
+    document.getElementById('comp-month').dispatchEvent(new Event('change'));
+    
+    document.getElementById('comp-day').value = p.d;
+    
+    // Trigger the actual check
+    handleCompatibilityCheck();
+
+    // フォームとタイトルを非表示にして相性結果だけにする
+    document.getElementById('compatibility-form-container').classList.add('hidden');
+    if (document.getElementById('compatibility-title')) {
+        document.getElementById('compatibility-title').classList.add('hidden');
+    }
+};
 
 // 空間へのダイブアニメーションとThree.jsの初期化（シングル用）
 // m は calculateMeishiki(date) の結果のオブジェクト全体を受け取るよう拡張
@@ -1884,59 +2085,117 @@ function showWorkFortuneModal() {
         return;
     }
 
-    const dayTuhen = TUHEN_TABLE[dayTenkan][dayTenkan];
+    // 各柱の星を全て算出
+    const daySurfaceTuhen = TUHEN_TABLE[dayTenkan][dayTenkan]; // 本来は比肩
+    const dayZokan = ZOKAN_HONKI[dayChishi];
+    const dayZokanTuhen = TUHEN_TABLE[dayTenkan][dayZokan];
     const dayUnsei = UNSEI_TABLE[dayTenkan][dayChishi];
-    const monthTuhen = TUHEN_TABLE[dayTenkan][mT];
+
+    const monthSurfaceTuhen = TUHEN_TABLE[dayTenkan][mT];
+    const monthZokan = ZOKAN_HONKI[mC];
+    const monthZokanTuhen = TUHEN_TABLE[dayTenkan][monthZokan];
     const monthUnsei = UNSEI_TABLE[dayTenkan][mC];
-    const yearTuhen = TUHEN_TABLE[dayTenkan][yT];
+
+    const yearSurfaceTuhen = TUHEN_TABLE[dayTenkan][yT];
+    const yearZokan = ZOKAN_HONKI[yC];
+    const yearZokanTuhen = TUHEN_TABLE[dayTenkan][yearZokan];
     const yearUnsei = UNSEI_TABLE[dayTenkan][yC];
 
     const meishikiContainer = document.getElementById('wf-meishiki');
     meishikiContainer.innerHTML = `
         <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 0.3rem;">
-            <span>日柱 (本質・土台)</span> <strong>${dayTenkan}${dayChishi} / ${dayTuhen} / ${dayUnsei}</strong>
+            <span>日柱 (本質・土台)</span> <strong>${dayTenkan}${dayChishi} / <span style="font-size:0.8em; color:#a1a1aa;">${daySurfaceTuhen}</span> / <span style="color:#f472b6;">${dayZokanTuhen}</span> / ${dayUnsei}</strong>
         </div>
         <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 0.3rem;">
-            <span>月柱 (仕事・社会)</span> <strong>${mT}${mC} / ${monthTuhen} / ${monthUnsei}</strong>
+            <span>月柱 (仕事・社会)</span> <strong>${mT}${mC} / <span style="font-size:0.8em; color:#a1a1aa;">${monthSurfaceTuhen}</span> / <span style="color:#f472b6;">${monthZokanTuhen}</span> / ${monthUnsei}</strong>
         </div>
         <div style="display: flex; justify-content: space-between;">
-            <span>年柱 (第一印象・若年)</span> <strong>${yT}${yC} / ${yearTuhen} / ${yearUnsei}</strong>
+            <span>年柱 (第一印象)</span> <strong>${yT}${yC} / <span style="font-size:0.8em; color:#a1a1aa;">${yearSurfaceTuhen}</span> / <span style="color:#f472b6;">${yearZokanTuhen}</span> / ${yearUnsei}</strong>
         </div>
+        <div style="text-align:right; font-size:0.75rem; color:#94a3b8; margin-top:0.3rem;">※ 星の並び:「通変星」/「蔵干通変星」/「十二運星」</div>
     `;
 
-    // 簡易的なアドバイス生成ロジック
-    const tuhenWorkInfo = {
-        '比肩': 'マイペースにコツコツと実績を積み上げる「職人肌・専門家スタイル」が最強です。人にペースを乱されず、独立心を持って自身の専門性を磨ける環境で最も能力を発揮します。',
-        '劫財': '集団の中でリーダーシップやプロデュース能力を発揮する星です。大きな目標を掲げ、仲間と一緒にダイナミックな成果を追い求める環境で大活躍します。',
-        '食神': 'リラックスした環境でおおらかに才能を発揮するクリエイタータイプ。衣食住や表現に関わる仕事、または人に楽しみを提供する仕事で自然と豊かさを引き寄せます。',
-        '傷官': '非常に鋭い感性と美意識を持つスペシャリストです。IT、技術、デザイン、芸術など、高い専門スキルや直感が求められるシャープな現場で圧倒的な成果を出します。',
-        '偏財': '人脈作りが非常に上手なビジネスパーソン。営業やサービス業など、人と関わりネットワークを広げながらお金やモノを動かしていく環境で才能が開花します。',
-        '正財': 'お金と数字の管理能力が高く、非常に堅実で真面目な努力家です。金融、経理、または伝統的な手堅いビジネスなど、正確さが評価される環境で圧倒的な信頼を得ます。',
-        '偏官': '行動力と決断力にあふれる切り込み隊長です。スピード感が求められる現場や、体を動かす仕事、困難を乗り越えてスピーディーに結果を出す環境で大いに輝きます。',
-        '正官': '責任感が強く格式を重んじる優等生タイプ。公務員や大企業など、ルールや評価基準が明確な環境に身を置くことで、順調に昇進し高い社会的地位を築きます。',
-        '偏印': '知的好奇心が旺盛で、常識に囚われないアイデアマンです。企画やIT、または海外など未知の分野を開拓する仕事、変化の多い自由な環境で才能を活かせます。',
-        '印綬': '落ち着いて深く学ぶ精神性を持つ学者・先生タイプです。教育、研究開発、伝統文化など、培った高い知性と専門知識を人に教え導く分野が天職です。'
+    // 蔵干通変星の『厚め』の解説データ（仕事のコア能力）
+    const zokanWorkInfoThick = {
+        '比肩': '【超・自立型スペシャリスト】\n人から指示されて動く環境ではあなたの真価は発揮されません。「自分の看板」で勝負し、独自のペースと哲学で物事を進めることで圧倒的な成果を上げます。専門性を極限まで高めて独立・起業を目指すか、裁量権の大きいポジションで「自分にしかできない仕事」を確立することが成功の絶対条件です。妥協を許さない職人的なこだわりが最大の武器になります。',
+        '劫財': '【ダイナミックな組織牽引者】\n周囲を巻き込み、スケールの大きな組織やプロジェクトを動かす圧倒的なプロデュース能力を秘めています。単独で動くよりも、明確なビジョンを掲げて多くの人を率いることで爆発的な力を発揮します。目標達成のためなら柔軟に清濁併せ呑む強さがあり、経営者やマネージャー、リーダー層として大きな成果を掴み取る天性の才能を持っています。',
+        '食神': '【自然体の豊かさクリエイター】\n仕事において「楽しい」「好き」という純粋な感性が何よりの原動力です。ピリピリとした厳しい環境では才能が枯渇します。おおらかに自分を表現できる仕事、とくに衣食住、エンタメ、表現活動など、人々に豊かさや喜びを提供する分野で自然と成功を引き寄せます。無理に数字を追うよりも、あなたが楽しむことで結果が後からついてくる稀有な才能です。',
+        '傷官': '【鋭敏な美意識を持つ天才肌】\n誰にも真似できない非常に鋭い感性、直感、そして美意識を仕事のコアに持っています。IT技術、デザイン、芸術、特殊な技術職など、高度な専門性とセンスが問われる現場で唯一無二の実力を発揮します。完璧主義ゆえに周囲との摩擦には注意が必要ですが、あなたの生み出す質の高いクリエイティブやロジカルな思考は、他者を圧倒する強烈な武器になります。',
+        '偏財': '【多芸多才なネットワーク構築者】\n人を引き付ける天性の商売センスと、幅広い人脈を築くコミュニケーション能力が最大の才能です。一つの場所に留まって黙々と作業するより、動き回りながら多くの人と関わり、モノやお金を大きく循環させる営業、貿易、コンサルなどで大活躍します。相手が必要としているものを瞬時に見抜くサービス精神が、巡り巡って莫大な豊かさを生み出します。',
+        '正財': '【揺るぎない信用と蓄積の達人】\nどんな仕事でも真面目にコツコツと取り組み、確固たる信用と実績を積み上げる不動の安定感を持っています。経理、金融、データ管理、または歴史ある伝統的なビジネスなど、正確さと誠実さが求められる環境で周囲から全幅の信頼を寄せられます。派手な一発逆転を狙うより、「確実な一歩」を積み上げることで、最終的に誰よりも強固な成功と財を手に入れます。',
+        '偏官': '【前人未到を切り拓く切り込み隊長】\n現状維持を嫌い、困難なミッションほど燃える圧倒的な行動力を持っています。スピーディーな決断力と実行力が必要な現場、新規営業や現場仕事、体を張るプロジェクトなどでトップクラスの成績を出します。あれこれ考える前に「まず動く」ことで状況を打開していく力は誰にも負けません。動き続けることで運気が活性化する生まれついての野心家です。',
+        '正官': '【品格あるエリート・マネージャー】\nルールや秩序を重んじ、高い責任感で社会的な役割を全うする気品とプライドの星です。公務員や大企業、格式の高い組織の中など、評価基準が明確な環境に身を置くことで順調に昇進していきます。ルールに従うだけでなく、正しい方向に組織をマネジメントする能力も高く、周囲からの高い信頼を背景に、揺るぎない社会的地位を築くことができます。',
+        '偏印': '【時代の最先端を行くアイデアマン】\n既存の常識や枠組みに囚われない、自由で独創的な発想力がコアにあります。斬新なアイデアを生み出す企画職、IT、海外事業、または誰も手をつけていない未知の分野を開拓する仕事で圧倒的な輝きを放ちます。飽きっぽさは「常に新しい刺激が必要」という才能の裏返しです。変化の激しい環境に身を置くことで、次々と魅力的なコンテンツを生み出します。',
+        '印綬': '【知性と伝統を重んじる叡智の探求者】\n物事の深い本質を学び、独自の知恵として吸収する学者や先生のような高い精神性を持っています。研究開発、教育、伝統文化の継承など、培った高度な専門知識を人に教え導く分野がまさに天職です。知的な探求心が満たされる環境でじっくりと腰を据えることで、周囲の誰からも尊敬される第一人者として、名誉と安定した成功を手に入れることができます。'
+    };
+    
+    // 表面的な通変星の解説
+    const tuhenSurfaceInfo = {
+        '比肩': '「自我・独立」の星です。表向きの仕事スタイルとして、単独行動を好み自分の力で物事を開拓していく意志の強さが表れます。',
+        '劫財': '「協調と競争」の星です。目標達成に向けて人と連帯する行動力と、負けず嫌いな一面が表に出ます。',
+        '食神': '「表現と快楽」の星です。ガツガツせず、自然体で楽しみながら周囲を明るく照らすスタイルが表れます。',
+        '傷官': '「美意識と反骨」の星です。鋭い観察眼とストレートな物言いで、既存の枠組みにメスを入れるスタイルです。',
+        '偏財': '「人脈と回転」の星です。フットワークが軽く、人間関係や情報商材を次々と回していく柔軟性があります。',
+        '正財': '「着実と蓄積」の星です。地道な作業を厭わず、確実な成果と信用を手堅く積み重ねるスタイルです。',
+        '偏官': '「行動と闘争」の星です。細かいことは後回しに、直感とスピードで現場を切り拓くエネルギーにあふれます。',
+        '正官': '「規律と名誉」の星です。礼儀正しく責任感にあふれ、社会のルールや役割を忠実に守るスタイルです。',
+        '偏印': '「革新と放浪」の星です。常に新しいものに興味を持ち、柔軟な発想で常識を疑うスタンスを取ります。',
+        '印綬': '「思考と学問」の星です。論理的で知性を重んじ、物事を深く考え分析的にアプローチするスタイルです。'
     };
 
+    // 十二運星の解説
     const unseiWorkInfo = {
-        '胎': '様々なことに興味を持つ多芸多才なエネルギーを持っています。新規事業の立ち上げなど、ゼロからイチを生み出す場面が得意です。',
-        '養': '周囲の目上から引き立てられやすい愛されキャラです。人をサポートし、サポートされるような温かい人間関係の中で成長します。',
-        '長生': '素直で順応性が高く、組織の中で着実に成長できる星です。人から教えを乞い、それを吸収する能力が非常に高いです。',
-        '沐浴': '自由とロマンを求める芸術家肌のエネルギーです。単調な作業よりも、変化や刺激のある環境で思いがけないヒットを生み出します。',
-        '冠帯': '華やかで社交的、表舞台で活躍することを好むエネルギーです。人前に出る仕事や、自分自身をアピールする場所で輝きます。',
-        '建禄': '堅実で安定感抜群、実力で着実に地位を築く最強のビジネス星です。一歩一歩の努力が高い確率で大きな成功に結びつきます。',
-        '帝旺': 'トップに立つカリスマ性を持つ星です。起業や独立に向いており、強いエネルギーで周囲をぐいぐい引っ張っていく力があります。',
-        '衰': '長年の経験則から的確なアドバイスができる参謀役の星です。最前線で戦うより、一歩引いて全体を見渡し戦略を練るポジションが適任です。',
-        '病': 'イマジネーション豊かで、企画やクリエイティブに強い星です。直感力が鋭く、芸術的・精神的な分野で素晴らしい作品やアイデアを残します。',
-        '死': '一つのことを極めるストイックな探求心の星です。職人のように技を磨いたり、特殊な分野でだれにも真似できない境地に達します。',
-        '墓': 'コレクター気質で、研究やデータの蓄積に並外れた才能を持つ星です。長期的なプロジェクトで粘り強く一つのテーマに取り組むのが得意です。',
-        '絶': '天才的なヒラメキを持ち、常識を覆す成果を上げる星です。ピンチをチャンスに変える閃きがあり、土壇場での突破力が群を抜いています。'
+        '胎': '新しい可能性に満ちた種。多芸多才で、ゼロからイチを生み出す立ち上げフェーズが得意です。',
+        '養': '周囲から引き立てられる愛されキャラ。先輩や上司のサポートを受けながら成長する場面に強いです。',
+        '長生': '素直で順応性が高く、組織の中で教えを吸収して着実に実力を伸ばす優等生タイプです。',
+        '沐浴': '自由とロマンを求める芸術家肌。変化や刺激のある環境で思いがけないヒットを生み出します。',
+        '冠帯': '華やかで社交的。人前に出る仕事や、自己アピールができる表舞台で輝くエネルギーです。',
+        '建禄': '堅実で安定感抜群。一歩一歩の努力が高い確率で大きな成功に結びつく最強のビジネス星です。',
+        '帝旺': '強烈なカリスマ性とトップに立つ器。組織のトップとして、または独立して周囲を牽引する王の星です。',
+        '衰': '長年の経験則から的確な戦略を練る参謀役。最前線より、一歩引いて全体を見渡すポジションが適宜です。',
+        '病': 'イマジネーション豊かで直感が鋭い。芸術的・クリエイティブな分野で素晴らしい作品を残します。',
+        '死': '一つのことを極めるストイックな探求心。職人のように特殊な分野で誰にも真似できない境地に達します。',
+        '墓': '研究やデータの集積に長けるコレクター気質。長期プロジェクトで地道に粘り強く動くのが得意です。',
+        '絶': '天才的な閃きを持ち、土壇場での突破力が群を抜く星。常識外れのアプローチで大逆転を起こします。'
     };
 
-    const style1 = tuhenWorkInfo[monthTuhen] || tuhenWorkInfo[dayTuhen];
-    const style2 = unseiWorkInfo[monthUnsei] || unseiWorkInfo[dayUnsei];
+    // 日柱の干支の解説
+    const NATURE_DATA = {
+        '甲': 'まっすぐ伸びる大樹のように、向上心に燃えるリーダー気質。',
+        '乙': 'しなやかな草花のように、周囲と調和しながらも芯の強さを持つ。',
+        '丙': '灿々と輝く太陽のように、明るく開放的で周囲を巻き込むカリスマ。',
+        '丁': '温かな灯火のように、繊細で内に秘めた強い情熱と鋭い洞察力。',
+        '戊': '堂々とした山のように、揺るぎない包容力で信頼を集める安定型。',
+        '己': '豊かな田園のように、愛情深く多様な知識や人を育てるサポート力。',
+        '庚': '鋭い鋼鉄のように、スピードと決断力で困難を突破する開拓精神。',
+        '辛': '輝く宝石のように、洗練された美意識と試練を乗り越える忍耐力。',
+        '壬': '広大な海のように、自由奔放でスケールが大きく、流れを読み適応する知性。',
+        '癸': '潤いの雨のように、慈愛に満ち献身的に裏から人を支える優しさ。'
+    };
 
-    const adviceMsg = `あなたの日干「${dayTenkan}」と、命式全体のバランスから導き出した仕事のスタイルです。\n\n${style1}\n\nまた、あなたが無意識に発揮しているエネルギーとして、${style2}\n\n★アクションプラン：\nすぐに結果が出なくても焦らず、あなたの本質にあった環境（上記のような場）を選ぶことが大成功への近道です。持てる能力を自分らしく表現して、あなたにしかできないポジションを築き上げてください。`;
+    const kanshiText = `${dayTenkan}${dayChishi}`;
+    const descKanshi = NATURE_DATA[dayTenkan] || '';
+    const descSurface = tuhenSurfaceInfo[daySurfaceTuhen] || tuhenSurfaceInfo['比肩'];
+    const descZokan = zokanWorkInfoThick[dayZokanTuhen] || '蔵干通変星のデータがありません。';
+    const descUnsei = unseiWorkInfo[dayUnsei] || '';
+
+    const adviceMsg = `■ 日柱「${kanshiText}」からの総合Stargazer
+
+【1. ベースとなる気質】(日柱の干支)
+${kanshiText}（${dayTenkan}の気質）：
+${descKanshi}
+
+【2. 表面上の仕事スタンス】(表面の通変星: ${daySurfaceTuhen})
+${descSurface}
+
+【3. 絶対的なコア才能】(蔵干通変星: ${dayZokanTuhen})
+${descZokan}
+
+【4. 無意識に発揮するエネルギー】(十二運星: ${dayUnsei})
+${descUnsei}
+
+★ アクションプラン：
+人からどう見られるか（表面上のスタンス）よりも、あなたの奥底で眠っている【${dayZokanTuhen}】のコア才能を最大限に活かせる環境を選ぶことが最も重要です。日柱「${kanshiText}」の本質と、十二運星「${dayUnsei}」の行動パターンを武器にして、あなただけのキャリアを構築してください。`;
 
     document.getElementById('wf-advice').textContent = adviceMsg;
     document.getElementById('work-fortune-modal').classList.remove('hidden');
@@ -1952,7 +2211,8 @@ function showPrivateFortuneModal() {
         return;
     }
 
-    const dayTuhen = TUHEN_TABLE[dayTenkan][dayTenkan];
+    const dayZokan = ZOKAN_HONKI[dayChishi];
+    const dayTuhen = TUHEN_TABLE[dayTenkan][dayZokan];
     const dayUnsei = UNSEI_TABLE[dayTenkan][dayChishi];
     const monthTuhen = TUHEN_TABLE[dayTenkan][mT];
     const monthUnsei = UNSEI_TABLE[dayTenkan][mC];
@@ -2011,6 +2271,68 @@ function showPrivateFortuneModal() {
     document.getElementById('private-fortune-modal').classList.remove('hidden');
 }
 
+function showRomanceFortuneModal() {
+    if (!window.currentMetaverseData) return;
+    const { dayTenkan, dayChishi, yT, yC, mT, mC } = window.currentMetaverseData;
+
+    if (!yT || !mT) {
+        alert("恋愛傾向を見るには通常のトップページから本人の生年月日を入力してください。");
+        return;
+    }
+
+    const dayZokan = ZOKAN_HONKI[dayChishi];
+    const dayTuhen = TUHEN_TABLE[dayTenkan][dayZokan];
+    const dayUnsei = UNSEI_TABLE[dayTenkan][dayChishi];
+    const monthTuhen = TUHEN_TABLE[dayTenkan][mT];
+    const monthUnsei = UNSEI_TABLE[dayTenkan][mC];
+
+    const meishikiContainer = document.getElementById('rf-meishiki');
+    meishikiContainer.innerHTML = `
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 0.3rem;">
+            <span style="color:#fda4af;">日柱 (配偶者・恋愛観)</span> <strong>${dayTenkan}${dayChishi} / ${dayTuhen} / ${dayUnsei}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <span>月柱 (自身の本質)</span> <strong>${mT}${mC} / ${monthTuhen} / ${monthUnsei}</strong>
+        </div>
+    `;
+
+    const tuhenRomanceInfo = {
+        '比肩': '恋愛でもお互いが自立した対等な関係を望みます。束縛されるのが苦手ですが、一度好きになると一途に相手を想います。同じ趣味を持てる相手が吉。',
+        '劫財': '駆け引きのうまい恋愛の達人。狙った獲物は逃さない情熱的な一面がありますが、お付き合いが始まると自分のペースに巻き込もうとしがちなので注意。',
+        '食神': '明るく楽しい恋愛を好みます。美味しいものを一緒に食べたり、のんびりデートするのが好き。おおらかでモテますが、ルーズになりすぎないように。',
+        '傷官': '非常にロマンチストで美意識が高く、理想の相手を求めます。感受性が強いため傷つきやすく、言葉のすれ違いで激しく衝突することもあるので素直さが鍵。',
+        '偏財': 'コミュニケーション能力が高く、男女問わずモテる人気者です。来る者拒まずなところがあり、目移りしやすいので、本命への誠実な態度を心がけて。',
+        '正財': '真面目で誠実な恋愛をします。一目惚れは少なく、時間をかけて愛を育むタイプ。結婚を前提とした真剣交際を望むため、軽い遊びの恋愛には不向きです。',
+        '偏官': '直感で恋に落ちるタイプで、好きになったら猛アタックします。スリルや変化を求めやすく、ドラマチックな恋愛に縁があります。思い込みでの暴走に注意。',
+        '正官': '礼儀正しく、世間的にも恥じることのない相手を選びます。誠実で浮気はしませんが、プライドが高いため相手にも一定のステータスや常識を求めてしまいます。',
+        '偏印': 'ミステリアスな魅力があり、ちょっと変わった人や才能ある人に惹かれます。マンネリを嫌い、適度な距離感と刺激がある自由な恋愛関係を好みます。',
+        '印綬': '知性や精神的なつながりを重視する恋愛をします。尊敬できる相手でないと恋愛に発展しません。母性的（父性的）で尽くしますが、理屈っぽくなりがち。'
+    };
+
+    const unseiRomanceInfo = {
+        '胎': '常に新鮮なときめきを求めており、色々なタイプへの興味が尽きません。甘えん坊で愛されたい願望が強いです。',
+        '養': '寂しがり屋で、包容力のある年上の相手や優しく見守ってくれる相手に惹かれやすい傾向にあります。',
+        '長生': '素直で穏やかなお付き合いができます。周囲からも祝福されるような、順調で平和な恋愛関係を築ける人です。',
+        '沐浴': '熱しやすく冷めやすいロマンチスト。恋愛経験が豊富になりがちで、華やかでドラマチックな展開を好みます。',
+        '冠帯': 'プライドが高く、自分を華やかに見せたい気持ちが強いため、見た目やステータスが洗練された相手を選びがちです。',
+        '建禄': '慎重で堅実な恋愛観の持ち主です。情熱で突っ走ることは少なく、相手の人柄や将来性をじっくり見極めます。',
+        '帝旺': '自分が主導権を握りたいタイプ。ワガママを聞いてくれる器の大きい相手とならうまくいきますが、自己中心的にならないよう注意。',
+        '衰': '派手な恋愛よりも、一緒にいて心落ち着く相手との穏やかな時間を好みます。古い価値観を大切にし、奥ゆかしい愛情表現をします。',
+        '病': '非常にロマンチストで夢見がち。相手に尽くしますが精神的にデリケートなため、浮気や裏切りには人一倍深く傷つきます。',
+        '死': '精神的な繋がりや、直感的な「運命」を感じる相手に惹かれます。言葉にしなくても分かり合えるような、深い魂の結びつきを求めます。',
+        '墓': 'じっくりと相手を観察し、一度好きになると執着するほど深く一途に愛します。過去の恋愛をいつまでも引きずりやすい面もあります。',
+        '絶': '気分屋で、急に熱烈に愛したかと思えば急に冷めたりします。束縛されると逃げたくなるため、つかず離れずの自由な距離感が必要です。'
+    };
+
+    const style1 = tuhenRomanceInfo[dayTuhen] || 'あなた独自の特別な恋愛観を持っています。';
+    const style2 = unseiRomanceInfo[dayUnsei] || '無意識のうちに相手に求めるものがあります。';
+
+    const adviceMsg = `あなたの「日柱」に秘められた恋愛観と、相手に求める要素です。\n\n${style1}\n\nまた、恋愛におけるあなたのエネルギー行動パターンとして、\n${style2}\n\n★アドバイス：\n恋愛において、自分の本質（理想）と実際にとる行動のギャップを理解しておくことが大切です。どんな時に自分が心が満たされ、逆に何がストレスになるのかを知ることで、より良いパートナーシップを築けます。`;
+
+    document.getElementById('rf-advice').textContent = adviceMsg;
+    document.getElementById('romance-fortune-modal').classList.remove('hidden');
+}
+
 // 運勢カレンダー表示ロジック
 function showCalendarModal() {
     if (!window.currentMetaverseData) return;
@@ -2019,8 +2341,8 @@ function showCalendarModal() {
     const container = document.getElementById('calendar-container');
     container.innerHTML = '';
 
-    // 詳細エリアは初期非表示
-    const detailArea = document.getElementById('calendar-detail-area');
+    // 詳細ポップアップは初期非表示
+    const detailArea = document.getElementById('calendar-detail-modal');
     detailArea.classList.add('hidden');
 
     const now = new Date();
@@ -2239,10 +2561,7 @@ function showCalendarModal() {
                             </div>
                         `;
                     });
-                    detailArea.classList.remove('hidden');
-
-                    // スクロールして見やすくする
-                    detailArea.scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById('calendar-detail-modal').classList.remove('hidden');
                 });
             }
 
@@ -2254,4 +2573,259 @@ function showCalendarModal() {
     }
 
     document.getElementById('calendar-modal').classList.remove('hidden');
+    
+    // 今日の日付を画面の中央にスクロールする
+    setTimeout(() => {
+        const todayCell = document.querySelector('#calendar-container .calendar-day-cell.today');
+        if (todayCell) {
+            todayCell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, 100);
 }
+
+// --- 万物の神域 特別な縁フィルター表示用ロジック ---
+window.showSpecialBondPeople = function(bondType) {
+    if (!window.currentMetaverseData || !window.currentMetaverseData.fullMeishiki) return;
+    const mA = window.currentMetaverseData.fullMeishiki;
+    const saved = JSON.parse(localStorage.getItem('metaverse_saved_people') || '[]');
+
+    const SANGO_GROUPS = [['申', '子', '辰'], ['亥', '卯', '未'], ['寅', '午', '戌'], ['巳', '酉', '丑']];
+    const CHU_MAP = { '子': '午', '午': '子', '丑': '未', '未': '丑', '寅': '申', '申': '寅', '卯': '酉', '酉': '卯', '辰': '戌', '戌': '辰', '巳': '亥', '亥': '巳' };
+
+    const people = saved.filter(p => {
+        if (!p.y || !p.m || !p.d) return false;
+        const dateB = new Date(p.y, p.m - 1, p.d);
+        const mB = calculateMeishikiLocal(dateB);
+
+        if (bondType === '律音') {
+            return (mA.dayTenkan === mB.dayTenkan && mA.dayChishi === mB.dayChishi) ||
+                   (mA.dayTenkan === mB.monthTenkan && mA.dayChishi === mB.monthChishi);
+        } else if (bondType === '宿命大半会') {
+            let isDaihankai = false;
+            for (const g of SANGO_GROUPS) {
+                if (mA.dayTenkan === mB.dayTenkan && g.includes(mA.dayChishi) && g.includes(mB.dayChishi) && mA.dayChishi !== mB.dayChishi) isDaihankai = true;
+                if (mA.dayTenkan === mB.monthTenkan && g.includes(mA.dayChishi) && g.includes(mB.monthChishi) && mA.dayChishi !== mB.monthChishi) isDaihankai = true;
+            }
+            return isDaihankai;
+        } else if (bondType === '納音') {
+            return (mA.dayTenkan === mB.dayTenkan && CHU_MAP[mA.dayChishi] === mB.dayChishi) ||
+                   (mA.dayTenkan === mB.monthTenkan && CHU_MAP[mA.dayChishi] === mB.monthChishi);
+        }
+        return false;
+    });
+
+    let bondIcon = ''; let bondColor = '';
+    if (bondType === '律音') { bondIcon = '🔮'; bondColor = '#f472b6'; }
+    if (bondType === '宿命大半会') { bondIcon = '⭐'; bondColor = '#a78bfa'; }
+    if (bondType === '納音') { bondIcon = '⚡'; bondColor = '#38bdf8'; }
+
+    document.getElementById('element-group-title').innerHTML = `<span style="color:${bondColor}">${bondIcon} ${bondType}</span> のご縁を持つ人々`;
+    const listContainer = document.getElementById('element-group-list');
+
+    if (people.length === 0) {
+        listContainer.innerHTML = `<p style="color:var(--text-secondary); text-align:center;">神域にはまだ「${bondType}」のご縁を持つ人はいません。<br>様々な人をStargazerで読み解いてみましょう。</p>`;
+    } else {
+        listContainer.innerHTML = people.map(p => {
+            const personJson = encodeURIComponent(JSON.stringify(p));
+            return `
+            <div class="saved-person-item" onclick="recheckCompatibility('${personJson}')" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; margin-bottom:0.8rem; transition: background 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid ${bondColor};">
+                <div style="font-size:1.1rem; font-weight:bold; color:#fbc2eb;">${p.name} <span style="font-size:0.85rem; color:#94a3b8; font-weight:normal; margin-left:0.5rem;">(${p.tenkan}${p.chishi})</span></div>
+                <div style="font-size:0.9rem; color:#94a3b8; display:flex; align-items:center; gap:0.5rem;">
+                    相性を確認 <span style="font-size:1.2rem; color:#fff;">▶</span>
+                </div>
+            </div>
+        `}).join('');
+    }
+    document.getElementById('element-group-modal').classList.remove('hidden');
+};
+
+// --- 万物の空間ダイブ用ロジック ---
+let isAllElementsSpace = false;
+let originalMetaverseBg = '';
+let originalTitleText = '';
+let originalDescText = '';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const doorAllElements = document.getElementById('door-all-elements');
+    if (doorAllElements) {
+        doorAllElements.addEventListener('click', () => {
+            const canvasContainer = document.getElementById('canvas-container');
+            const label = document.querySelector('#door-all-elements .door-label');
+            const titleEl = document.getElementById('env-title');
+            const descEl = document.getElementById('env-desc');
+            const doorsToHide = ['door-work', 'door-private', 'door-romance', 'door-calendar', 'door-compatibility'];
+            const themeBtns = document.querySelector('.theme-buttons');
+
+            // 荘厳な演出のため、一旦キャンバスを暗くするなどのエフェクトは維持
+            canvasContainer.style.transition = 'opacity 1.5s ease-in-out';
+            canvasContainer.style.opacity = '0.3'; // 背景を少し暗くするくらいに留める
+            
+            setTimeout(() => {
+                if (!isAllElementsSpace) {
+                    // ダイブする
+                    originalTitleText = titleEl.textContent;
+                    originalDescText = descEl.textContent;
+                    
+                    titleEl.textContent = "🪐 万物の神域";
+                    descEl.textContent = "木・火・土・金・水の五行、十干全ての要素が完璧なバランスで調和し統合された、究極の仮想楽園です。（元の空間に戻るには扉をもう一度クリック）";
+                    label.textContent = "元の空間へ戻る";
+                    
+                    // Hide other doors
+                    doorsToHide.forEach(id => {
+                        const el = document.getElementById(id);
+                        if(el && el.id !== 'door-all-elements') el.style.display = 'none';
+                    });
+                    if (themeBtns) themeBtns.style.display = 'none';
+
+                    // Show elements UI central container
+                    const allElemUi = document.getElementById('all-elements-ui');
+                    if (allElemUi) {
+                        allElemUi.style.opacity = '0';
+                        allElemUi.classList.remove('hidden');
+                        allElemUi.style.transition = 'opacity 1s ease';
+                        setTimeout(() => allElemUi.style.opacity = '1', 50);
+                    }
+                    
+                    document.body.classList.add('in-all-elements-space');
+                    isAllElementsSpace = true;
+                } else {
+                    // 元に戻る
+                    titleEl.textContent = originalTitleText;
+                    descEl.textContent = originalDescText;
+                    label.textContent = "万物の神域";
+                    
+                    // Show other doors
+                    doorsToHide.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            if (id === 'door-private') el.style.display = 'flex';
+                            else el.style.display = 'flex'; 
+                        }
+                    });
+                    if (themeBtns) themeBtns.style.display = 'flex';
+
+                    // Hide elements UI
+                    const allElemUi = document.getElementById('all-elements-ui');
+                    if (allElemUi) {
+                        allElemUi.style.opacity = '0';
+                        setTimeout(() => allElemUi.classList.add('hidden'), 1000);
+                    }
+                    
+                    document.body.classList.remove('in-all-elements-space');
+                    isAllElementsSpace = false;
+                }
+                
+                // Fade in (restore background brightness)
+                canvasContainer.style.opacity = '1';
+            }, 1000);
+        });
+    }
+
+    // 万物の属性ノードドラッグ＆ドロップおよびクリックイベント
+    document.querySelectorAll('.element-node').forEach(node => {
+        const stem = node.getAttribute('data-stem');
+        
+        // 保存された位置を読み込み
+        const savedTop = localStorage.getItem(`element_pos_top_${stem}`);
+        const savedLeft = localStorage.getItem(`element_pos_left_${stem}`);
+        if (savedTop && savedLeft) {
+            node.style.top = savedTop;
+            node.style.left = savedLeft;
+        }
+
+        let isDragging = false;
+        let isMoved = false; // クリックかドラッグかを判定
+        let startX, startY, initialTop, initialLeft;
+
+        const startDrag = (clientX, clientY) => {
+            isDragging = true;
+            isMoved = false;
+            startX = clientX;
+            startY = clientY;
+            initialTop = node.offsetTop;
+            initialLeft = node.offsetLeft;
+            node.style.cursor = 'grabbing';
+            node.style.zIndex = '1000';
+            node.dataset.dragged = 'false';
+        };
+
+        const onDrag = (clientX, clientY) => {
+            if (!isDragging) return;
+            const dx = clientX - startX;
+            const dy = clientY - startY;
+            
+            // 少しでも動いたらドラッグと判定
+            if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
+                isMoved = true;
+                node.dataset.dragged = 'true';
+            }
+            
+            const container = node.parentElement;
+            const newTop = initialTop + dy;
+            const newLeft = initialLeft + dx;
+            
+            node.style.top = `${(newTop / container.clientHeight) * 100}%`;
+            node.style.left = `${(newLeft / container.clientWidth) * 100}%`;
+        };
+
+        const stopDrag = () => {
+            if (isDragging) {
+                isDragging = false;
+                node.style.cursor = 'pointer';
+                node.style.zIndex = '';
+                if (isMoved) {
+                    localStorage.setItem(`element_pos_top_${stem}`, node.style.top);
+                    localStorage.setItem(`element_pos_left_${stem}`, node.style.left);
+                }
+            }
+        };
+
+        // マウスイベント
+        node.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+        document.addEventListener('mousemove', (e) => onDrag(e.clientX, e.clientY));
+        document.addEventListener('mouseup', stopDrag);
+
+        // タッチイベント
+        node.addEventListener('touchstart', (e) => startDrag(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
+        document.addEventListener('touchmove', (e) => onDrag(e.touches[0].clientX, e.touches[0].clientY), {passive: true});
+        document.addEventListener('touchend', stopDrag);
+
+        // 元々のクリックイベント（リスト表示機能）
+        node.addEventListener('click', (e) => {
+            // ドラッグした直後の場合はクリックイベントを無視
+            if (node.dataset.dragged === 'true') {
+                node.dataset.dragged = 'false';
+                return;
+            }
+            
+            const iconText = node.textContent.trim(); // "木 (甲) 🌳"
+            const parts = iconText.split(' ');
+            const iconLabel = parts[2] ? parts[2] : '';
+            const stemLabel = parts[0] ? parts[0] : stem;
+
+            const saved = JSON.parse(localStorage.getItem('metaverse_saved_people') || '[]');
+            const people = saved.filter(p => p.tenkan === stem);
+            
+            document.getElementById('element-group-title').innerHTML = `<span>${iconLabel}</span> ${stemLabel} のご縁を持つ人々`;
+            const listContainer = document.getElementById('element-group-list');
+            
+            if (people.length === 0) {
+                listContainer.innerHTML = '<p style="color:var(--text-secondary); text-align:center;">まだこの属性の人はいません。<br>相性の空間からStargazerをして保存してみましょう。</p>';
+            } else {
+                listContainer.innerHTML = people.map(p => {
+                    const personJson = encodeURIComponent(JSON.stringify(p));
+                    return `
+                    <div class="saved-person-item" onclick="recheckCompatibility('${personJson}')" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; margin-bottom:0.8rem; transition: background 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <div style="font-size:1.1rem; font-weight:bold; color:#fbc2eb;">${p.name}</div>
+                        <div style="font-size:0.9rem; color:#94a3b8; display:flex; align-items:center; gap:0.5rem;">
+                            相性を確認 <span style="font-size:1.2rem; color:#fff;">▶</span>
+                            <button type="button" onclick="event.stopPropagation(); deleteSavedPerson('${p.name}', '${p.tenkan}')" style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); color:#fca5a5; font-size:1rem; cursor:pointer; margin-left:1rem; padding:0.3rem 0.6rem; border-radius:4px; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)'; this.style.color='#fff';" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'; this.style.color='#fca5a5';" title="削除">削除</button>
+                        </div>
+                    </div>
+                `}).join('');
+            }
+            document.getElementById('element-group-modal').classList.remove('hidden');
+        });
+    });
+
+});

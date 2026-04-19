@@ -386,7 +386,7 @@ html {
 .door-container {
     position: absolute;
     top: 30%;
-    right: 5%;
+    right: 15%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
@@ -407,7 +407,7 @@ html {
 .door-private {
     position: absolute;
     top: 55%;
-    right: 5%;
+    right: 8%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
@@ -428,7 +428,7 @@ html {
 #door-calendar {
     position: absolute;
     top: 80%;
-    right: 5%;
+    right: 15%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
@@ -485,6 +485,149 @@ html {
 .mystic-door.calendar:hover {
     box-shadow: 0 0 30px rgba(251, 191, 36, 0.8), inset 0 0 20px rgba(251, 191, 36, 0.4);
 }
+
+/* 相性の空間扉 */
+.door-compatibility {
+    position: absolute;
+    top: 55%;
+    left: 8%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+    pointer-events: auto;
+    z-index: 60;
+}
+.door-compatibility:hover {
+    transform: translateY(-50%) scale(1.08);
+    filter: brightness(1.2);
+}
+.mystic-door.compatibility {
+    background: linear-gradient(180deg, rgba(60, 20, 60, 0.8), rgba(100, 40, 80, 0.9));
+    border: 2px solid #fbc2eb;
+    box-shadow: 0 0 15px rgba(251, 194, 235, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+.mystic-door.compatibility:hover {
+    box-shadow: 0 0 30px rgba(251, 194, 235, 0.8), inset 0 0 20px rgba(251, 194, 235, 0.4);
+}
+.mystic-door.compatibility::after {
+    content: none;
+    display: none;
+}
+.door-compatibility .door-label {
+    border-color: #fbc2eb;
+}
+
+/* 恋愛への扉 */
+.door-romance {
+    position: absolute;
+    top: 30%;
+    left: 15%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+    pointer-events: auto;
+    z-index: 60;
+}
+.door-romance:hover {
+    transform: translateY(-50%) scale(1.08);
+    filter: brightness(1.2);
+}
+.mystic-door.romance {
+    background: linear-gradient(180deg, rgba(60, 20, 40, 0.8), rgba(100, 30, 60, 0.9));
+    border: 2px solid #fda4af;
+    box-shadow: 0 0 15px rgba(253, 164, 175, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+.mystic-door.romance:hover {
+    box-shadow: 0 0 30px rgba(253, 164, 175, 0.8), inset 0 0 20px rgba(253, 164, 175, 0.4);
+}
+.mystic-door.romance::after {
+    content: none;
+    display: none;
+}
+.door-romance .door-label {
+    border-color: #fda4af;
+}
+
+
+/* 万物の空間扉 */
+.door-all-elements {
+    position: absolute;
+    top: 80%;
+    left: 15%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+    pointer-events: auto;
+    z-index: 60;
+}
+
+.door-all-elements:hover {
+    transform: translateY(-50%) scale(1.08);
+    filter: brightness(1.2);
+}
+
+.mystic-door.all-elements {
+    background: linear-gradient(180deg, rgba(20, 60, 50, 0.8), rgba(40, 100, 90, 0.9));
+    border: 2px solid #38f9d7;
+    box-shadow: 0 0 15px rgba(56, 249, 215, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.mystic-door.all-elements:hover {
+    box-shadow: 0 0 30px rgba(56, 249, 215, 0.8), inset 0 0 20px rgba(56, 249, 215, 0.4);
+}
+
+.mystic-door.all-elements::after {
+    content: none;
+    display: none;
+}
+
+.door-all-elements .door-label {
+    border-color: #38f9d7;
+}
+
+/* 万物の神域の属性ノード */
+.element-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 0.8rem 1.2rem;
+    border-radius: 30px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+}
+.element-node:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #fff;
+    z-index: 10;
+}
+/* 各属性ごとの個別カラーリング */
+.element-node[data-stem="甲"], .element-node[data-stem="乙"] { border-color: #4ade80; box-shadow: 0 0 15px rgba(74,222,128,0.4); }
+.element-node[data-stem="丙"], .element-node[data-stem="丁"] { border-color: #f87171; box-shadow: 0 0 15px rgba(248,113,113,0.4); }
+.element-node[data-stem="戊"], .element-node[data-stem="己"] { border-color: #fbbf24; box-shadow: 0 0 15px rgba(251,191,36,0.4); }
+.element-node[data-stem="庚"], .element-node[data-stem="辛"] { border-color: #e2e8f0; box-shadow: 0 0 15px rgba(226,232,240,0.4); }
+.element-node[data-stem="壬"], .element-node[data-stem="癸"] { border-color: #60a5fa; box-shadow: 0 0 15px rgba(96,165,250,0.4); }
 
 .mystic-door.private::after {
     content: '🏠';
@@ -599,6 +742,29 @@ html {
         transform: none !important;
     }
 
+    .door-compatibility {
+        top: 40% !important;
+        left: 20% !important;
+        transform: translateX(-50%) !important;
+    }
+
+    .door-romance {
+        top: 40% !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+
+    .door-all-elements {
+        top: 40% !important;
+        left: 80% !important;
+        transform: translateX(-50%) !important;
+    }
+
+    .element-node {
+        font-size: 0.8em !important;
+        padding: 0.5rem 0.8rem !important;
+    }
+
     /* 扉サイズ縮小 */
     .mystic-door {
         width: 50px !important;
@@ -702,4 +868,25 @@ html {
         width: 96% !important;
         padding: 1.5rem 1rem !important;
     }
+}
+
+/* =============================================
+   万物の神域ダイブ時のUI非表示用クラス
+   ============================================= */
+body.in-all-elements-space .info-panel,
+body.in-all-elements-space #top-theme-display,
+body.in-all-elements-space #avatar-container,
+body.in-all-elements-space #btn-appraisal,
+body.in-all-elements-space #btn-settings,
+body.in-all-elements-space #btn-back {
+    display: none !important;
+}
+
+/* 万物の神域 保存された人のリストホバー効果 */
+.saved-person-item {
+    transition: background 0.3s ease, transform 0.2s ease !important;
+}
+.saved-person-item:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    transform: translateY(-2px);
 }

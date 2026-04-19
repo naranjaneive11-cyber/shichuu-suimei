@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>四柱推命 プレミアム鑑定 | 鳥海伯翠流</title>
+    <title>Stargazer | 鳥海伯翠流</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -24,19 +24,19 @@
 
     <main class="container">
         <section class="hero glass-panel">
-            <h1 class="title" style="margin-bottom: 0;">四柱推命鑑定書</h1>
+            <h1 class="title" style="margin-bottom: 0;">Stargazer</h1>
             <a href="metaverse.html" class="btn-primary"
                 style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; margin-top:1.5rem; padding: 0.8rem 2rem; background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); text-decoration:none; font-weight:bold; border-radius:30px; box-shadow: 0 4px 15px rgba(161, 140, 209, 0.4); transition: transform 0.3s;">
-                <span style="font-size:1.2rem;">🌌</span> 新感覚 運勢メタバース（3D版）へ
+                <span style="font-size:1.2rem;">🌌</span> 新感覚 Stargazer（3D版）へ
             </a>
         </section>
 
         <section class="card glass input-section">
             <div class="mode-toggle" style="display:flex; justify-content:center; gap:1rem; margin-bottom:1.5rem;">
                 <button type="button" id="btn-mode-single" class="btn-primary"
-                    style="padding:0.5rem 2rem; border-radius:20px;">👤 個人占い</button>
+                    style="padding:0.5rem 2rem; border-radius:20px;">👤 個人Stargazer</button>
                 <button type="button" id="btn-mode-pair" class="btn-secondary"
-                    style="padding:0.5rem 2rem; border-radius:20px; opacity:0.7;">💕 相性占い</button>
+                    style="padding:0.5rem 2rem; border-radius:20px; opacity:0.7;">💕 相性Stargazer</button>
             </div>
 
             <form id="appraisal-form">
@@ -144,7 +144,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-primary" style="margin-top:1.5rem;">鑑定を開始する</button>
+                <button type="submit" class="btn-primary" style="margin-top:1.5rem;">Stargazerを開始する</button>
             </form>
         </section>
 
@@ -299,11 +299,11 @@
                 </div>
 
                 <div class="personality-report card-sub">
-                    <h4>総合鑑定書</h4>
+                    <h4>Stargazer 総合レポート</h4>
                     <p id="report-text">準備中...</p>
                 </div>
 
-                <button id="reset-btn" class="btn-secondary">別の鑑定を行う</button>
+                <button id="reset-btn" class="btn-secondary">別のStargazerを行う</button>
             </div>
         </section>
     </main>
@@ -403,7 +403,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 四柱推命プレミアム鑑定 - 鳥海伯翠流メソッド</p>
+        <p>&copy; 2026 Stargazer - 四柱推命 鳥海伯翠流メソッド</p>
     </footer>
 
     <script>
@@ -743,7 +743,7 @@
 
                         // 結果ヘッダーの情報をペア向けに書き換え
                         document.getElementById('result-user-name').innerHTML = `${name} 様 <span style="font-size:0.8em; color:var(--text-secondary); margin:0 0.5rem;">×</span> ${nameB} 様`;
-                        document.getElementById('result-user-info').textContent = `相性鑑定結果`;
+                        document.getElementById('result-user-info').textContent = `相性Stargazer結果`;
 
                         renderCompatibility(name, meishiki, gender, nameB, meishikiB, genderB);
                     }
@@ -1499,7 +1499,43 @@
                 energyScore = { mark: '〇', pts: 25, desc: `同エネルギー（完全均等）` };
             }
 
-            const totalScore = stemScore.pts + dayBranchScore.pts + monBranchScore.pts + energyScore.pts;
+            let totalScore = stemScore.pts + dayBranchScore.pts + monBranchScore.pts + energyScore.pts;
+
+            let bonusScore = 0;
+            
+            // 律音
+            if (mA.dayTenkan === mB.dayTenkan && mA.dayChishi === mB.dayChishi) {
+                bonusScore += 30; // 律音（日柱同士）
+            } else if (mA.dayTenkan === mB.monthTenkan && mA.dayChishi === mB.monthChishi) {
+                bonusScore += 10; // 律音（日柱×月柱）
+            }
+
+            // 宿命大半会
+            const SANGO_B = [['申', '子', '辰'], ['亥', '卯', '未'], ['寅', '午', '戌'], ['巳', '酉', '丑']];
+            let sdDay = false, sdMonth = false;
+            for (const g of SANGO_B) {
+                if (mA.dayTenkan === mB.dayTenkan && g.includes(mA.dayChishi) && g.includes(mB.dayChishi) && mA.dayChishi !== mB.dayChishi) {
+                    sdDay = true; break;
+                }
+                if (mA.dayTenkan === mB.monthTenkan && g.includes(mA.dayChishi) && g.includes(mB.monthChishi) && mA.dayChishi !== mB.monthChishi) {
+                    sdMonth = true; break;
+                }
+            }
+            if (sdDay) {
+                bonusScore += 40;
+            } else if (sdMonth) {
+                bonusScore += 20;
+            }
+
+            // 納音
+            const CHU_M = { '子': '午', '午': '子', '丑': '未', '未': '丑', '寅': '申', '申': '寅', '卯': '酉', '酉': '卯', '辰': '戌', '戌': '辰', '巳': '亥', '亥': '巳' };
+            if (mA.dayTenkan === mB.dayTenkan && CHU_M[mA.dayChishi] === mB.dayChishi) {
+                bonusScore -= 20; // 納音（日柱同士）
+            } else if (mA.dayTenkan === mB.monthTenkan && CHU_M[mA.dayChishi] === mB.monthChishi) {
+                bonusScore -= 10; // 納音（日柱×月柱）
+            }
+            
+            totalScore += bonusScore;
 
             let heart = totalScore >= 80 ? '💖' : (totalScore >= 60 ? '💕' : (totalScore >= 40 ? '💛' : '🍃'));
 
@@ -1570,20 +1606,30 @@
             // ========== 特殊縁の判定 ==========
             const specialBonds = [];
 
-            // ① 律音（りつおん）: 日柱の天干・地支が完全に一致
+            // ① 律音（りつおん）
             if (mA.dayTenkan === mB.dayTenkan && mA.dayChishi === mB.dayChishi) {
                 specialBonds.push({
-                    name: '律音',
+                    name: '律音(日柱同士)',
                     yomi: 'りつおん',
                     icon: '🔮',
                     color: '#f472b6',
                     bg: 'rgba(244,114,182,0.12)',
                     border: '#f472b6',
-                    desc: '日柱（天干・地支）が完全に一致する、極めて稀な宿命的縁。鏡のように似た魂の持ち主で、深い共鳴と共感が生まれます。一緒にいると自分がよく分かる、特別な関係です。'
+                    desc: 'お互いの日柱が完全に一致する、極めて稀な宿命的縁。鏡のように似た魂の持ち主で、深い共鳴と共感が生まれます。'
+                });
+            } else if (mA.dayTenkan === mB.monthTenkan && mA.dayChishi === mB.monthChishi) {
+                specialBonds.push({
+                    name: '律音(日柱×月柱)',
+                    yomi: 'りつおん',
+                    icon: '🔮',
+                    color: '#f472b6',
+                    bg: 'rgba(244,114,182,0.12)',
+                    border: '#f472b6',
+                    desc: 'あなたの本質（日柱）とお相手の社会性（月柱）が一致する縁。相手の活躍を見守りサポートしあえる関係です。'
                 });
             }
 
-            // ② 宿命大半会（しゅくめいだいはんかい）: 年支が三合の関係
+            // ② 宿命大半会（しゅくめいだいはんかい）
             const SANGO_GROUPS = [
                 ['申', '子', '辰'], // 水局
                 ['亥', '卯', '未'], // 木局
@@ -1591,32 +1637,66 @@
                 ['巳', '酉', '丑']  // 金局
             ];
             for (const g of SANGO_GROUPS) {
-                if (g.includes(mA.yearChishi) && g.includes(mB.yearChishi) && mA.yearChishi !== mB.yearChishi) {
-                    const element = g === SANGO_GROUPS[0] ? '水' : g === SANGO_GROUPS[1] ? '木' : g === SANGO_GROUPS[2] ? '火' : '金';
+                if (mA.dayTenkan === mB.dayTenkan && g.includes(mA.dayChishi) && g.includes(mB.dayChishi) && mA.dayChishi !== mB.dayChishi) {
                     specialBonds.push({
-                        name: '宿命大半会',
+                        name: '宿命大半会(日柱同士)',
                         yomi: 'しゅくめいだいはんかい',
                         icon: '⭐',
                         color: '#fbbf24',
                         bg: 'rgba(251,191,36,0.12)',
                         border: '#fbbf24',
-                        desc: `年柱の地支（${mA.yearChishi}と${mB.yearChishi}）が「三合${element}局」の関係。生まれ年から繋がる宿命的な縁で、二人は同じ大きな流れの中に生きています。人生の節目で出会う、運命が引き寄せた組み合わせです。`
+                        desc: `日干が同じで日支（${mA.dayChishi}と${mB.dayChishi}）が三合する宿命的縁です。運命が引き寄せた強い引力で、一緒にいるとお互いの枠を超えた非日常的な発展が期待できます。`
+                    });
+                    break;
+                }
+                if (mA.dayTenkan === mB.monthTenkan && g.includes(mA.dayChishi) && g.includes(mB.monthChishi) && mA.dayChishi !== mB.monthChishi) {
+                    specialBonds.push({
+                        name: '宿命大半会(日柱×月柱)',
+                        yomi: 'しゅくめいだいはんかい',
+                        icon: '⭐',
+                        color: '#fbbf24',
+                        bg: 'rgba(251,191,36,0.12)',
+                        border: '#fbbf24',
+                        desc: `あなたの日柱とお相手の月柱が三合する縁。一緒に社会的な目標や夢に向かってスケール大きく進むことができる関係です。`
                     });
                     break;
                 }
             }
 
-            // ③ 日柱冲（宿命的対決）: 日支が冲の関係
+            // ③ 納音（なっちん）と 宿命対冲
             const CHU_MAP = { '子': '午', '午': '子', '丑': '未', '未': '丑', '寅': '申', '申': '寅', '卯': '酉', '酉': '卯', '辰': '戌', '戌': '辰', '巳': '亥', '亥': '巳' };
-            if (CHU_MAP[mA.dayChishi] === mB.dayChishi && mA.dayTenkan !== mB.dayTenkan) {
+            
+            if (CHU_MAP[mA.dayChishi] === mB.dayChishi) {
+                if (mA.dayTenkan === mB.dayTenkan) {
+                    specialBonds.push({
+                        name: '納音(日柱同士)',
+                        yomi: 'なっちん',
+                        icon: '⚡',
+                        color: '#38bdf8',
+                        bg: 'rgba(56,189,248,0.12)',
+                        border: '#38bdf8',
+                        desc: `日柱の天干が同じで地支が「冲」の関係。強烈に惹かれ合いますが、物事が白紙に戻りやすい組み合わせ。違いを認め合い、適度な距離感を保つことが大切です。`
+                    });
+                } else {
+                    specialBonds.push({
+                        name: '宿命対冲',
+                        yomi: 'しゅくめいたいちゅう',
+                        icon: '⚡',
+                        color: '#fb923c',
+                        bg: 'rgba(251,146,60,0.12)',
+                        border: '#fb923c',
+                        desc: `日柱の地支（${mA.dayChishi}と${mB.dayChishi}）が「冲」の関係。正反対の性質が強烈に引き合う緊張した縁。刺激し合い、共に成長できますが、妥協点を見つける努力が不可欠です。`
+                    });
+                }
+            } else if (mA.dayTenkan === mB.monthTenkan && CHU_MAP[mA.dayChishi] === mB.monthChishi) {
                 specialBonds.push({
-                    name: '宿命対冲',
-                    yomi: 'しゅくめいたいちゅう',
+                    name: '納音(日柱×月柱)',
+                    yomi: 'なっちん',
                     icon: '⚡',
-                    color: '#fb923c',
-                    bg: 'rgba(251,146,60,0.12)',
-                    border: '#fb923c',
-                    desc: `日柱の地支（${mA.dayChishi}と${mB.dayChishi}）が「冲」の関係。正反対の性質が強烈に引き合う緊張した縁。刺激し合い、共に成長できますが、妥協点を見つける努力が不可欠です。`
+                    color: '#38bdf8',
+                    bg: 'rgba(56,189,248,0.12)',
+                    border: '#38bdf8',
+                    desc: `あなたの本質とお相手の社会的役割が冲となる縁。惹かれ合いますが、お互いの価値観の違いを認め合う必要があります。`
                 });
             }
 
@@ -2040,19 +2120,19 @@
 
         document.getElementById('btn-year-theme').addEventListener('click', () => {
             if (window.currentMeishiki) showYearTheme(window.currentMeishiki);
-            else alert("鑑定結果表示後に利用できます。");
+            else alert("Stargazer結果表示後に利用できます。");
         });
 
         document.getElementById('btn-month-theme').addEventListener('click', () => {
             if (window.currentMeishiki) showMonthTheme(window.currentMeishiki);
-            else alert("鑑定結果表示後に利用できます。");
+            else alert("Stargazer結果表示後に利用できます。");
         });
 
         const btnLuckyDays = document.getElementById('btn-lucky-days');
         if (btnLuckyDays) {
             btnLuckyDays.addEventListener('click', () => {
                 if (window.currentMeishiki) showLuckyDays(window.currentMeishiki);
-                else alert("鑑定結果表示後に利用できます。");
+                else alert("Stargazer結果表示後に利用できます。");
             });
         }
 
@@ -2060,7 +2140,7 @@
         if (btnDestinyDays) {
             btnDestinyDays.addEventListener('click', () => {
                 if (window.currentMeishiki) showDestinyDays(window.currentMeishiki);
-                else alert("鑑定結果表示後に利用できます。");
+                else alert("Stargazer結果表示後に利用できます。");
             });
         }
 

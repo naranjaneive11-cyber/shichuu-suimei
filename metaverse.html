@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>運勢メタバース | 四柱推命</title>
+    <title>Stargazer | 四柱推命</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -64,15 +64,12 @@
             style="position: absolute; top: 2rem; right: 2rem; display: flex; gap: 1rem; z-index: 100; pointer-events: none;">
             <button type="button" id="btn-appraisal" class="btn-primary"
                 style="pointer-events: auto; padding: 0.3rem 0.8rem; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">📄
-                鑑定書</button>
-            <button type="button" id="btn-compatibility" class="btn-primary"
-                style="display: none !important; pointer-events: auto; padding: 0.3rem 0.8rem; font-size: 0.8rem; cursor: pointer; align-items: center; background: linear-gradient(135deg, #fbc2eb 0%, #a18cd1 100%);">👥
-                別の人との相性を占う</button>
+                Stargazerレポート</button>
             <button type="button" id="btn-settings" class="btn-secondary glass"
                 style="pointer-events: auto; padding: 0.5rem 1.5rem; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center;">⚙️
                 設定変更</button>
             <a href="index.html" id="btn-back" class="btn-secondary glass"
-                style="pointer-events: auto; text-decoration:none; padding: 0.5rem 1.5rem; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;">鑑定へ戻る</a>
+                style="pointer-events: auto; text-decoration:none; padding: 0.5rem 1.5rem; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;">トップへ戻る</a>
         </div>
 
         <!-- 仕事への扉 -->
@@ -94,6 +91,56 @@
                 <div class="door-symbol">📅</div>
             </div>
             <div class="door-label">運勢カレンダー</div>
+        </div>
+
+        <!-- 相性の空間扉 -->
+        <div id="door-compatibility" class="door-compatibility">
+            <div class="mystic-door compatibility">
+                <div class="door-glow"></div>
+                <div class="door-symbol">💖</div>
+            </div>
+            <div class="door-label">相性の空間</div>
+        </div>
+
+        <!-- 恋愛面への扉 -->
+        <div id="door-romance" class="door-romance">
+            <div class="mystic-door romance">
+                <div class="door-glow"></div>
+                <div class="door-symbol">💕</div>
+            </div>
+            <div class="door-label">恋愛面</div>
+        </div>
+
+        <!-- 万物の空間扉 -->
+        <div id="door-all-elements" class="door-all-elements">
+            <div class="mystic-door all-elements">
+                <div class="door-glow"></div>
+                <div class="door-symbol">🪐</div>
+            </div>
+            <div class="door-label">万物の神域</div>
+        </div>
+
+        <!-- 万物の神域 UI (初期非表示) -->
+        <div id="all-elements-ui" class="hidden" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:55; display:flex; flex-direction:column; justify-content:center; align-items:center; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);">
+            
+            <div id="bond-filter-buttons" style="margin-bottom: 1rem; display: flex; gap: 0.5rem; pointer-events: auto; z-index: 60; flex-wrap: nowrap; justify-content: center; width: 100%; max-width: 600px;">
+                <button type="button" class="btn-primary glass" onclick="showSpecialBondPeople('律音')" style="padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; border: 1px solid rgba(244, 114, 182, 0.5); color: #fbc2eb; box-shadow: 0 4px 15px rgba(244, 114, 182, 0.2); font-family: 'Noto Sans JP', sans-serif; white-space: nowrap; flex: 1;">🔮 律音の人々</button>
+                <button type="button" class="btn-primary glass" onclick="showSpecialBondPeople('宿命大半会')" style="padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; border: 1px solid rgba(167, 139, 250, 0.5); color: #c4b5fd; box-shadow: 0 4px 15px rgba(167, 139, 250, 0.2); font-family: 'Noto Sans JP', sans-serif; white-space: nowrap; flex: 1;">⭐ 宿命大半会</button>
+                <button type="button" class="btn-primary glass" onclick="showSpecialBondPeople('納音')" style="padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; border: 1px solid rgba(56, 189, 248, 0.5); color: #7dd3fc; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2); font-family: 'Noto Sans JP', sans-serif; white-space: nowrap; flex: 1;">⚡ 納音の人々</button>
+            </div>
+
+            <div id="all-elements-bg" style="position:relative; width:98%; max-width:1400px; max-height:85vh; aspect-ratio:16/9; background-image:url('assets/all_elements_paradise_cleaned.png'); background-size:contain; background-position:center; background-repeat:no-repeat; pointer-events:auto; border-radius:12px; box-shadow:0 0 40px rgba(0,0,0,0.8);">
+                <div class="element-node" data-stem="甲" style="top: 45%; left: 50%;">木 (甲) 🌳</div>
+                <div class="element-node" data-stem="乙" style="top: 70%; left: 15%;">草 (乙) 🌿</div>
+                <div class="element-node" data-stem="丙" style="top: 15%; left: 45%;">陽 (丙) ☀️</div>
+                <div class="element-node" data-stem="丁" style="top: 55%; left: 35%;">灯 (丁) 🕯️</div>
+                <div class="element-node" data-stem="戊" style="top: 35%; left: 75%;">山 (戊) ⛰️</div>
+                <div class="element-node" data-stem="己" style="top: 80%; left: 50%;">畑 (己) 🌾</div>
+                <div class="element-node" data-stem="庚" style="top: 65%; left: 85%;">鉄 (庚) ⚔️</div>
+                <div class="element-node" data-stem="辛" style="top: 80%; left: 80%;">宝 (辛) 💎</div>
+                <div class="element-node" data-stem="壬" style="top: 75%; left: 30%;">海 (壬) 🌊</div>
+                <div class="element-node" data-stem="癸" style="top: 20%; left: 75%;">雨 (癸) 🌧️</div>
+            </div>
         </div>
 
         <!-- テーマボタン -->
@@ -120,9 +167,9 @@
     <!-- Gateway UI -->
     <div id="gateway" class="gateway-container">
         <div class="glass-panel gateway-card">
-            <h1 class="title" style="font-size: 2rem;">🌌 運勢メタバース</h1>
+            <h1 class="title" style="font-size: 2rem;">🌌 Stargazer</h1>
             <p style="text-align: center; margin-bottom: 2rem; color: var(--text-secondary);">
-                生年月日に基づいた、あなただけの仮想精神空間へダイブします。<br>日干が空間を、日支がアバターを形作ります。</p>
+                生年月日に基づいた、あなただけの星の世界のStargazerを開始します。<br>日干が空間を、日支がアバターを形作ります。</p>
 
             <form id="metaverse-form">
                 <div class="form-group">
@@ -171,10 +218,10 @@
                     </div>
                 </div>
                 <button type="submit" class="btn-primary"
-                    style="margin-top:1.5rem; width:100%; box-shadow: 0 0 20px rgba(161, 140, 209, 0.5);">空間へダイブ</button>
+                    style="margin-top:1.5rem; width:100%; box-shadow: 0 0 20px rgba(161, 140, 209, 0.5);">Stargazerへ</button>
                 <div style="margin-top:1.5rem; text-align:center;">
                     <a href="index.html" class="btn-secondary"
-                        style="text-decoration:none; display:inline-block; font-size:0.9rem;">← 通常の鑑定に戻る</a>
+                        style="text-decoration:none; display:inline-block; font-size:0.9rem;">← トップへ戻る</a>
                 </div>
             </form>
         </div>
@@ -389,6 +436,42 @@
         </div>
     </div>
 
+    <!-- 恋愛運勢モーダル -->
+    <div id="romance-fortune-modal" class="modal-overlay hidden" style="z-index: 2000;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 600px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="romance-fortune-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="romance-fortune-title"
+                style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; display: flex; align-items: center; justify-content: flex-start; gap: 0.5rem;">
+                <span style="font-size: 1.5rem;">💕</span> 恋愛面での傾向
+            </h3>
+
+            <div
+                style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 1.5rem;">
+                <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;">■
+                    あなたの命式（恋愛に関わる重要な星）</div>
+                <div id="rf-meishiki"
+                    style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 1rem; color: var(--text-primary);">
+                    <!-- JSで動的に生成 -->
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="color: #fda4af; margin-bottom: 0.8rem; font-size: 1.1rem;">【恋愛における傾向と注意点】</h4>
+                <div id="rf-advice"
+                    style="font-size: 0.95rem; line-height: 1.8; color: var(--text-primary); white-space: pre-wrap;">
+                    <!-- JSで動的に生成 -->
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top: 2rem;">
+                <button type="button" class="btn-primary" id="rf-close-btn"
+                    style="padding: 0.6rem 2rem; background: linear-gradient(135deg, #fda4af 0%, #f43f5e 100%); box-shadow: 0 4px 10px rgba(244, 63, 94, 0.4); border-radius: 8px;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 運勢カレンダーモーダル（z-indexを増やして前面に） -->
     <div id="calendar-modal" class="modal-overlay hidden" style="z-index: 2500;">
         <div class="glass-panel modal-content"
@@ -407,18 +490,103 @@
                 <!-- JSで月ごとのカレンダーを生成 -->
             </div>
 
-            <!-- カレンダー詳細表示エリア部分 -->
-            <div id="calendar-detail-area" class="hidden"
-                style="margin-top: 2rem; padding: 1.5rem; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; text-align: left;">
-                <h3 id="cal-detail-date"
-                    style="color: #4facfe; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; font-size: 1.2rem;">
-                </h3>
-                <div id="cal-detail-content" style="line-height: 1.6; font-size: 0.95rem;"></div>
-            </div>
-
             <div style="text-align: center; margin-top: 2rem;">
                 <button type="button" id="calendar-close-btn" class="btn-primary"
                     style="background: linear-gradient(135deg, #fbbf24, #f59e0b); padding: 0.6rem 2rem; border-radius: 8px;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- カレンダー詳細ポップアップモーダル -->
+    <div id="calendar-detail-modal" class="modal-overlay hidden" style="z-index: 3000;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 500px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left;">
+            <button onclick="document.getElementById('calendar-detail-modal').classList.add('hidden')"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="cal-detail-date"
+                style="color: #4facfe; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; font-size: 1.2rem;">
+            </h3>
+            <div id="cal-detail-content" style="line-height: 1.6; font-size: 0.95rem;"></div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="button" class="btn-primary" onclick="document.getElementById('calendar-detail-modal').classList.add('hidden')"
+                    style="padding: 0.6rem 2rem; border-radius: 8px;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 相性鑑定モーダル -->
+    <div id="compatibility-modal" class="modal-overlay hidden" style="z-index: 2000;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 600px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="compatibility-modal-close"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; transition: color 0.2s;">&times;</button>
+            <h3 id="compatibility-title" style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                💖 別の人との相性Stargazer
+            </h3>
+            
+            <div id="compatibility-form-container" style="margin-bottom: 2rem; font-family: 'Noto Sans JP', sans-serif;">
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">お相手の情報を入力してください。</p>
+                
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label style="display:block; margin-bottom:0.5rem; color:var(--text-secondary); font-size:0.9rem;">お名前</label>
+                    <input type="text" id="comp-name" placeholder="例：お相手の名前" style="width: 100%; padding: 0.8rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
+                </div>
+                
+                <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="form-group" style="flex: 2;">
+                        <label style="display:block; margin-bottom:0.5rem; color:var(--text-secondary); font-size:0.9rem;">生年月日</label>
+                        <div class="birthday-selects" style="display: flex; gap: 0.5rem;">
+                            <select id="comp-year" style="flex: 1; padding: 0.8rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;"></select>
+                            <select id="comp-month" style="flex: 1; padding: 0.8rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
+                                <option value="">月</option>
+                                <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+                                <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
+                                <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
+                                <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+                            </select>
+                            <select id="comp-day" style="flex: 1; padding: 0.8rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
+                                <option value="">日</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display:block; margin-bottom:0.5rem; color:var(--text-secondary); font-size:0.9rem;">性別</label>
+                    <div style="display: flex; gap: 1.5rem;">
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #cbd5e1;"><input type="radio" name="comp-gender" value="male" checked> 男性</label>
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #cbd5e1;"><input type="radio" name="comp-gender" value="female"> 女性</label>
+                    </div>
+                </div>
+                
+                <button type="button" id="btn-calc-comp" class="btn-primary" style="width: 100%; padding: 0.8rem; border-radius: 8px; background: linear-gradient(135deg, #fbc2eb 0%, #a18cd1 100%);">Stargazerを開始する</button>
+            </div>
+
+            <div id="compatibility-result-container" class="hidden" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); font-family: 'Noto Sans JP', sans-serif;">
+                <!-- JSで結果が表示されます -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="button" class="btn-primary glass" onclick="document.getElementById('compatibility-modal').classList.add('hidden')" style="padding: 0.6rem 2rem; border-radius: 8px;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 属性グループのモーダル -->
+    <div id="element-group-modal" class="modal-overlay hidden" style="z-index: 2000;">
+        <div class="glass-panel modal-content"
+            style="width: 90%; max-width: 500px; padding: 2.5rem 2rem; border-radius: 16px; position: relative; text-align: left; max-height: 85vh; overflow-y: auto;">
+            <button id="element-group-modal-close" onclick="document.getElementById('element-group-modal').classList.add('hidden')"
+                style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;">&times;</button>
+            <h3 id="element-group-title" style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.5rem; display:flex; align-items:center; gap:0.5rem;">
+                属性の人々
+            </h3>
+            <div id="element-group-list" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; font-family: 'Noto Sans JP', sans-serif;">
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="button" class="btn-primary glass" onclick="document.getElementById('element-group-modal').classList.add('hidden')" style="padding: 0.6rem 2rem; border-radius: 8px;">閉じる</button>
             </div>
         </div>
     </div>
