@@ -771,8 +771,8 @@ html {
     }
 
     .element-node {
-        font-size: 0.8em !important;
-        padding: 0.5rem 0.8rem !important;
+        font-size: 0.65em !important;
+        padding: 0.3rem 0.5rem !important;
     }
 
     /* 扉サイズ縮小 */
