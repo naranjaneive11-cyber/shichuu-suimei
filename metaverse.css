@@ -795,6 +795,19 @@ html {
         white-space: nowrap !important;
     }
 
+    /* 万物の神域画面モバイルレイアウト調整 */
+    #all-elements-ui {
+        justify-content: flex-start !important;
+        padding-top: 4rem !important; /* 画面の一番上ギリギリではなく適切に上に寄せる */
+    }
+
+    #all-elements-bg {
+        width: 100% !important;
+        aspect-ratio: 4/3 !important; /* 横幅100%のまま、縦長に画像を伸ばして大きく表示する */
+        background-size: 100% 100% !important; /* アスペクト比変更に伴い画像を引き伸ばす */
+        margin-top: 1rem !important;
+    }
+
     /* --- 操作バー（鑑定書・設定・戻る）: 画面最下部 固定バー --- */
     #ui-overlay>div[style*="top: 2rem; right: 2rem"] {
         position: absolute !important;
