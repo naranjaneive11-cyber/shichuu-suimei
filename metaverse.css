@@ -704,9 +704,9 @@ html {
         text-align: center !important;
     }
 
-    /* --- アバター: 画面上部28%に固定（topで管理） --- */
+    /* --- アバター: 画面上部15%に固定（topで管理） --- */
     #avatar-container {
-        top: 22% !important;
+        top: 15% !important;
         bottom: auto !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
@@ -717,9 +717,9 @@ html {
         height: 70px !important;
     }
 
-    /* --- 扉3つ: アバターより下の58%に横一列 --- */
+    /* --- 下段扉3つ: 画面の65%付近に横一列 --- */
     .door-container {
-        top: 58% !important;
+        top: 65% !important;
         bottom: auto !important;
         left: 7% !important;
         right: auto !important;
@@ -727,7 +727,7 @@ html {
     }
 
     .door-private {
-        top: 58% !important;
+        top: 65% !important;
         bottom: auto !important;
         left: 50% !important;
         right: auto !important;
@@ -735,27 +735,28 @@ html {
     }
 
     #door-calendar {
-        top: 58% !important;
+        top: 65% !important;
         bottom: auto !important;
         right: 7% !important;
         left: auto !important;
         transform: none !important;
     }
 
+    /* --- 上段扉3つ: 画面の45%付近に横一列 --- */
     .door-compatibility {
-        top: 40% !important;
+        top: 45% !important;
         left: 20% !important;
         transform: translateX(-50%) !important;
     }
 
     .door-romance {
-        top: 40% !important;
+        top: 45% !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
     }
 
     .door-all-elements {
-        top: 40% !important;
+        top: 45% !important;
         left: 80% !important;
         transform: translateX(-50%) !important;
     }
