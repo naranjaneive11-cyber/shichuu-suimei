@@ -2647,13 +2647,14 @@ let originalDescText = '';
 
 document.addEventListener('DOMContentLoaded', () => {
     const doorAllElements = document.getElementById('door-all-elements');
+    const btnReturnAllElements = document.getElementById('btn-return-all-elements');
+
     if (doorAllElements) {
         doorAllElements.addEventListener('click', () => {
             const canvasContainer = document.getElementById('canvas-container');
-            const label = document.querySelector('#door-all-elements .door-label');
             const titleEl = document.getElementById('env-title');
             const descEl = document.getElementById('env-desc');
-            const doorsToHide = ['door-work', 'door-private', 'door-romance', 'door-calendar', 'door-compatibility'];
+            const doorsToHide = ['door-work', 'door-private', 'door-romance', 'door-calendar', 'door-compatibility', 'door-all-elements'];
             const themeBtns = document.querySelector('.theme-buttons');
 
             // 荘厳な演出のため、一旦キャンバスを暗くするなどのエフェクトは維持
@@ -2667,13 +2668,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     originalDescText = descEl.textContent;
                     
                     titleEl.textContent = "🪐 万物の神域";
-                    descEl.textContent = "木・火・土・金・水の五行、十干全ての要素が完璧なバランスで調和し統合された、究極の仮想楽園です。（元の空間に戻るには扉をもう一度クリック）";
-                    label.textContent = "元の空間へ戻る";
+                    descEl.textContent = "木・火・土・金・水の五行、十干全ての要素が完璧なバランスで調和し統合された、究極の仮想楽園です。";
                     
-                    // Hide other doors
+                    // Hide all doors including the all-elements portal itself
                     doorsToHide.forEach(id => {
                         const el = document.getElementById(id);
-                        if(el && el.id !== 'door-all-elements') el.style.display = 'none';
+                        if(el) el.style.display = 'none';
                     });
                     if (themeBtns) themeBtns.style.display = 'none';
 
@@ -2688,34 +2688,48 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     document.body.classList.add('in-all-elements-space');
                     isAllElementsSpace = true;
-                } else {
-                    // 元に戻る
-                    titleEl.textContent = originalTitleText;
-                    descEl.textContent = originalDescText;
-                    label.textContent = "万物の神域";
-                    
-                    // Show other doors
-                    doorsToHide.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) {
-                            if (id === 'door-private') el.style.display = 'flex';
-                            else el.style.display = 'flex'; 
-                        }
-                    });
-                    if (themeBtns) themeBtns.style.display = 'flex';
-
-                    // Hide elements UI
-                    const allElemUi = document.getElementById('all-elements-ui');
-                    if (allElemUi) {
-                        allElemUi.style.opacity = '0';
-                        setTimeout(() => allElemUi.classList.add('hidden'), 1000);
-                    }
-                    
-                    document.body.classList.remove('in-all-elements-space');
-                    isAllElementsSpace = false;
                 }
                 
                 // Fade in (restore background brightness)
+                canvasContainer.style.opacity = '1';
+            }, 1000);
+        });
+    }
+
+    if (btnReturnAllElements) {
+        btnReturnAllElements.addEventListener('click', () => {
+            const canvasContainer = document.getElementById('canvas-container');
+            const titleEl = document.getElementById('env-title');
+            const descEl = document.getElementById('env-desc');
+            const doorsToShow = ['door-work', 'door-private', 'door-romance', 'door-calendar', 'door-compatibility', 'door-all-elements'];
+            const themeBtns = document.querySelector('.theme-buttons');
+
+            canvasContainer.style.opacity = '0.3';
+
+            setTimeout(() => {
+                // 元に戻る
+                titleEl.textContent = originalTitleText;
+                descEl.textContent = originalDescText;
+                
+                // Show all doors again
+                doorsToShow.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.style.display = 'flex'; 
+                    }
+                });
+                if (themeBtns) themeBtns.style.display = 'flex';
+
+                // Hide elements UI
+                const allElemUi = document.getElementById('all-elements-ui');
+                if (allElemUi) {
+                    allElemUi.style.opacity = '0';
+                    setTimeout(() => allElemUi.classList.add('hidden'), 1000);
+                }
+                
+                document.body.classList.remove('in-all-elements-space');
+                isAllElementsSpace = false;
+                
                 canvasContainer.style.opacity = '1';
             }, 1000);
         });
