@@ -1,6 +1,6 @@
 
         /**
-         * 四柱推命 鑑定ロジック (鳥海伯翠流)
+         * 四柱推命 鑑定ロジック
          */
 
         // --- 定数・データ定義 ---
@@ -36,13 +36,13 @@
             '癸': { '卯': '長生', '寅': '沐浴', '丑': '冠帯', '子': '建禄', '亥': '帝旺', '戌': '衰', '酉': '病', '申': '死', '未': '墓', '午': '絶', '巳': '胎', '辰': '養' }
         };
 
-        // 十二運星のエネルギー値 (鳥海流)
+        // 十二運星のエネルギー値
         const ENERGY_VALUES = {
             '胎': 3, '養': 6, '長生': 9, '沐浴': 7, '冠帯': 10, '建禄': 11,
             '帝旺': 12, '衰': 8, '病': 4, '死': 2, '墓': 5, '絶': 1
         };
 
-        // 鳥海流 蔵干表 (地支 vs 日数)
+        // 蔵干表 (地支 vs 日数)
         const TORIUMI_ZOKAN = {
             '子': (d) => (d <= 10 ? '壬' : '癸'),
             '丑': (d) => (d <= 9 ? '癸' : (d <= 12 ? '辛' : '己')),
@@ -85,11 +85,12 @@
 
         // --- メインロジック ---
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('appraisal-form');
-            const resetBtn = document.getElementById('reset-btn');
-            const inputSection = document.querySelector('.input-section');
-            const resultSection = document.getElementById('result-section');
+        if (typeof document !== 'undefined') {
+            document.addEventListener('DOMContentLoaded', () => {
+                const form = document.getElementById('appraisal-form');
+                const resetBtn = document.getElementById('reset-btn');
+                const inputSection = document.querySelector('.input-section');
+                const resultSection = document.getElementById('result-section');
 
             // 年プルダウンの生成（1920年〜今年）
             const yearSelect = document.getElementById('birthday-year');
@@ -147,6 +148,7 @@
                 inputSection.classList.remove('hidden');
             });
         });
+        }
 
         const ELEMENT_MAP = {
             '甲': '+木', '乙': '-木', '丙': '+火', '丁': '-火', '戊': '+土', '己': '-土', '庚': '+金', '辛': '-金', '壬': '+水', '癸': '-水',
@@ -236,6 +238,7 @@
         }
 
         function displayResult(name, date, m) {
+            if (typeof document === 'undefined') return;
             document.getElementById('result-user-name').textContent = `${name} 様`;
             document.getElementById('result-user-info').textContent = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 生まれ`;
             document.getElementById('chushatsu-value').textContent = m.chushatsu;
@@ -304,6 +307,7 @@
          * dayTenkan: 日干（陰陽の判定に使用）
          */
         function renderChushatsuYearTable(chushatsuStr, dayTenkan) {
+            if (typeof document === 'undefined') return;
             const container = document.getElementById('chushatsu-year-table');
             container.innerHTML = '';
 
@@ -407,5 +411,13 @@
                 row.appendChild(badgeCol);
                 container.appendChild(row);
             }
+        }
+
+        // Node.js環境での直接実行テスト用
+        if (typeof module !== 'undefined' && typeof window === 'undefined') {
+            console.log("Node.js環境で鑑定ロジックのテストを実行します...");
+            const testDate = new Date(1995, 8, 15); // 1995年9月15日
+            const result = calculateMeishiki(testDate);
+            console.log("鑑定結果 (1995年9月15日):", JSON.stringify(result, null, 2));
         }
     

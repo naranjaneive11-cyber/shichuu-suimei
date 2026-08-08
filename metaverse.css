@@ -913,3 +913,239 @@ body.in-all-elements-space #btn-back {
     background: rgba(255, 255, 255, 0.15) !important;
     transform: translateY(-2px);
 }
+
+/* =============================================
+   ✨ 今日の運気「デイリー・オーラ空間」用追加スタイル
+   ============================================= */
+
+/* 吹き出し（バルーン） */
+.avatar-balloon {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid var(--accent, rgba(255, 255, 255, 0.2));
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px var(--accent-glow, rgba(255, 255, 255, 0.1));
+    backdrop-filter: blur(12px);
+    width: max-content;
+    max-width: 260px;
+    z-index: 300;
+    animation: balloonFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    pointer-events: auto;
+}
+
+.avatar-balloon p {
+    margin: 0;
+    color: #f1f5f9;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    text-align: left;
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+.balloon-arrow {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(15, 23, 42, 0.85);
+}
+
+@keyframes balloonFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+    }
+}
+
+/* 運気エフェクトオーバーレイ */
+#fortune-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+
+/* 1. 自立 (上昇する光) */
+.stars-rising {
+    background: radial-gradient(circle at bottom, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+}
+.stars-rising::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.4) 1px, transparent 1px),
+        radial-gradient(circle at 40% 70%, rgba(16, 185, 129, 0.3) 2px, transparent 2px),
+        radial-gradient(circle at 60% 90%, rgba(16, 185, 129, 0.4) 1.5px, transparent 1.5px),
+        radial-gradient(circle at 80% 60%, rgba(16, 185, 129, 0.3) 2px, transparent 2px);
+    background-size: 100% 100%;
+    animation: riseEffect 8s linear infinite;
+}
+
+@keyframes riseEffect {
+    0% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    100% {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+}
+
+/* 2. 表現 (きらきらと輝く星・流星) */
+.stars-twinkle {
+    background: radial-gradient(circle at center, rgba(244, 114, 182, 0.1) 0%, transparent 80%);
+}
+.stars-twinkle::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: 
+        radial-gradient(circle at 15% 25%, #fff 1.5px, transparent 1.5px),
+        radial-gradient(circle at 75% 35%, #fff 2px, transparent 2px),
+        radial-gradient(circle at 45% 65%, #fff 1px, transparent 1px),
+        radial-gradient(circle at 85% 75%, #fff 1.5px, transparent 1.5px);
+    animation: twinkleEffect 3s ease-in-out infinite alternate;
+}
+
+@keyframes twinkleEffect {
+    0% { opacity: 0.2; }
+    100% { opacity: 0.8; }
+}
+
+/* 3. 人脈 (波紋) */
+.stars-ripple {
+    background: radial-gradient(circle at center, rgba(251, 191, 36, 0.12) 0%, transparent 75%);
+}
+.stars-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4),
+                0 0 0 50px rgba(251, 191, 36, 0);
+    animation: rippleEffect 5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+
+@keyframes rippleEffect {
+    0% {
+        width: 10px;
+        height: 10px;
+        box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4),
+                    0 0 0 0 rgba(251, 191, 36, 0.2),
+                    0 0 0 0 rgba(251, 191, 36, 0.1);
+    }
+    100% {
+        width: 800px;
+        height: 800px;
+        box-shadow: 0 0 0 50px rgba(251, 191, 36, 0),
+                    0 0 0 150px rgba(251, 191, 36, 0),
+                    0 0 0 300px rgba(251, 191, 36, 0);
+    }
+}
+
+/* 4. 行動 (軌道・素早い光) */
+.stars-orbit {
+    background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+}
+.stars-orbit::after {
+    content: '';
+    position: absolute;
+    top: -100px;
+    left: -100px;
+    width: 200%;
+    height: 10px;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), transparent);
+    transform: rotate(35deg);
+    animation: orbitEffect 4s cubic-bezier(0.3, 0.5, 0.1, 1) infinite;
+}
+
+@keyframes orbitEffect {
+    0% {
+        transform: translate(-100%, -100%) rotate(35deg);
+    }
+    100% {
+        transform: translate(100%, 100%) rotate(35deg);
+    }
+}
+
+/* 5. 知性 (ゆっくり浮遊するオーブ) */
+.stars-float {
+    background: radial-gradient(circle at center, rgba(139, 92, 246, 0.12) 0%, transparent 80%);
+}
+.stars-float::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+    filter: blur(20px);
+    top: 20%;
+    left: 20%;
+    animation: floatEffect 12s ease-in-out infinite alternate;
+}
+
+@keyframes floatEffect {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(200px, 100px) scale(1.2);
+    }
+    100% {
+        transform: translate(-100px, 300px) scale(0.8);
+    }
+}
+
+/* カレンダーの運気ドット */
+.cal-fortune-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 4px;
+    display: inline-block;
+    box-shadow: 0 0 5px currentColor;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.cal-fortune-dot:hover {
+    transform: scale(1.3);
+}
+
+.calendar-day-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}

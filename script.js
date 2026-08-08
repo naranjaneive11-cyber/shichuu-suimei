@@ -1,5 +1,5 @@
 /**
- * 四柱推命 鑑定ロジック (鳥海伯翠流)
+ * 四柱推命 鑑定ロジック
  */
 
 // --- 定数・データ定義 ---
@@ -35,7 +35,7 @@ const UNSEI_TABLE = {
     '癸': { '卯': '長生', '寅': '沐浴', '丑': '冠帯', '子': '建禄', '亥': '帝旺', '戌': '衰', '酉': '病', '申': '死', '未': '墓', '午': '絶', '巳': '胎', '辰': '養' }
 };
 
-// 十二運星のエネルギー値 (鳥海流)
+// 十二運星のエネルギー値
 const ENERGY_VALUES = {
     '胎': 3, '養': 6, '長生': 9, '沐浴': 7, '冠帯': 10, '建禄': 11,
     '帝旺': 12, '衰': 8, '病': 4, '死': 2, '墓': 5, '絶': 1
@@ -137,7 +137,6 @@ function calculateMeishiki(date) {
     const monthChishi = CHISHI[monthAdjusted % 12]; // 1月=丑(1), 2月=寅(2)
 
     // --- 星の算出 ---
-    // 鳥海流では月天干は「正財」などの通変星として扱う
     const tuhenYear = TUHEN_TABLE[dayTenkan][yearTenkan];
     const tuhenMonth = TUHEN_TABLE[dayTenkan][monthTenkan];
     // 蔵干通変星 (簡易的に地支から代表を抽出)

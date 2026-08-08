@@ -232,8 +232,84 @@ const ENV_THEMES = {
     '庚': { name: '⚔️ 鋼の城塞', desc: '鋭く研ぎ澄まされた金属と星空の空間。決断力と行動力に溢れる開拓次元です。', baseImage: 'assets/kanoe_iron_1772805600474.png' },
     '辛': { name: '💎 輝石の洞窟', desc: '透明な宝石が光を反射する空間。美意識と洗練を極めたクリアな精神界です。', baseImage: 'assets/kanoto_jewel_1772805704807.png' },
     '壬': { name: '🌊 深海の海原', desc: 'どこまでも広がる自由な深海の空間。束縛を嫌い、全てを飲み込む知性です。', baseImage: 'assets/mizunoe_ocean_1772805719801.png' },
-    '癸': { name: '🌧️ 恵みの泉', desc: '静かに湧き出る純粋な水の空間。献身的に周囲を潤す慈愛の泉です。', baseImage: 'assets/mizunoto_rain_1772805757005.png' }
+    '癸': { name: '🌧️ 恵みの泉', desc: '静かに湧き出る純粋な水の空間。献身的に周囲を潤す慈愛 of 泉です。', baseImage: 'assets/mizunoto_rain_1772805757005.png' }
 };
+
+// =============================================
+// ✨ 今日の運気「デイリー・オーラ空間」用データ
+// =============================================
+const FORTUNE_GROUPS = {
+    '比肩': 'self', '劫財': 'self',
+    '食神': 'expression', '傷官': 'expression',
+    '偏財': 'wealth', '正財': 'wealth',
+    '偏官': 'action', '正官': 'action',
+    '偏印': 'intellect', '印綬': 'intellect'
+};
+
+const FORTUNE_STYLES = {
+    'self': {
+        color: '#10b981',
+        name: '自立・自我の星 (比肩・劫財)',
+        className: 'stars-rising',
+        advice: '自分の意志を信じて、新しい一歩を踏み出すのに最適な日！周りに流されず、自分のやりたいことを優先してみてね。'
+    },
+    'expression': {
+        color: '#f472b6',
+        name: '表現・感性の星 (食神・傷官)',
+        className: 'stars-twinkle',
+        advice: '感性が研ぎ澄まされるクリエイティブな日。遊び心を持って、好きなことや趣味に没頭してみよう！'
+    },
+    'wealth': {
+        color: '#fbbf24',
+        name: '人脈・財の星 (偏財・正財)',
+        className: 'stars-ripple',
+        advice: '人との繋がりや豊かさが巡ってくる魅力的な日。積極的にコミュニケーションをとったり、周囲に感謝を伝えると◎。'
+    },
+    'action': {
+        color: '#3b82f6',
+        name: '行動・自律の星 (偏官・正官)',
+        className: 'stars-orbit',
+        advice: 'フットワークが軽くなり、決断力が増す行動の日！後回しにしていたタスクを片付ける大チャンスだよ。'
+    },
+    'intellect': {
+        color: '#8b5cf6',
+        name: '知性・直感の星 (偏印・印綬)',
+        className: 'stars-float',
+        advice: '深く考え、新しい知識を吸収するのに最適な日。読書をしたり、直感を信じて一人の時間を静かに楽しんでみて。'
+    }
+};
+
+// 指定日の運気を計算して取得する
+function getDailyFortune(userDayTenkan, date = new Date()) {
+    const todayMeishiki = calculateMeishikiLocal(date);
+    const todayTenkan = todayMeishiki.dayTenkan;
+    const tuhen = TUHEN_TABLE[userDayTenkan][todayTenkan] || '比肩';
+    const groupKey = FORTUNE_GROUPS[tuhen] || 'self';
+    return {
+        tuhen: tuhen,
+        groupKey: groupKey,
+        style: FORTUNE_STYLES[groupKey]
+    };
+}
+
+// アバター吹き出しバルーン表示用変数・関数
+let balloonTimeout = null;
+function showAvatarBalloon(text) {
+    const balloon = document.getElementById('avatar-balloon');
+    const balloonText = document.getElementById('avatar-balloon-text');
+    if (!balloon || !balloonText) return;
+
+    if (balloonTimeout) {
+        clearTimeout(balloonTimeout);
+    }
+
+    balloonText.textContent = text;
+    balloon.classList.remove('hidden');
+
+    balloonTimeout = setTimeout(() => {
+        balloon.classList.add('hidden');
+    }, 6000);
+}
 
 // 十二支季節マッピング（春:寅卯辰, 夏:巳午未, 秋:申酉戌, 冬:亥子丑）
 function getBackgroundImage(tenkan, chishi) {
@@ -283,6 +359,18 @@ document.addEventListener('DOMContentLoaded', () => {
         diveIntoMetaverse(savedName, savedGender, m);
         checkMoonPhaseAndApplyEffect(m.dayTenkan);
     }
+
+    // 吹き出し（バルーン）以外をクリックしたら閉じる
+    document.addEventListener('click', (e) => {
+        const balloon = document.getElementById('avatar-balloon');
+        const avatarContainer = document.getElementById('avatar-container');
+        if (balloon && !balloon.classList.contains('hidden') && avatarContainer) {
+            if (!avatarContainer.contains(e.target)) {
+                balloon.classList.add('hidden');
+                if (balloonTimeout) clearTimeout(balloonTimeout);
+            }
+        }
+    });
 
     const form = document.getElementById('metaverse-form');
     form.addEventListener('submit', (e) => {
@@ -1430,6 +1518,50 @@ function diveIntoMetaverse(name, gender, m) {
     let existingOverlay = document.getElementById('season-overlay');
     if (existingOverlay) existingOverlay.remove();
 
+    // ---------------------------------------------
+    // ✨ 今日の運気（デイリー・オーラ空間）の適用
+    // ---------------------------------------------
+    const dailyFortune = getDailyFortune(dayTenkan, new Date());
+    
+    // UIバッジの更新
+    const fortuneBadge = document.getElementById('display-today-fortune');
+    const fortuneText = document.getElementById('today-fortune-text');
+    const fortuneLabel = document.getElementById('today-fortune-label');
+    if (fortuneBadge && fortuneText) {
+        fortuneBadge.classList.remove('hidden');
+        fortuneText.textContent = `${dailyFortune.tuhen} (${dailyFortune.style.name.split(' ')[0]})`;
+        fortuneText.style.color = dailyFortune.style.color;
+        if (fortuneLabel) {
+            fortuneLabel.style.color = dailyFortune.style.color;
+        }
+    }
+
+    // エフェクトオーバーレイのクラス変更
+    const overlay = document.getElementById('fortune-overlay');
+    if (overlay) {
+        overlay.className = '';
+        overlay.classList.add(dailyFortune.style.className);
+    }
+
+    // アバターリングのグロー効果・色の適用
+    const ring = document.getElementById('avatar-ring');
+    if (ring) {
+        ring.style.borderColor = dailyFortune.style.color;
+        ring.style.boxShadow = `0 0 25px ${dailyFortune.style.color}, inset 0 0 15px ${dailyFortune.style.color}`;
+    }
+
+    // メタバースのステートに今日の運気情報を追加
+    window.currentMetaverseData.dailyFortune = dailyFortune;
+
+    // アバタータップ（クリック）時にアドバイスを吹き出し表示するイベント設定
+    const avatarContainer = document.getElementById('avatar-container');
+    if (avatarContainer) {
+        avatarContainer.onclick = function(e) {
+            e.stopPropagation();
+            showAvatarBalloon(dailyFortune.style.advice);
+        };
+    }
+
     // わずかなパララックス効果のためのマウス連動
     document.addEventListener('mousemove', (e) => {
         const x = (e.clientX / window.innerWidth - 0.5) * 20;
@@ -2407,6 +2539,15 @@ function showCalendarModal() {
             cell.appendChild(dateDiv);
             cell.appendChild(kanshiDiv);
 
+            // 今日の運気（通変星）と対応カラーのドットを追加
+            const cellFortune = getDailyFortune(dayTenkan, cellDate);
+            const dot = document.createElement('div');
+            dot.className = 'cal-fortune-dot';
+            dot.style.color = cellFortune.style.color;
+            dot.style.backgroundColor = cellFortune.style.color;
+            dot.title = `運気: ${cellFortune.tuhen} (${cellFortune.style.name.split(' ')[0]})`;
+            cell.appendChild(dot);
+
             // 運勢判定（希望の光＆静寂の日）
             let details = [];
 
@@ -2543,27 +2684,46 @@ function showCalendarModal() {
                 cell.appendChild(m);
             });
 
-            // クリックイベント
-            if (details.length > 0) {
-                cell.addEventListener('click', () => {
-                    const dTitle = document.getElementById('cal-detail-date');
-                    const dContent = document.getElementById('cal-detail-content');
-                    dTitle.textContent = `${year}年${month}月${d}日 (${cellStr})`;
+            // クリックイベント (運気情報と吉凶詳細を表示)
+            cell.addEventListener('click', () => {
+                const dTitle = document.getElementById('cal-detail-date');
+                const dContent = document.getElementById('cal-detail-content');
+                dTitle.textContent = `${year}年${month}月${d}日 (${cellStr})`;
 
-                    dContent.innerHTML = '';
+                dContent.innerHTML = '';
+
+                // 1. 今日の運気情報を表示
+                const cellFortune = getDailyFortune(dayTenkan, cellDate);
+                dContent.innerHTML += `
+                    <div style="margin-bottom: 1.2rem; padding: 0.8rem; background: rgba(255,255,255,0.05); border-radius: 8px; border-left: 4px solid ${cellFortune.style.color};">
+                        <strong style="color: ${cellFortune.style.color}; font-size: 1.1rem;">🪐 今日の運気: ${cellFortune.tuhen} (${cellFortune.style.name.split(' ')[0]})</strong>
+                        <p style="margin-top: 0.4rem; opacity: 0.95; font-size: 0.85rem; line-height: 1.4;">${cellFortune.style.advice}</p>
+                    </div>
+                `;
+
+                // 2. 既存の吉凶詳細があれば追加
+                if (details.length > 0) {
+                    dContent.innerHTML += `<div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.8rem; margin-top: 0.8rem;"></div>`;
                     details.forEach(det => {
-                        const icon = det.type === 'lucky' ? '✨' : '⚠️';
-                        const color = det.type === 'lucky' ? '#fbbf24' : '#f472b6';
+                        let icon = 'ℹ️';
+                        let color = '#a78bfa';
+                        if (det.type === 'lucky' || det.type === 'super-lucky') {
+                            icon = '✨';
+                            color = '#fbbf24';
+                        } else if (det.type === 'warning' || det.type === 'super-warning' || det.type === 'caution') {
+                            icon = '⚠️';
+                            color = '#f472b6';
+                        }
                         dContent.innerHTML += `
                             <div style="margin-bottom: 1rem;">
-                                <strong style="color: ${color}; font-size: 1.1rem;">${icon} ${det.title}</strong>
-                                <p style="margin-top: 0.3rem; opacity: 0.9;">${det.desc}</p>
+                                <strong style="color: ${color}; font-size: 1.05rem;">${icon} ${det.title}</strong>
+                                <p style="margin-top: 0.3rem; opacity: 0.9; font-size: 0.85rem; line-height: 1.4;">${det.desc}</p>
                             </div>
                         `;
                     });
-                    document.getElementById('calendar-detail-modal').classList.remove('hidden');
-                });
-            }
+                }
+                document.getElementById('calendar-detail-modal').classList.remove('hidden');
+            });
 
             grid.appendChild(cell);
         }

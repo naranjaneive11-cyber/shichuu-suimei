@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stargazer | 鳥海伯翠流</title>
+    <title>Stargazer | 四柱推命鑑定</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -403,12 +403,12 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Stargazer - 四柱推命 鳥海伯翠流メソッド</p>
+        <p>&copy; 2026 Stargazer - 四柱推命</p>
     </footer>
 
     <script>
         /**
-         * 四柱推命 鑑定ロジック (鳥海伯翠流)
+         * 四柱推命 鑑定ロジック
          */
 
         // --- 定数・データ定義 ---
@@ -532,13 +532,13 @@
             '癸': { '卯': '長生', '寅': '沐浴', '丑': '冠帯', '子': '建禄', '亥': '帝旺', '戌': '衰', '酉': '病', '申': '死', '未': '墓', '午': '絶', '巳': '胎', '辰': '養' }
         };
 
-        // 十二運星のエネルギー値 (鳥海流)
+        // 十二運星のエネルギー値
         const ENERGY_VALUES = {
             '胎': 3, '養': 6, '長生': 9, '沐浴': 7, '冠帯': 10, '建禄': 11,
             '帝旺': 12, '衰': 8, '病': 4, '死': 2, '墓': 5, '絶': 1
         };
 
-        // 鳥海流 蔵干表 (地支 vs 日数)
+        // 蔵干表 (地支 vs 日数)
         const TORIUMI_ZOKAN = {
             '子': (d) => (d <= 10 ? '壬' : '癸'),
             '丑': (d) => (d <= 9 ? '癸' : (d <= 12 ? '辛' : '己')),
