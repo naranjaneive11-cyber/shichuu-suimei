@@ -326,6 +326,119 @@ function getBackgroundImage(tenkan, chishi) {
     return encodeURI(`カメラ ロール/${tenkan}（${season}）${ext}`);
 }
 
+// 日干×日支から自然界のイメージ・画像・キャッチコピーを取得
+function getNatureImageProfile(tenkan, chishi) {
+    const STEM_INFO = {
+        '甲': { name: '大樹', icon: '🌲', element: '木', color: '#10b981', elementDesc: '天へ伸びる大木' },
+        '乙': { name: '草花', icon: '🌿', element: '木', color: '#34d399', elementDesc: 'しなやかな花草' },
+        '丙': { name: '太陽', icon: '☀️', element: '火', color: '#f59e0b', elementDesc: '全てを照らす太陽' },
+        '丁': { name: '灯火', icon: '🕯️', element: '火', color: '#fbbf24', elementDesc: '静かに灯るかがり火' },
+        '戊': { name: '山', icon: '⛰️', element: '土', color: '#d97706', elementDesc: 'どっしり構える山岳' },
+        '己': { name: '畑', icon: '🌾', element: '土', color: '#eab308', elementDesc: '万物を育む田園大地' },
+        '庚': { name: '鉄', icon: '⚔️', element: '金', color: '#cbd5e1', elementDesc: '鋭く鍛錬された鋼鉄・剛金' },
+        '辛': { name: '宝石', icon: '💎', element: '金', color: '#38bdf8', elementDesc: '美しく輝く貴金属・原石' },
+        '壬': { name: '海', icon: '🌊', element: '水', color: '#6366f1', elementDesc: '壮大に広がる大海原' },
+        '癸': { name: '雨', icon: '🌧️', element: '水', color: '#a855f7', elementDesc: '大地を潤す慈愛の雨露' }
+    };
+
+    let season = '';
+    let seasonDesc = '';
+    if (['寅', '卯', '辰'].includes(chishi)) { season = '春'; seasonDesc = '芽吹きと息吹の春'; }
+    else if (['巳', '午', '未'].includes(chishi)) { season = '夏'; seasonDesc = '情熱と繁栄の夏'; }
+    else if (['申', '酉', '戌'].includes(chishi)) { season = '秋'; seasonDesc = '実りと研ぎ澄ましの秋'; }
+    else if (['亥', '子', '丑'].includes(chishi)) { season = '冬'; seasonDesc = '静寂と蓄積の冬'; }
+
+    const ZODIAC_ANIMALS = {
+        '子': '子 (ネズミ)', '丑': '丑 (牛)', '寅': '寅 (虎)', '卯': '卯 (兎)',
+        '辰': '辰 (龍)', '巳': '巳 (蛇)', '午': '午 (馬)', '未': '未 (羊)',
+        '申': '申 (猿)', '酉': '酉 (鳥)', '戌': '戌 (犬)', '亥': '亥 (猪)'
+    };
+
+    const sInfo = STEM_INFO[tenkan] || { name: '自然', icon: '✨', element: '五行', color: '#fff', elementDesc: '神秘の気' };
+    const title = `${season}の${sInfo.name}`;
+    const imageUrl = getBackgroundImage(tenkan, chishi);
+
+    // 季節×十干の自然界の情景表現
+    const POETIC_DESCS = {
+        '甲': {
+            '春': '春の息吹を受け、若葉を青々と茂らせて空へと真っ直ぐ伸びる大樹。',
+            '夏': '夏の太陽を浴び、深い木陰を作りながら周囲を力強く守る大樹。',
+            '秋': '秋の実りをたずさえ、豊かに色づきながら静かに威厳を放つ大樹。',
+            '冬': '冬の寒さに耐え、雪をかぶりながら地下深くへ力強く根を張る大樹。'
+        },
+        '乙': {
+            '春': '春の陽だまりに咲き誇り、甘い香りで人々を惹きつける愛らしい草花。',
+            '夏': '夏の強い光の中でも枯れることなく、瑞々しく群生するしなやかな野草。',
+            '秋': '秋風に揺れながらも折れることなく、季節の風情を美しく彩る草花。',
+            '冬': '冬の寒さの中、霜に耐えながら春をじっと待つ生命力豊かな冬草。'
+        },
+        '丙': {
+            '春': '春の訪れを告げ、冷たい大地を温かく包み込んで生命を呼び覚ます太陽。',
+            '夏': '空の頂点から圧倒的な光とエネルギーを降り注ぐ、輝かしい真夏の太陽。',
+            '秋': '澄み渡る秋空を黄金色に染め上げ、豊かな実りを祝福する夕陽。',
+            '冬': '凍てつく世界に希望のぬくもりを届ける、貴重で優しい冬の陽光。'
+        },
+        '丁': {
+            '春': '春の夜風に揺れながら、幻想的な灯りで周囲を温かく照らす灯火。',
+            '夏': '夏の夜空を彩る花火やかがり火のように、情熱的に燃え上がる炎。',
+            '秋': '秋の夜長を静かに照らし、思索や学びを深める落ち着いたランプの灯り。',
+            '冬': '雪夜の暖炉のように、凍えた心を芯から癒やす暖かなぬくもりの火。'
+        },
+        '戊': {
+            '春': '春霞の中にそびえ立ち、新たな生命を懐深く育む雄大な霊峰。',
+            '夏': '青空へそびえ立つ緑豊かな山。圧倒的な存在感で天候をも司る山岳。',
+            '秋': '見事な紅葉に染まり、豊かな実りと壮麗な美しさを見せる秋の山。',
+            '冬': '白銀の雪をまとい、静寂の中で厳かにたたずむ不変の雪山。'
+        },
+        '己': {
+            '春': '春の雨を吸い込み、豊かな作物の種を受け入れる温かな耕地。',
+            '夏': '夏の豊かな太陽の下で、ぐんぐんと作物を実らせる肥沃な田園。',
+            '秋': '黄金の稲穂や豊かな実りに満ちた、収穫を迎える実りの大地。',
+            '冬': '冬の間、養分をじっくりと蓄えて春の作付けを待つ静かな土壌。'
+        },
+        '庚': {
+            '春': '春の芽吹きの中で鍛え上げられ、新たな道を切り拓く鋭敏な剛金・名刀。',
+            '夏': '激しい熱で鍛錬され、より強靭で不屈の強さを手に入れた剛鉄。',
+            '秋': '澄んだ大気の中で最も鋭く研ぎ澄まされ、圧倒的な切れ味を誇る神剣。',
+            '冬': '凍てつく冷気で硬度を極め、冷徹なまでの美しさを放つ純鉄。'
+        },
+        '辛': {
+            '春': '春の光をプリズムのように反射し、清らかな輝きを放つ宝石。',
+            '夏': '真夏の強い日差しを受けてキラキラと眩しく輝く洗練されたジュエリー。',
+            '秋': '秋の澄み切った水で洗い清められ、最高峰の輝きを極めた貴金属。',
+            '冬': '氷雪の中で透明感を極め、孤高の美しさを宿すクリスタル。'
+        },
+        '壬': {
+            '春': '雪解けの水を集めて勢いよく流れ出し、大海へと向かう雄大な大河。',
+            '夏': 'どこまでも青く広がり、無限の冒険と活気をもたらす夏の海原。',
+            '秋': '静けさと深みをたたえ、世界のすべてを包み込むような秋の深海。',
+            '冬': '荒波を越えて地球を循環し、神秘的な知性を秘めた極寒の海。'
+        },
+        '癸': {
+            '春': '春の芽吹きを優しく濡らし、あらゆる命を育む恵みの春雨。',
+            '夏': '灼熱の渇きを潤し、大地をクールダウンさせる恵みの夕立・清流。',
+            '秋': 'しっとりと静けさを運び、万物の実りを清める秋霖（しゅうりん）。',
+            '冬': '清らかに舞い降りる雪や霜となり、世界を白銀に包む静謐な雨水。'
+        }
+    };
+
+    const poetic = (POETIC_DESCS[tenkan] && POETIC_DESCS[tenkan][season]) || `${season}の美しい${sInfo.name}の情景。`;
+
+    return {
+        tenkan, chishi,
+        stemName: sInfo.name,
+        stemIcon: sInfo.icon,
+        element: sInfo.element,
+        color: sInfo.color,
+        season,
+        seasonDesc,
+        zodiacAnimal: ZODIAC_ANIMALS[chishi] || chishi,
+        title,
+        imageUrl,
+        poetic
+    };
+}
+
 
 
 
@@ -343,21 +456,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 年・日プルダウン生成（index.htmlと同様）
+    // 年・日プルダウン生成（保存データがあればフォームに自動入力）
     initFormSelects();
 
-    // 自動ログイン：前回のデータがあればそのままダイブ
-    const savedName = localStorage.getItem('mv_name');
+    // 性別の復元
     const savedGender = localStorage.getItem('mv_gender');
-    const savedY = parseInt(localStorage.getItem('mv_y'));
-    const savedM = parseInt(localStorage.getItem('mv_m'));
-    const savedD = parseInt(localStorage.getItem('mv_d'));
-
-    if (savedName && savedGender && savedY && savedM && savedD) {
-        const savedDate = new Date(savedY, savedM - 1, savedD);
-        const m = calculateMeishikiLocal(savedDate);
-        diveIntoMetaverse(savedName, savedGender, m);
-        checkMoonPhaseAndApplyEffect(m.dayTenkan);
+    if (savedGender) {
+        const genderRadio = document.querySelector(`input[name="mv-gender"][value="${savedGender}"]`);
+        if (genderRadio) genderRadio.checked = true;
     }
 
     // 吹き出し（バルーン）以外をクリックしたら閉じる
@@ -372,34 +478,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const form = document.getElementById('metaverse-form');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
+    window.handleMetaverseSubmit = function(e) {
+        if (e && typeof e.preventDefault === 'function') e.preventDefault();
 
-        const name = document.getElementById('mv-name').value || 'Guest';
-        const y = parseInt(document.getElementById('mv-year').value);
-        const m_val = parseInt(document.getElementById('mv-month').value);
-        const d = parseInt(document.getElementById('mv-day').value);
-        const gender = document.querySelector('input[name="mv-gender"]:checked').value;
+        const nameInput = document.getElementById('mv-name');
+        const yearSelect = document.getElementById('mv-year');
+        const monthSelect = document.getElementById('mv-month');
+        const daySelect = document.getElementById('mv-day');
+        const genderChecked = document.querySelector('input[name="mv-gender"]:checked');
 
-        if (!y || !m_val || !d) {
-            alert('生年月日を選択してください。');
-            return;
+        const name = (nameInput && nameInput.value.trim()) ? nameInput.value.trim() : 'Guest';
+        const y = parseInt(yearSelect ? yearSelect.value : '');
+        const m_val = parseInt(monthSelect ? monthSelect.value : '');
+        const d = parseInt(daySelect ? daySelect.value : '');
+        const gender = genderChecked ? genderChecked.value : 'male';
+
+        if (!y || !m_val || !d || isNaN(y) || isNaN(m_val) || isNaN(d)) {
+            alert('生年月日（年・月・日）をすべて選択してください。');
+            return false;
         }
 
-        const date = new Date(y, m_val - 1, d);
-        const m = calculateMeishikiLocal(date);
+        try {
+            const date = new Date(y, m_val - 1, d);
+            const m = calculateMeishikiLocal(date);
 
-        // 基本データの保存（次回アクセス時用）
-        localStorage.setItem('mv_name', name);
-        localStorage.setItem('mv_gender', gender);
-        localStorage.setItem('mv_y', y);
-        localStorage.setItem('mv_m', m_val);
-        localStorage.setItem('mv_d', d);
+            // 基本データの保存（次回アクセス時用）
+            localStorage.setItem('mv_name', name);
+            localStorage.setItem('mv_gender', gender);
+            localStorage.setItem('mv_y', y);
+            localStorage.setItem('mv_m', m_val);
+            localStorage.setItem('mv_d', d);
 
-        diveIntoMetaverse(name, gender, m);
-        checkMoonPhaseAndApplyEffect(m.dayTenkan);
-    });
+            diveIntoMetaverse(name, gender, m);
+            if (typeof checkMoonPhaseAndApplyEffect === 'function') {
+                checkMoonPhaseAndApplyEffect(m.dayTenkan);
+            }
+            return true;
+        } catch (err) {
+            console.error('ダイブ処理エラー:', err);
+            alert('エラーが発生しました: ' + err.message);
+            return false;
+        }
+    };
+
+    const form = document.getElementById('metaverse-form');
+    if (form) {
+        form.addEventListener('submit', window.handleMetaverseSubmit);
+    }
+    const diveBtn = document.getElementById('btn-dive-metaverse');
+    if (diveBtn) {
+        diveBtn.addEventListener('click', window.handleMetaverseSubmit);
+    }
 
     // 鑑定書モーダルの表示イベント
     const btnAppraisal = document.getElementById('btn-appraisal');
@@ -710,25 +839,50 @@ function initFormSelects() {
     const yearSelect = document.getElementById('mv-year');
     const monthSelect = document.getElementById('mv-month');
     const daySelect = document.getElementById('mv-day');
+    const nameInput = document.getElementById('mv-name');
+
+    if (!yearSelect || !monthSelect || !daySelect) return;
+
+    const savedName = localStorage.getItem('mv_name');
+    const savedY = parseInt(localStorage.getItem('mv_y'));
+    const savedM = parseInt(localStorage.getItem('mv_m'));
+    const savedD = parseInt(localStorage.getItem('mv_d'));
+
+    if (nameInput && savedName) {
+        nameInput.value = savedName;
+    }
 
     const currentYear = new Date().getFullYear();
+    yearSelect.innerHTML = '<option value="">年</option>';
     for (let y = currentYear; y >= 1920; y--) {
         const opt = document.createElement('option');
         opt.value = y; opt.textContent = y + '年';
         yearSelect.appendChild(opt);
     }
 
+    if (savedY) {
+        yearSelect.value = savedY;
+    } else {
+        yearSelect.value = 1995;
+    }
+
+    if (savedM) {
+        monthSelect.value = savedM;
+    } else if (!monthSelect.value) {
+        monthSelect.value = "1";
+    }
+
     function updateDays() {
-        const y = parseInt(yearSelect.value) || 2000;
+        const y = parseInt(yearSelect.value) || 1995;
         const m = parseInt(monthSelect.value) || 1;
         const maxDay = new Date(y, m, 0).getDate();
-        const prevDay = parseInt(daySelect.value);
+        const prevDay = parseInt(daySelect.value) || (savedD || 1);
 
         daySelect.innerHTML = '<option value="">日</option>';
         for (let d = 1; d <= maxDay; d++) {
             const opt = document.createElement('option');
             opt.value = d; opt.textContent = d + '日';
-            if (d === prevDay) opt.selected = true;
+            if (d === prevDay || (prevDay > maxDay && d === maxDay)) opt.selected = true;
             daySelect.appendChild(opt);
         }
     }
@@ -1296,28 +1450,90 @@ function handleCompatibilityCheck() {
             </div>`;
     }
 
+    const profA = getNatureImageProfile(mA.dayTenkan, mA.dayChishi);
+    const profB = getNatureImageProfile(mB.dayTenkan, mB.dayChishi);
+
+    let bondIcon = '✨';
+    let bondTag = `${tenkanRel.type}の関係`;
+    let bondColor = '#a78bfa';
+    if (tenkanRel.type === '干合') {
+        bondIcon = '💖';
+        bondTag = '干合 (運命の引力)';
+        bondColor = '#f472b6';
+    } else if (tenkanRel.type === '相生') {
+        bondIcon = '🌱';
+        bondTag = '相生 (育み合う光)';
+        bondColor = '#10b981';
+    } else if (tenkanRel.type === '比和') {
+        bondIcon = '🤝';
+        bondTag = '比和 (共鳴する魂)';
+        bondColor = '#38bdf8';
+    } else if (tenkanRel.type === '相剋') {
+        bondIcon = '⚡';
+        bondTag = '相剋 (刺激と錬磨)';
+        bondColor = '#f59e0b';
+    }
+
     const resultContainer = document.getElementById('compatibility-result-container');
     resultContainer.innerHTML = `
-        <h4 style="color: #6ee7b7; font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 1px dashed rgba(110, 231, 183, 0.3); padding-bottom: 0.5rem;">💞 相性Stargazer結果</h4>
-        <div style="display:flex; justify-content:space-between; margin-bottom: 1.5rem; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
-            <div style="flex:1; text-align:center;">
-                <div style="color:#94a3b8; font-size:0.9rem;">${nameA}</div>
-                <div style="font-size:1.5rem; color:#fbc2eb; font-weight:bold;">${mA.dayTenkan}${mA.dayChishi}</div>
+        <h4 style="color: #6ee7b7; font-size: 1.2rem; margin-bottom: 1.2rem; border-bottom: 1px dashed rgba(110, 231, 183, 0.3); padding-bottom: 0.5rem; text-align: center; letter-spacing: 0.05em;">💞 相性Stargazer 鑑定結果</h4>
+
+        <!-- ✨ 左右デュアル自然イメージ表示 -->
+        <div class="comp-dual-section">
+            <!-- あなたのカード -->
+            <div class="comp-nature-card">
+                <div class="comp-card-badge user-badge">${nameA}</div>
+                <div class="comp-img-wrapper" style="border-color: ${profA.color}66; box-shadow: 0 0 15px ${profA.color}33;">
+                    <img src="${profA.imageUrl}" alt="${profA.title}" class="comp-nature-img" onerror="this.src='assets/all_elements_paradise_cleaned.png'" />
+                    <div class="comp-img-overlay"></div>
+                    <span class="comp-stem-tag" style="background: ${profA.color}25; color: #fff; border: 1px solid ${profA.color}88; text-shadow: 0 0 5px ${profA.color};">
+                        ${profA.stemIcon} ${mA.dayTenkan}${mA.dayChishi}
+                    </span>
+                </div>
+                <div class="comp-card-info">
+                    <h5 class="comp-nature-title" style="color: ${profA.color};">${profA.title}</h5>
+                    <div class="comp-nature-zodiac">${profA.season} (${profA.zodiacAnimal})</div>
+                    <p class="comp-nature-poetic">${profA.poetic}</p>
+                </div>
             </div>
-            <div style="flex:0.5; display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:#fff;">×</div>
-            <div style="flex:1; text-align:center;">
-                <div style="color:#94a3b8; font-size:0.9rem;">${nameB}</div>
-                <div style="font-size:1.5rem; color:#fbc2eb; font-weight:bold;">${mB.dayTenkan}${mB.dayChishi}</div>
+
+            <!-- 中央コネクタ・エネルギーの絆 -->
+            <div class="comp-connector">
+                <div class="comp-connector-icon" style="text-shadow: 0 0 12px ${bondColor};">${bondIcon}</div>
+                <div class="comp-connector-badge" style="background: ${bondColor}22; color: ${bondColor}; border: 1px solid ${bondColor}66;">
+                    ${bondTag}
+                </div>
+                <div class="comp-connector-line"></div>
+            </div>
+
+            <!-- お相手のカード -->
+            <div class="comp-nature-card">
+                <div class="comp-card-badge partner-badge">${nameB}</div>
+                <div class="comp-img-wrapper" style="border-color: ${profB.color}66; box-shadow: 0 0 15px ${profB.color}33;">
+                    <img src="${profB.imageUrl}" alt="${profB.title}" class="comp-nature-img" onerror="this.src='assets/all_elements_paradise_cleaned.png'" />
+                    <div class="comp-img-overlay"></div>
+                    <span class="comp-stem-tag" style="background: ${profB.color}25; color: #fff; border: 1px solid ${profB.color}88; text-shadow: 0 0 5px ${profB.color};">
+                        ${profB.stemIcon} ${mB.dayTenkan}${mB.dayChishi}
+                    </span>
+                </div>
+                <div class="comp-card-info">
+                    <h5 class="comp-nature-title" style="color: ${profB.color};">${profB.title}</h5>
+                    <div class="comp-nature-zodiac">${profB.season} (${profB.zodiacAnimal})</div>
+                    <p class="comp-nature-poetic">${profB.poetic}</p>
+                </div>
             </div>
         </div>
 
-        <div style="text-align:center; margin-bottom: 1.5rem;">
-            <div style="font-size: 0.9rem; color: #cbd5e1;">総合相性スコア</div>
-            <div style="font-size: 3rem; font-weight: bold; color: ${score >= 70 ? '#f472b6' : (score >= 40 ? '#facc15' : '#94a3b8')};">${score}%</div>
+        <!-- 総合スコア -->
+        <div style="text-align:center; margin: 1.5rem 0; background: rgba(0,0,0,0.3); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+            <div style="font-size: 0.9rem; color: #cbd5e1; letter-spacing: 0.05em;">総合相性スコア</div>
+            <div style="font-size: 3.2rem; font-weight: bold; line-height: 1.1; margin: 0.3rem 0; color: ${score >= 70 ? '#f472b6' : (score >= 40 ? '#facc15' : '#94a3b8')}; text-shadow: 0 0 20px ${score >= 70 ? 'rgba(244,114,182,0.5)' : 'rgba(250,204,21,0.3)'};">
+                ${score}%
+            </div>
             ${specialBondsHtml}
         </div>
 
-        <table style="width: 100%; border-collapse: collapse; text-align: left; background: rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; background: rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem;">
             <tr style="background: rgba(161, 140, 209, 0.2); color: #e2e8f0;">
                 <th style="padding: 0.8rem; border-right: 1px solid rgba(255,255,255,0.1);">審査項目</th>
                 <th style="padding: 0.8rem; border-right: 1px solid rgba(255,255,255,0.1); width: 60px; text-align:center;">判定</th>
@@ -1358,7 +1574,7 @@ function handleCompatibilityCheck() {
 // 相性鑑定した人を万物の神域に保存する機能
 window.saveAppraisedPerson = function(name, tenkan, chishi, y, m, d) {
     let saved = JSON.parse(localStorage.getItem('metaverse_saved_people') || '[]');
-    if (!saved.some(p => p.name === name && p.tenkan === tenkan)) {
+    if (!saved.some(p => p.name === name && p.tenkan === tenkan && p.chishi === chishi)) {
         saved.push({ name, tenkan, chishi, y, m, d, savedAt: new Date().toISOString() });
         localStorage.setItem('metaverse_saved_people', JSON.stringify(saved));
         alert(`${name} さんを万物の神域（${tenkan} の領域）に保存しました！`);
@@ -1367,18 +1583,42 @@ window.saveAppraisedPerson = function(name, tenkan, chishi, y, m, d) {
     }
 };
 
-window.deleteSavedPerson = function(name, tenkan) {
-    if (!confirm(`${name} さんを神域からの登録から削除してもよろしいですか？`)) return;
+window.deleteSavedPerson = function(btnElement, name, tenkan, chishi, currentContext) {
+    if (!confirm(`${name} さん（${tenkan}${chishi || ''}）を神域の保存リストから削除してもよろしいですか？`)) return;
+
+    // クリックされたカード要素を即座にフェードアウト・縮小アニメーション
+    const card = btnElement ? btnElement.closest('.saved-person-item') : null;
+    if (card) {
+        card.style.transition = 'all 0.35s ease';
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.9) translateX(30px)';
+        card.style.maxHeight = card.offsetHeight + 'px';
+        setTimeout(() => {
+            card.style.maxHeight = '0';
+            card.style.paddingTop = '0';
+            card.style.paddingBottom = '0';
+            card.style.marginTop = '0';
+            card.style.marginBottom = '0';
+            card.style.border = 'none';
+        }, 50);
+    }
+
     let saved = JSON.parse(localStorage.getItem('metaverse_saved_people') || '[]');
-    saved = saved.filter(p => !(p.name === name && p.tenkan === tenkan));
+    saved = saved.filter(p => !(p.name === name && p.tenkan === tenkan && (!chishi || p.chishi === chishi)));
     localStorage.setItem('metaverse_saved_people', JSON.stringify(saved));
     
-    // リストの再描画
-    const node = document.querySelector(`.element-node[data-stem="\${tenkan}"]`);
-    if (node) {
-        node.dataset.dragged = 'false';
-        node.click();
-    }
+    // アニメーション完了後にリスト全体を安全に再描画
+    setTimeout(() => {
+        if (currentContext === '律音' || currentContext === '宿命大半会' || currentContext === '納音') {
+            if (typeof showSpecialBondPeople === 'function') {
+                showSpecialBondPeople(currentContext);
+            }
+        } else {
+            if (typeof renderElementGroupList === 'function') {
+                renderElementGroupList(tenkan);
+            }
+        }
+    }, 400);
 };
 
 
@@ -2783,15 +3023,23 @@ window.showSpecialBondPeople = function(bondType) {
     const listContainer = document.getElementById('element-group-list');
 
     if (people.length === 0) {
-        listContainer.innerHTML = `<p style="color:var(--text-secondary); text-align:center;">神域にはまだ「${bondType}」のご縁を持つ人はいません。<br>様々な人をStargazerで読み解いてみましょう。</p>`;
+        listContainer.innerHTML = `<p style="color:var(--text-secondary); text-align:center; padding:1.5rem 0;">神域にはまだ「${bondType}」のご縁を持つ人はいません。<br>様々な人を相性で読み解いて保存してみましょう。</p>`;
     } else {
         listContainer.innerHTML = people.map(p => {
             const personJson = encodeURIComponent(JSON.stringify(p));
             return `
-            <div class="saved-person-item" onclick="recheckCompatibility('${personJson}')" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; margin-bottom:0.8rem; transition: background 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid ${bondColor};">
-                <div style="font-size:1.1rem; font-weight:bold; color:#fbc2eb;">${p.name} <span style="font-size:0.85rem; color:#94a3b8; font-weight:normal; margin-left:0.5rem;">(${p.tenkan}${p.chishi})</span></div>
-                <div style="font-size:0.9rem; color:#94a3b8; display:flex; align-items:center; gap:0.5rem;">
-                    相性を確認 <span style="font-size:1.2rem; color:#fff;">▶</span>
+            <div class="saved-person-item" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:1rem 1.2rem; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border-left: 4px solid ${bondColor};">
+                <div style="display:flex; flex-direction:column; gap:0.2rem; cursor:pointer;" onclick="recheckCompatibility('${personJson}')">
+                    <div style="font-size:1.15rem; font-weight:bold; color:#fbc2eb;">${p.name} <span style="font-size:0.85rem; color:#94a3b8; font-weight:normal;">(${p.tenkan}${p.chishi || ''})</span></div>
+                    <div style="font-size:0.8rem; color:#94a3b8;">${p.y ? p.y + '年' + p.m + '月' + p.d + '日生' : ''}</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.6rem;">
+                    <button type="button" class="btn-primary" onclick="recheckCompatibility('${personJson}')" style="padding:0.4rem 0.9rem; font-size:0.85rem; border-radius:20px; background:linear-gradient(135deg, #818cf8 0%, #c084fc 100%); color:#fff; border:none; cursor:pointer; display:flex; align-items:center; gap:0.3rem;">
+                        <span>相性</span> <span>▶</span>
+                    </button>
+                    <button type="button" onclick="event.stopPropagation(); deleteSavedPerson(this, '${p.name}', '${p.tenkan}', '${p.chishi || ''}', '${bondType}')" style="background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.4); color:#fca5a5; font-size:0.85rem; cursor:pointer; padding:0.4rem 0.8rem; border-radius:20px; display:flex; align-items:center; gap:0.3rem; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.4)'; this.style.color='#fff';" onmouseout="this.style.background='rgba(239, 68, 68, 0.15)'; this.style.color='#fca5a5';" title="この人を削除">
+                        <span>🗑️</span> <span>削除</span>
+                    </button>
                 </div>
             </div>
         `}).join('');
@@ -2807,7 +3055,6 @@ let originalDescText = '';
 
 document.addEventListener('DOMContentLoaded', () => {
     const doorAllElements = document.getElementById('door-all-elements');
-    const btnReturnAllElements = document.getElementById('btn-return-all-elements');
 
     if (doorAllElements) {
         doorAllElements.addEventListener('click', () => {
@@ -2856,43 +3103,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (btnReturnAllElements) {
-        btnReturnAllElements.addEventListener('click', () => {
-            const canvasContainer = document.getElementById('canvas-container');
-            const titleEl = document.getElementById('env-title');
-            const descEl = document.getElementById('env-desc');
-            const doorsToShow = ['door-work', 'door-private', 'door-romance', 'door-calendar', 'door-compatibility', 'door-all-elements'];
-            const themeBtns = document.querySelector('.theme-buttons');
+    const btnReturnAllElements = document.getElementById('btn-return-all-elements');
 
-            canvasContainer.style.opacity = '0.3';
+    const handleReturnFromAllElements = () => {
+        const canvasContainer = document.getElementById('canvas-container');
+        const titleEl = document.getElementById('env-title');
+        const descEl = document.getElementById('env-desc');
+        const doorsToShow = ['door-work', 'door-private', 'door-romance', 'door-calendar', 'door-compatibility', 'door-all-elements'];
+        const themeBtns = document.querySelector('.theme-buttons');
 
-            setTimeout(() => {
-                // 元に戻る
-                titleEl.textContent = originalTitleText;
-                descEl.textContent = originalDescText;
-                
-                // Show all doors again
-                doorsToShow.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) {
-                        el.style.display = 'flex'; 
-                    }
-                });
-                if (themeBtns) themeBtns.style.display = 'flex';
+        canvasContainer.style.opacity = '0.3';
 
-                // Hide elements UI
-                const allElemUi = document.getElementById('all-elements-ui');
-                if (allElemUi) {
-                    allElemUi.style.opacity = '0';
-                    setTimeout(() => allElemUi.classList.add('hidden'), 1000);
+        setTimeout(() => {
+            // 元に戻る
+            titleEl.textContent = originalTitleText;
+            descEl.textContent = originalDescText;
+            
+            // Show all doors again
+            doorsToShow.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.style.display = 'flex'; 
                 }
-                
-                document.body.classList.remove('in-all-elements-space');
-                isAllElementsSpace = false;
-                
-                canvasContainer.style.opacity = '1';
-            }, 1000);
-        });
+            });
+            if (themeBtns) themeBtns.style.display = 'flex';
+
+            // Hide elements UI
+            const allElemUi = document.getElementById('all-elements-ui');
+            if (allElemUi) {
+                allElemUi.style.opacity = '0';
+                setTimeout(() => allElemUi.classList.add('hidden'), 1000);
+            }
+            
+            document.body.classList.remove('in-all-elements-space');
+            isAllElementsSpace = false;
+            
+            canvasContainer.style.opacity = '1';
+        }, 1000);
+    };
+
+    if (btnReturnAllElements) {
+        btnReturnAllElements.addEventListener('click', handleReturnFromAllElements);
     }
 
     // 万物の属性ノードドラッグ＆ドロップおよびクリックイベント
@@ -2971,35 +3222,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 node.dataset.dragged = 'false';
                 return;
             }
-            
-            const iconText = node.textContent.trim(); // "木 (甲) 🌳"
-            const parts = iconText.split(' ');
-            const iconLabel = parts[2] ? parts[2] : '';
-            const stemLabel = parts[0] ? parts[0] : stem;
-
-            const saved = JSON.parse(localStorage.getItem('metaverse_saved_people') || '[]');
-            const people = saved.filter(p => p.tenkan === stem);
-            
-            document.getElementById('element-group-title').innerHTML = `<span>${iconLabel}</span> ${stemLabel} のご縁を持つ人々`;
-            const listContainer = document.getElementById('element-group-list');
-            
-            if (people.length === 0) {
-                listContainer.innerHTML = '<p style="color:var(--text-secondary); text-align:center;">まだこの属性の人はいません。<br>相性の空間からStargazerをして保存してみましょう。</p>';
-            } else {
-                listContainer.innerHTML = people.map(p => {
-                    const personJson = encodeURIComponent(JSON.stringify(p));
-                    return `
-                    <div class="saved-person-item" onclick="recheckCompatibility('${personJson}')" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; margin-bottom:0.8rem; transition: background 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        <div style="font-size:1.1rem; font-weight:bold; color:#fbc2eb;">${p.name}</div>
-                        <div style="font-size:0.9rem; color:#94a3b8; display:flex; align-items:center; gap:0.5rem;">
-                            相性を確認 <span style="font-size:1.2rem; color:#fff;">▶</span>
-                            <button type="button" onclick="event.stopPropagation(); deleteSavedPerson('${p.name}', '${p.tenkan}')" style="background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); color:#fca5a5; font-size:1rem; cursor:pointer; margin-left:1rem; padding:0.3rem 0.6rem; border-radius:4px; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)'; this.style.color='#fff';" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'; this.style.color='#fca5a5';" title="削除">削除</button>
-                        </div>
-                    </div>
-                `}).join('');
-            }
-            document.getElementById('element-group-modal').classList.remove('hidden');
+            window.renderElementGroupList(stem);
         });
     });
 
 });
+
+// 十干属性グループのモーダル描画共通関数
+window.renderElementGroupList = function(stem) {
+    const node = document.querySelector(`.element-node[data-stem="${stem}"]`);
+    let iconLabel = '';
+    let stemLabel = stem;
+    if (node) {
+        const iconText = node.textContent.trim();
+        const parts = iconText.split(' ');
+        iconLabel = parts[2] ? parts[2] : '';
+        stemLabel = parts[0] ? parts[0] : stem;
+    }
+
+    const saved = JSON.parse(localStorage.getItem('metaverse_saved_people') || '[]');
+    const people = saved.filter(p => p.tenkan === stem);
+
+    document.getElementById('element-group-title').innerHTML = `<span>${iconLabel}</span> ${stemLabel} のご縁を持つ人々`;
+    const listContainer = document.getElementById('element-group-list');
+
+    if (people.length === 0) {
+        listContainer.innerHTML = '<p style="color:var(--text-secondary); text-align:center; padding:1.5rem 0;">まだこの属性の人はいません。<br>相性の空間からStargazerをして保存してみましょう。</p>';
+    } else {
+        listContainer.innerHTML = people.map(p => {
+            const personJson = encodeURIComponent(JSON.stringify(p));
+            return `
+            <div class="saved-person-item" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:1rem 1.2rem; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+                <div style="display:flex; flex-direction:column; gap:0.2rem; cursor:pointer;" onclick="recheckCompatibility('${personJson}')">
+                    <div style="font-size:1.15rem; font-weight:bold; color:#fbc2eb;">${p.name} <span style="font-size:0.85rem; color:#94a3b8; font-weight:normal;">(${p.tenkan}${p.chishi || ''})</span></div>
+                    <div style="font-size:0.8rem; color:#94a3b8;">${p.y ? p.y + '年' + p.m + '月' + p.d + '日生' : ''}</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.6rem;">
+                    <button type="button" class="btn-primary" onclick="recheckCompatibility('${personJson}')" style="padding:0.4rem 0.9rem; font-size:0.85rem; border-radius:20px; background:linear-gradient(135deg, #818cf8 0%, #c084fc 100%); color:#fff; border:none; cursor:pointer; display:flex; align-items:center; gap:0.3rem;">
+                        <span>相性</span> <span>▶</span>
+                    </button>
+                    <button type="button" onclick="event.stopPropagation(); deleteSavedPerson(this, '${p.name}', '${p.tenkan}', '${p.chishi || ''}', '${stem}')" style="background:rgba(239, 68, 68, 0.15); border:1px solid rgba(239, 68, 68, 0.4); color:#fca5a5; font-size:0.85rem; cursor:pointer; padding:0.4rem 0.8rem; border-radius:20px; display:flex; align-items:center; gap:0.3rem; transition: all 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.4)'; this.style.color='#fff';" onmouseout="this.style.background='rgba(239, 68, 68, 0.15)'; this.style.color='#fca5a5';" title="この人を削除">
+                        <span>🗑️</span> <span>削除</span>
+                    </button>
+                </div>
+            </div>
+        `}).join('');
+    }
+    document.getElementById('element-group-modal').classList.remove('hidden');
+};

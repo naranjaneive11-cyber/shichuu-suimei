@@ -132,16 +132,16 @@
         </div>
 
         <!-- 万物の神域 UI (初期非表示) -->
-        <div id="all-elements-ui" class="hidden" style="position: absolute; top:0; left:0; width:100vw; height:100vh; overflow: hidden; pointer-events:none; z-index:55; display:flex; flex-direction:column; justify-content:center; align-items:center; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);">
+        <div id="all-elements-ui" class="hidden" style="position: absolute; top:0; left:0; width:100vw; height:100vh; overflow-y: auto; pointer-events:none; z-index:55; display:flex; flex-direction:column; justify-content:center; align-items:center; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); padding: 1.5rem 1rem; box-sizing: border-box;">
             
-            <div id="bond-filter-buttons" style="margin-bottom: 1rem; display: flex; gap: 0.5rem; pointer-events: auto; z-index: 60; flex-wrap: wrap; justify-content: center; width: 95%; max-width: 600px;">
+            <div id="bond-filter-buttons" style="margin-bottom: 0.8rem; display: flex; gap: 0.5rem; pointer-events: auto; z-index: 60; flex-wrap: wrap; justify-content: center; width: 95%; max-width: 600px;">
                 <button type="button" class="btn-primary glass" onclick="showSpecialBondPeople('律音')" style="padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; border: 1px solid rgba(244, 114, 182, 0.5); color: #fbc2eb; box-shadow: 0 4px 15px rgba(244, 114, 182, 0.2); font-family: 'Noto Sans JP', sans-serif; white-space: nowrap; flex: 1 1 auto; min-width: 100px;">🔮 律音の人々</button>
                 <button type="button" class="btn-primary glass" onclick="showSpecialBondPeople('宿命大半会')" style="padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; border: 1px solid rgba(167, 139, 250, 0.5); color: #c4b5fd; box-shadow: 0 4px 15px rgba(167, 139, 250, 0.2); font-family: 'Noto Sans JP', sans-serif; white-space: nowrap; flex: 1 1 auto; min-width: 100px;">⭐ 宿命大半会</button>
                 <button type="button" class="btn-primary glass" onclick="showSpecialBondPeople('納音')" style="padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; border: 1px solid rgba(56, 189, 248, 0.5); color: #7dd3fc; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2); font-family: 'Noto Sans JP', sans-serif; white-space: nowrap; flex: 1 1 auto; min-width: 100px;">⚡ 納音の人々</button>
             </div>
 
-            <div id="all-elements-scroll-wrapper" style="width: 100%; max-width: 1400px; display: flex; justify-content: center; pointer-events: auto; padding: 0;">
-                <div id="all-elements-bg" style="position:relative; width:100%; max-width:1400px; aspect-ratio:16/9; background-image:url('assets/all_elements_paradise_cleaned.png'); background-size:contain; background-position:center; background-repeat:no-repeat; border-radius:12px; box-shadow:0 0 40px rgba(0,0,0,0.8); margin: 0 auto;">
+            <div id="all-elements-scroll-wrapper" style="width: 100%; max-width: 1100px; display: flex; justify-content: center; pointer-events: auto; padding: 0;">
+                <div id="all-elements-bg" style="position:relative; width:100%; max-width:1100px; max-height:60vh; aspect-ratio:16/9; background-image:url('assets/all_elements_paradise_cleaned.png'); background-size:contain; background-position:center; background-repeat:no-repeat; border-radius:12px; box-shadow:0 0 40px rgba(0,0,0,0.8); margin: 0 auto;">
                     <div class="element-node" data-stem="甲" style="top: 65%; left: 15%;">木 (甲) 🌳</div>
                     <div class="element-node" data-stem="乙" style="top: 90%; left: 20%;">草 (乙) 🌿</div>
                     <div class="element-node" data-stem="丙" style="top: 18%; left: 75%;">陽 (丙) ☀️</div>
@@ -155,7 +155,7 @@
                 </div>
             </div>
             
-            <button type="button" id="btn-return-all-elements" class="btn-primary glass" style="margin-top: 2rem; padding: 1rem 3rem; border-radius: 30px; font-size: 1.1rem; pointer-events: auto; z-index: 60; box-shadow: 0 4px 15px rgba(255,255,255,0.2);">🌌 元の空間に戻る</button>
+            <button type="button" id="btn-return-all-elements" class="btn-primary glass" style="margin-top: 1.2rem; padding: 0.8rem 2.5rem; border-radius: 30px; font-size: 1.05rem; pointer-events: auto; z-index: 60; box-shadow: 0 4px 15px rgba(255,255,255,0.2);">🌌 元の空間に戻る</button>
         </div>
 
         <!-- テーマボタン -->
@@ -182,63 +182,124 @@
     <!-- Gateway UI -->
     <div id="gateway" class="gateway-container">
         <div class="glass-panel gateway-card">
-            <h1 class="title" style="font-size: 2rem;">🌌 Stargazer</h1>
-            <p style="text-align: center; margin-bottom: 2rem; color: var(--text-secondary);">
-                生年月日に基づいた、あなただけの星の世界のStargazerを開始します。<br>日干が空間を、日支がアバターを形作ります。</p>
+            <h1 class="title" style="font-size: 2.2rem; text-align: center; margin-bottom: 0.5rem;">🌌 Stargazer</h1>
+            <p style="text-align: center; margin-bottom: 1.8rem; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                生年月日に基づいた、あなただけの星の世界のメタバースを開始します。<br>日干が空間の情景を、日支がアバターを形作ります。
+            </p>
 
             <form id="metaverse-form">
                 <div class="form-group">
                     <label for="mv-name">お名前</label>
                     <input type="text" id="mv-name" placeholder="例：山田 太郎" required>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>生年月日</label>
-                        <div class="birthday-selects">
-                            <select id="mv-year" required>
-                                <option value="">年</option>
-                            </select>
-                            <select id="mv-month" required>
-                                <option value="">月</option>
-                                <option value="1">1月</option>
-                                <option value="2">2月</option>
-                                <option value="3">3月</option>
-                                <option value="4">4月</option>
-                                <option value="5">5月</option>
-                                <option value="6">6月</option>
-                                <option value="7">7月</option>
-                                <option value="8">8月</option>
-                                <option value="9">9月</option>
-                                <option value="10">10月</option>
-                                <option value="11">11月</option>
-                                <option value="12">12月</option>
-                            </select>
-                            <select id="mv-day" required>
-                                <option value="">日</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>性別</label>
-                        <div class="radio-group">
-                            <label class="radio-label">
-                                <input type="radio" name="mv-gender" value="male" checked>
-                                <span>男性</span>
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="mv-gender" value="female">
-                                <span>女性</span>
-                            </label>
-                        </div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label>生年月日</label>
+                    <div class="birthday-selects">
+                        <select id="mv-year" name="mv-year" required style="flex: 1.3;">
+                            <option value="">年</option>
+                        </select>
+                        <select id="mv-month" name="mv-month" required style="flex: 1;">
+                            <option value="">月</option>
+                            <option value="1">1月</option>
+                            <option value="2">2月</option>
+                            <option value="3">3月</option>
+                            <option value="4">4月</option>
+                            <option value="5">5月</option>
+                            <option value="6">6月</option>
+                            <option value="7">7月</option>
+                            <option value="8">8月</option>
+                            <option value="9">9月</option>
+                            <option value="10">10月</option>
+                            <option value="11">11月</option>
+                            <option value="12">12月</option>
+                        </select>
+                        <select id="mv-day" name="mv-day" required style="flex: 1;">
+                            <option value="">日</option>
+                            <option value="1">1日</option>
+                            <option value="2">2日</option>
+                            <option value="3">3日</option>
+                            <option value="4">4日</option>
+                            <option value="5">5日</option>
+                            <option value="6">6日</option>
+                            <option value="7">7日</option>
+                            <option value="8">8日</option>
+                            <option value="9">9日</option>
+                            <option value="10">10日</option>
+                            <option value="11">11日</option>
+                            <option value="12">12日</option>
+                            <option value="13">13日</option>
+                            <option value="14">14日</option>
+                            <option value="15">15日</option>
+                            <option value="16">16日</option>
+                            <option value="17">17日</option>
+                            <option value="18">18日</option>
+                            <option value="19">19日</option>
+                            <option value="20">20日</option>
+                            <option value="21">21日</option>
+                            <option value="22">22日</option>
+                            <option value="23">23日</option>
+                            <option value="24">24日</option>
+                            <option value="25">25日</option>
+                            <option value="26">26日</option>
+                            <option value="27">27日</option>
+                            <option value="28">28日</option>
+                            <option value="29">29日</option>
+                            <option value="30">30日</option>
+                            <option value="31">31日</option>
+                        </select>
                     </div>
                 </div>
-                <button type="submit" class="btn-primary"
-                    style="margin-top:1.5rem; width:100%; box-shadow: 0 0 20px rgba(161, 140, 209, 0.5);">Stargazerへ</button>
-                <div style="margin-top:1.5rem; text-align:center;">
+
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label>性別</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="mv-gender" value="male" checked>
+                            <span>男性</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="mv-gender" value="female">
+                            <span>女性</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-dive-metaverse" onclick="if(window.handleMetaverseSubmit){window.handleMetaverseSubmit(event);}" class="btn-primary"
+                    style="width: 100%; padding: 1rem 2rem; border-radius: 30px; font-size: 1.1rem; font-weight: bold; background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%); color: #fff; border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(139, 92, 246, 0.5); transition: transform 0.2s, box-shadow 0.2s;">🌌 Stargazerへダイブ</button>
+                <div style="margin-top: 1.5rem; text-align: center;">
                     <a href="index.html" class="btn-secondary"
-                        style="text-decoration:none; display:inline-block; font-size:0.9rem;">← トップへ戻る</a>
+                        style="text-decoration: none; display: inline-block; font-size: 0.9rem; color: #94a3b8; padding: 0.5rem 1.2rem; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s;">← トップへ戻る</a>
                 </div>
             </form>
+            <script>
+                (function() {
+                    var ySel = document.getElementById('mv-year');
+                    if (ySel) {
+                        var curY = new Date().getFullYear();
+                        ySel.innerHTML = '<option value="">年</option>';
+                        for (var y = curY; y >= 1920; y--) {
+                            var opt = document.createElement('option');
+                            opt.value = y;
+                            opt.textContent = y + '年';
+                            ySel.appendChild(opt);
+                        }
+                    }
+                    var sName = localStorage.getItem('mv_name');
+                    var sY = localStorage.getItem('mv_y');
+                    var sM = localStorage.getItem('mv_m');
+                    var sD = localStorage.getItem('mv_d');
+                    var sG = localStorage.getItem('mv_gender');
+                    if (sName) { document.getElementById('mv-name').value = sName; }
+                    if (sY && ySel) { ySel.value = sY; }
+                    if (sM) { document.getElementById('mv-month').value = sM; }
+                    if (sD) { document.getElementById('mv-day').value = sD; }
+                    if (sG) {
+                        var r = document.querySelector('input[name="mv-gender"][value="' + sG + '"]');
+                        if (r) r.checked = true;
+                    }
+                })();
+            </script>
         </div>
     </div>
 
