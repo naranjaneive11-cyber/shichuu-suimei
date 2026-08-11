@@ -187,14 +187,42 @@ select option {
 }
 
 .birthday-selects {
-    display: flex;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 0.4rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .birthday-selects select {
-    flex: 1;
+    width: 100%;
     min-width: 0;
-    padding-right: 0.5rem;
+    box-sizing: border-box;
+    padding: 0.65rem 0.35rem;
+    text-align: center;
+    text-align-last: center;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.3rem center;
+    background-size: 0.85em;
+    padding-right: 1.2rem;
+}
+
+@media (max-width: 480px) {
+    .birthday-selects {
+        grid-template-columns: 1.25fr 1fr 1fr;
+        gap: 0.3rem;
+    }
+    .birthday-selects select {
+        padding: 0.6rem 0.2rem;
+        padding-right: 1rem;
+        font-size: 0.82rem;
+        background-position: right 0.15rem center;
+        background-size: 0.75em;
+    }
 }
 
 
