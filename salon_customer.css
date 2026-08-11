@@ -1,0 +1,976 @@
+/* ==========================================================================
+   お客様専用 タブレット開運ヘア診断 スタイルシート
+   ========================================================================== */
+
+:root {
+    --bg-dark: #090d16;
+    --bg-card: rgba(18, 26, 43, 0.85);
+    --bg-card-glass: rgba(255, 255, 255, 0.05);
+    --accent-gold: #f59e0b;
+    --accent-gold-light: #fef08a;
+    --accent-rose: #f43f5e;
+    --accent-teal: #10b981;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-glass: rgba(255, 255, 255, 0.12);
+    --border-gold: rgba(245, 158, 11, 0.35);
+    --shadow-rich: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 158, 11, 0.1);
+    --radius-xl: 20px;
+    --radius-md: 12px;
+    --font-family: 'Outfit', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(at 10% 10%, rgba(245, 158, 11, 0.15) 0px, transparent 40%),
+        radial-gradient(at 90% 90%, rgba(56, 189, 248, 0.12) 0px, transparent 45%),
+        radial-gradient(at 50% 50%, rgba(244, 63, 94, 0.08) 0px, transparent 50%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-bottom: 3rem;
+}
+
+/* タブレットヘッダー */
+.cust-header {
+    background: rgba(9, 13, 22, 0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-glass);
+    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cust-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.brand-icon {
+    font-size: 1.4rem;
+}
+
+.brand-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+
+.brand-sub {
+    font-size: 0.75rem;
+    color: var(--accent-gold-light);
+    display: block;
+}
+
+.header-links {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.link-btn {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    border: 1px solid var(--border-glass);
+    transition: all 0.2s;
+}
+
+.link-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* メインラッパー */
+.cust-container {
+    max-width: 860px;
+    margin: 2rem auto;
+    padding: 0 1.25rem;
+}
+
+/* ================= 入力ウェルカム画面 ================= */
+.welcome-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem 2rem;
+    box-shadow: var(--shadow-rich);
+    backdrop-filter: blur(20px);
+    text-align: center;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold-light);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.4rem 1.2rem;
+    border-radius: 30px;
+    margin-bottom: 1rem;
+    letter-spacing: 0.08em;
+}
+
+.welcome-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.02em;
+}
+
+.welcome-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    line-height: 1.7;
+}
+
+.cust-form-box {
+    background: rgba(9, 13, 22, 0.6);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    max-width: 620px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.form-row-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-row-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.form-input-cust {
+    width: 100%;
+    background: rgba(18, 26, 43, 0.9);
+    border: 1px solid var(--border-glass);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+}
+
+.form-input-cust:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+}
+
+/* 性別選択トグル */
+.cust-gender-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.gender-radio-label {
+    cursor: pointer;
+}
+
+.gender-radio-label input[type="radio"] {
+    display: none;
+}
+
+.gender-radio-label span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    background: rgba(18, 26, 43, 0.7);
+    border: 1.5px solid var(--border-glass);
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: all 0.25s ease;
+}
+
+.gender-radio-label input[type="radio"]:checked + span {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%);
+    border-color: var(--accent-gold);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.25);
+}
+
+.birthday-select-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.birthday-select-grid select {
+    background-color: rgba(18, 26, 43, 0.9);
+    border: 1px solid var(--border-glass);
+    color: #fff;
+    padding: 0.75rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    outline: none;
+    font-family: inherit;
+}
+
+.birthday-select-grid select option {
+    background: #0f172a;
+    color: #fff;
+}
+
+.btn-cust-submit {
+    width: 100%;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #090d16;
+    font-size: 1.15rem;
+    font-weight: 800;
+    border: none;
+    padding: 1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    transition: all 0.25s ease;
+    margin-top: 1.5rem;
+}
+
+.btn-cust-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+}
+
+/* ================= 診断結果画面 ================= */
+.result-container {
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* Hero結果カード */
+.hero-result-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-xl);
+    padding: 2.2rem;
+    box-shadow: var(--shadow-rich);
+    backdrop-filter: blur(20px);
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.res-user-title {
+    font-size: 1.3rem;
+    color: #fff;
+    font-weight: 700;
+}
+
+.element-pill-badge {
+    border: 1.5px solid var(--accent-gold);
+    padding: 0.4rem 1.2rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.res-catchphrase {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent-gold-light);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.res-desc-box {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.res-personality {
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    line-height: 1.8;
+}
+
+.res-mind-box {
+    background: rgba(244, 63, 94, 0.08);
+    border-left: 4px solid var(--accent-rose);
+    border-radius: 0 8px 8px 0;
+    padding: 0.85rem 1.2rem;
+}
+
+.res-mind-box strong {
+    color: #fecdd3;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.res-mind-advice {
+    font-size: 0.9rem;
+    color: #ffe4e6;
+    line-height: 1.6;
+}
+
+/* 2カラムレイアウト（カラー＆スタイル） */
+.res-grid-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .res-grid-split {
+        grid-template-columns: 1fr;
+    }
+}
+
+.feature-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.box-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid var(--border-glass);
+    padding-bottom: 0.75rem;
+}
+
+.box-head h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* カラーカード一覧 */
+.color-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.2rem;
+}
+
+.cust-color-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    transition: all 0.2s;
+}
+
+.cust-color-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.color-swatch-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.color-card-info {
+    flex: 1;
+}
+
+.color-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.color-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.texture-note {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: #a7f3d0;
+}
+
+/* スタイルリスト */
+.cust-style-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.2rem;
+}
+
+.cust-style-list li {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.style-check {
+    color: var(--accent-gold);
+}
+
+.lucky-care-box {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px dashed var(--border-gold);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: var(--accent-gold-light);
+}
+
+/* 🛍️ ホームケア＆アロマ処方箋カード */
+.homecare-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-xl);
+    padding: 1.8rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.homecare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .homecare-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.homecare-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    transition: all 0.2s;
+}
+
+.homecare-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.homecare-icon-badge {
+    font-size: 1.5rem;
+    background: rgba(15, 23, 42, 0.8);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid var(--border-glass);
+}
+
+.homecare-text {
+    flex: 1;
+}
+
+.homecare-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--accent-gold-light);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.homecare-val {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #f8fafc;
+    line-height: 1.4;
+}
+
+.homecare-advice-box {
+    background: rgba(245, 158, 11, 0.08);
+    border-left: 4px solid var(--accent-gold);
+    border-radius: 0 8px 8px 0;
+    padding: 0.85rem 1.2rem;
+    font-size: 0.85rem;
+    color: #fef08a;
+    line-height: 1.6;
+}
+
+.homecare-advice-box strong {
+    display: block;
+    color: var(--accent-gold);
+    font-size: 0.8rem;
+    margin-bottom: 2px;
+}
+
+/* 次回開運日バナー */
+.lucky-banner-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 78, 59, 0.35));
+    border: 1.5px solid var(--accent-teal);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+}
+
+.banner-text-left h4 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.25rem;
+}
+
+.banner-text-left p {
+    font-size: 0.85rem;
+    color: #a7f3d0;
+}
+
+.lucky-period-tag {
+    background: #10b981;
+    color: #064e3b;
+    font-size: 1.05rem;
+    font-weight: 800;
+    padding: 0.6rem 1.4rem;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+/* アクションボタン群 */
+.result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-secondary-action {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-glass);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary-action:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ================= SNSモーダル スタイル ================= */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal-card {
+    background: #121a2b;
+    border: 1px solid var(--border-gold);
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-rich);
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--border-glass);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 1.1rem;
+    color: var(--accent-gold-light);
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.btn-close:hover {
+    color: #fff;
+}
+
+.modal-body {
+    padding: 1.2rem 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-glass);
+    display: flex;
+    background: rgba(9, 13, 22, 0.9);
+}
+
+.sns-card-preview-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 0.5rem 0;
+}
+
+.sns-preview-img {
+    width: 270px;
+    height: 480px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 15px rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    object-fit: cover;
+}
+
+/* ================= 年間12ヶ月開運カレンダー スタイル ================= */
+.yearly-calendar-section {
+    background: var(--bg-card);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: var(--radius-xl);
+    padding: 1.8rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.yearly-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 1.2rem;
+}
+
+@media (max-width: 900px) {
+    .yearly-calendar-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 540px) {
+    .yearly-calendar-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.cal-month-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.cal-month-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cal-month-card.highlight {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(217, 119, 6, 0.05));
+    border: 1.5px solid var(--accent-gold);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+}
+
+.cal-month-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cal-month-num {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.cal-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.cal-badge.gold {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fef08a;
+    border: 1px solid var(--accent-gold);
+}
+
+.cal-badge.teal {
+    background: rgba(16, 185, 129, 0.2);
+    color: #a7f3d0;
+    border: 1px solid var(--accent-teal);
+}
+
+.cal-badge.pink {
+    background: rgba(236, 72, 153, 0.2);
+    color: #fbcfe8;
+    border: 1px solid rgba(236, 72, 153, 0.5);
+}
+
+.cal-badge.normal {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-glass);
+}
+
+.cal-theme-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.cal-hair-action {
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    line-height: 1.4;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 6px 8px;
+    border-radius: 6px;
+    margin: 0;
+}
+
+.cal-mind-tip {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    line-height: 1.3;
+    margin: 0;
+}
+
+/* ================= 2WAY ヘアスタイルカード ================= */
+.twoway-styles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+@media (max-width: 640px) {
+    .twoway-styles-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.twoway-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-md);
+    padding: 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.2s;
+}
+
+.twoway-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-2px);
+}
+
+.twoway-card.on-style {
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+.twoway-card.off-style {
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.twoway-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 0.6rem;
+}
+
+.twoway-badge.on {
+    background: rgba(56, 189, 248, 0.15);
+    color: #7dd3fc;
+    border: 1px solid #38bdf8;
+}
+
+.twoway-badge.off {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fef08a;
+    border: 1px solid var(--accent-gold);
+}
+
+.twoway-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.4rem;
+}
+
+.twoway-desc {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+/* ================= 神秘的な星読みローディング演出 ================= */
+.loading-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(7, 10, 16, 0.92);
+    backdrop-filter: blur(12px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.loading-content {
+    text-align: center;
+    max-width: 400px;
+    padding: 2rem;
+}
+
+.star-spinner {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1.5rem;
+    border: 3px solid rgba(245, 158, 11, 0.2);
+    border-top: 3px solid var(--accent-gold);
+    border-right: 3px solid var(--accent-gold-light);
+    border-radius: 50%;
+    animation: spin 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent-gold-light);
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.loading-sub {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ================= エレメント別ダイナミック背景テーマ ================= */
+body[data-element="木"] {
+    --accent-glow: rgba(16, 185, 129, 0.15);
+}
+body[data-element="火"] {
+    --accent-glow: rgba(239, 68, 68, 0.15);
+}
+body[data-element="土"] {
+    --accent-glow: rgba(245, 158, 11, 0.15);
+}
+body[data-element="金"] {
+    --accent-glow: rgba(148, 163, 184, 0.2);
+}
+body[data-element="水"] {
+    --accent-glow: rgba(2, 132, 199, 0.2);
+}
+
+.hidden {
+    display: none !important;
+}

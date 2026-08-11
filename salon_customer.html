@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パーソナル開運ヘア診断 | Stargazer Salon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="salon_customer.css">
+</head>
+<body>
+
+    <!-- タブレットヘッダー -->
+    <header class="cust-header">
+        <div class="cust-brand">
+            <span class="brand-icon">✨✂️</span>
+            <div>
+                <div class="brand-text">STARGAZER SALON</div>
+                <span class="brand-sub">髪を整え、心をほどく。開運ヘア診断</span>
+            </div>
+        </div>
+        <div class="header-links">
+            <a href="salon_cheat_sheet.html" class="link-btn">✂️ スタッフ用画面へ</a>
+            <a href="index.html" class="link-btn">📄 通常鑑定へ</a>
+        </div>
+    </header>
+
+    <main class="cust-container">
+
+        <!-- ================= ① 入力ウェルカム画面 ================= -->
+        <section id="cust-input-screen" class="welcome-card">
+            <span class="welcome-badge">PERSONAL FORTUNE & BEAUTY</span>
+            <h1 class="welcome-title">あなただけの開運ヘアカラー＆スタイル診断</h1>
+            <p class="welcome-desc">
+                生年月日から、あなたが生まれ持った自然界のエレメント（五行）と本質を導き出し、<br>
+                今一番あなたを輝かせる「開運ヘアカラー」「似合わせスタイル」を診断します。
+            </p>
+
+            <form id="cust-diag-form" class="cust-form-box">
+                <div class="form-row-group">
+                    <label for="cust-diag-name">お名前（ニックネームでもOK）</label>
+                    <input type="text" id="cust-diag-name" class="form-input-cust" placeholder="例: さとう">
+                </div>
+
+                <div class="form-row-group">
+                    <label>生年月日 <span style="color:#f43f5e">*</span></label>
+                    <div class="birthday-select-grid">
+                        <select id="cust-diag-year" required>
+                            <option value="">年</option>
+                        </select>
+                        <select id="cust-diag-month" required>
+                            <option value="">月</option>
+                        </select>
+                        <select id="cust-diag-day" required>
+                            <option value="">日</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row-group">
+                    <label>スタイルタイプ（性別）</label>
+                    <div class="cust-gender-toggle">
+                        <label class="gender-radio-label">
+                            <input type="radio" name="cust-diag-gender" value="female" checked>
+                            <span>👩 レディース提案</span>
+                        </label>
+                        <label class="gender-radio-label">
+                            <input type="radio" name="cust-diag-gender" value="male">
+                            <span>👨 メンズ提案</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-cust-submit">
+                    <span>✨</span> 開運ヘアスタイルを診断する
+                </button>
+            </form>
+        </section>
+
+        <!-- ================= ② 診断結果画面 ================= -->
+        <section id="cust-result-screen" class="result-container hidden">
+            
+            <!-- Hero結果カード -->
+            <div class="hero-result-card">
+                <div class="hero-header">
+                    <h2 id="res-user-name" class="res-user-title">佐藤 様 の開運ヘアカルテ</h2>
+                    <div id="res-element-badge" class="element-pill-badge">🌲 木（大樹タイプ）</div>
+                </div>
+
+                <div id="res-catchphrase" class="res-catchphrase">まっすぐ上を目指すリーダー・向上心の塊</div>
+                
+                <div class="res-desc-box">
+                    <p id="res-personality" class="res-personality"></p>
+                </div>
+
+                <div class="res-mind-box">
+                    <strong>💡 心をほどく開運メッセージ:</strong>
+                    <p id="res-mind-advice" class="res-mind-advice"></p>
+                </div>
+            </div>
+
+            <!-- 2カラム構成：開運カラー & ヘアスタイル -->
+            <div class="res-grid-split">
+                
+                <!-- 開運パーソナルカラー -->
+                <div class="feature-box">
+                    <div class="box-head">
+                        <span style="font-size: 1.3rem;">🎨</span>
+                        <h3>あなたを輝かせる開運ヘアカラー</h3>
+                    </div>
+                    <div id="res-color-cards" class="color-cards-list">
+                        <!-- JSで動的生成 -->
+                    </div>
+                    <div class="texture-note">
+                        <strong>🌟 おすすめの質感：</strong>
+                        <span id="res-texture"></span>
+                    </div>
+                </div>
+
+                <!-- おすすめ開運スタイル（2WAY提案） -->
+                <div class="feature-box">
+                    <div class="box-head">
+                        <span style="font-size: 1.3rem;">✂️</span>
+                        <h3>運気を引き寄せる「2WAY」ヘアデザイン</h3>
+                    </div>
+                    
+                    <div class="twoway-styles-grid">
+                        <div class="twoway-card on-style">
+                            <div class="twoway-badge on">💼 仕事・勝負のONスタイル</div>
+                            <h4 id="res-on-style-title" class="twoway-title"></h4>
+                            <p id="res-on-style-desc" class="twoway-desc"></p>
+                        </div>
+                        <div class="twoway-card off-style">
+                            <div class="twoway-badge off">🌿 休日・癒やしのOFFスタイル</div>
+                            <h4 id="res-off-style-title" class="twoway-title"></h4>
+                            <p id="res-off-style-desc" class="twoway-desc"></p>
+                        </div>
+                    </div>
+
+                    <div class="lucky-care-box" style="margin-top: 1rem;">
+                        <strong>💆‍♀️ サロンおすすめの開運ケア：</strong>
+                        <span id="res-lucky-care"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 🛍️ あなたを高める開運アロマ＆ホームケア処方箋 -->
+            <div class="homecare-card" style="margin-bottom: 1.5rem;">
+                <div class="box-head" style="border-color: rgba(245, 158, 11, 0.3);">
+                    <span style="font-size: 1.3rem;">🛍️</span>
+                    <div>
+                        <h3 style="color: var(--accent-gold-light);">あなたを高める「開運アロマ＆ホームケア処方箋」</h3>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary);">サロン専売品・おうちでできる開運セルフケア</p>
+                    </div>
+                </div>
+                
+                <div class="homecare-grid">
+                    <div class="homecare-item">
+                        <div class="homecare-icon-badge">🌿</div>
+                        <div class="homecare-text">
+                            <span class="homecare-label">開運アロマ・香りの処方箋</span>
+                            <h4 id="res-home-aroma" class="homecare-val"></h4>
+                        </div>
+                    </div>
+
+                    <div class="homecare-item">
+                        <div class="homecare-icon-badge">🧴</div>
+                        <div class="homecare-text">
+                            <span class="homecare-label">おすすめシャンプー＆トリートメント</span>
+                            <h4 id="res-home-shampoo" class="homecare-val"></h4>
+                        </div>
+                    </div>
+
+                    <div class="homecare-item">
+                        <div class="homecare-icon-badge">✨</div>
+                        <div class="homecare-text">
+                            <span class="homecare-label">開運スタイリング剤＆アウトバス</span>
+                            <h4 id="res-home-styling" class="homecare-val"></h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="homecare-advice-box">
+                    <strong>💡 スタイリストからのホームケアアドバイス：</strong>
+                    <p id="res-home-advice"></p>
+                </div>
+            </div>
+
+            <!-- 📅 年間12ヶ月 開運メンテナンス・カレンダー -->
+            <div class="yearly-calendar-section" style="margin-bottom: 1.5rem;">
+                <div class="box-head" style="border-color: rgba(56, 189, 248, 0.3);">
+                    <span style="font-size: 1.3rem;">📅</span>
+                    <div>
+                        <h3 style="color: #38bdf8;">あなたの年間12ヶ月「開運メンテナンス・カレンダー」</h3>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary);">季節のバイオリズムに合わせた最適なヘアケア＆邪気払いサイクル</p>
+                    </div>
+                </div>
+
+                <div id="res-yearly-calendar-grid" class="yearly-calendar-grid">
+                    <!-- JSで12ヶ月分動的生成 -->
+                </div>
+            </div>
+
+            <!-- 次回開運日バナー -->
+            <div class="lucky-banner-card">
+                <div class="banner-text-left">
+                    <h4>🌟 次回の開運メンテナンス時期</h4>
+                    <p>エネルギーの切り替わりと、髪の美しさをキープするベストタイミングです。</p>
+                </div>
+                <div id="res-lucky-period" class="lucky-period-tag">
+                    9月25日 〜 10月10日頃
+                </div>
+            </div>
+
+            <!-- アクションボタン -->
+            <div class="result-actions" style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center;">
+                <button type="button" id="btn-open-sns-modal" class="btn-cust-submit" style="width: auto; margin-top: 0; padding: 0.8rem 2rem;">
+                    <span>📸</span> スマホ用待ち受け・SNS画像を生成
+                </button>
+                <button type="button" id="btn-copy-share-url" class="btn-secondary-action" style="border-color: #38bdf8; color: #7dd3fc;">
+                    <span>🔗</span> 診断結果URLをコピー
+                </button>
+                <button type="button" id="btn-re-diag" class="btn-secondary-action">
+                    🔄 もう一度診断する
+                </button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ================= 神秘的な星読みローディング演出 ================= -->
+    <div id="cust-loading-overlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="star-spinner"></div>
+            <h3 class="loading-title">星の配置を読み解いています...</h3>
+            <p class="loading-sub">あなたの生年月日から守護エレメントと開運ヘアを導き出しています</p>
+        </div>
+    </div>
+
+    <!-- ================= スマホ用待ち受け・SNS画像生成モーダル ================= -->
+    <div id="sns-modal" class="modal-overlay hidden">
+        <div class="modal-card" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3>📸 スマホ待ち受け・SNSシェア画像</h3>
+                <button type="button" id="btn-close-sns-modal" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Instagramのストーリーや、スマホの待ち受け画面にぴったりな縦長開運カードです✨
+                </p>
+
+                <!-- プレビュー表示エリア（Canvasレンダリング結果） -->
+                <div class="sns-card-preview-wrap">
+                    <img id="sns-preview-img" class="sns-preview-img" alt="開運待ち受けカード">
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: center; gap: 0.75rem;">
+                <a id="btn-download-sns-card" class="btn-cust-submit" style="text-decoration: none; width: auto; margin-top: 0; padding: 0.75rem 1.8rem; font-size: 1rem;" download="fortune_hair_card.png">
+                    <span>📥</span> 画像をダウンロード保存
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 描画用隠しCanvas (1080x1920 高解像度) -->
+    <canvas id="card-canvas" width="1080" height="1920" style="display: none;"></canvas>
+
+    <script src="salon_customer.js"></script>
+</body>
+</html>
