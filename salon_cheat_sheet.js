@@ -1001,6 +1001,47 @@ document.addEventListener('DOMContentLoaded', () => {
         photoModal.classList.remove('hidden');
     };
 
+    // 📲 PWA インストール制御
+    let deferredPwaPrompt = null;
+    const btnPwaInstall = document.getElementById('btn-pwa-install');
+    const pwaModal = document.getElementById('pwa-install-modal');
+    const btnClosePwa = document.getElementById('btn-close-pwa-modal');
+    const btnClosePwa2 = document.getElementById('btn-close-pwa-modal-2');
+    const pwaPromptWrap = document.getElementById('pwa-native-prompt-wrap');
+    const btnPwaPromptInstall = document.getElementById('btn-pwa-prompt-install');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPwaPrompt = e;
+        if (pwaPromptWrap) pwaPromptWrap.style.display = 'block';
+    });
+
+    if (btnPwaInstall) {
+        btnPwaInstall.addEventListener('click', () => {
+            if (pwaModal) pwaModal.classList.remove('hidden');
+        });
+    }
+
+    function closePwaModal() {
+        if (pwaModal) pwaModal.classList.add('hidden');
+    }
+    if (btnClosePwa) btnClosePwa.addEventListener('click', closePwaModal);
+    if (btnClosePwa2) btnClosePwa2.addEventListener('click', closePwaModal);
+
+    if (btnPwaPromptInstall) {
+        btnPwaPromptInstall.addEventListener('click', async () => {
+            if (deferredPwaPrompt) {
+                deferredPwaPrompt.prompt();
+                const { outcome } = await deferredPwaPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User accepted PWA installation');
+                }
+                deferredPwaPrompt = null;
+                closePwaModal();
+            }
+        });
+    }
+
     // --- 施術記録追加・保存イベント ---
     const btnAddCrmLog = document.getElementById('btn-add-crm-log');
     if (btnAddCrmLog) {
