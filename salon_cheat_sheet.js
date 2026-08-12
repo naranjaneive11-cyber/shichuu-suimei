@@ -551,8 +551,34 @@ function getCrmLedger() {
 function saveCrmLedger(ledger) {
     try {
         localStorage.setItem(CRM_STORAGE_KEY, JSON.stringify(ledger));
+        return true;
     } catch (e) {
-        console.error(e);
+        console.warn('LocalStorage quota exceeded, attempting cleanup of old photos...', e);
+        // 容量超過時のセーフガード: 最も古い施術ログの写真データから順に削除して容量を確保
+        try {
+            const keys = Object.keys(ledger);
+            let cleaned = false;
+            keys.forEach(k => {
+                const logs = ledger[k].logs || [];
+                for (let i = logs.length - 1; i >= 0; i--) {
+                    if (logs[i].photoBefore || logs[i].photoAfter) {
+                        logs[i].photoBefore = null;
+                        logs[i].photoAfter = null;
+                        cleaned = true;
+                        break;
+                    }
+                }
+            });
+            if (cleaned) {
+                localStorage.setItem(CRM_STORAGE_KEY, JSON.stringify(ledger));
+                console.log('Successfully saved ledger after photo cleanup.');
+                return true;
+            }
+        } catch (retryErr) {
+            console.error('Failed to save even after photo cleanup:', retryErr);
+        }
+        alert('カルテ保存容量が上限に達しています。不要な顧客カルテを削除するか、JSONバックアップ後に整理してください。');
+        return false;
     }
 }
 
@@ -706,19 +732,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ================= 時短DX：写真添付・Canvas圧縮・クイックパレット・音声入力 =================
+    // ================= 時短DX：写真添付・Canvas超軽量圧縮・クイックパレット・音声入力 =================
     let tempPhotos = { before: null, after: null };
 
     /**
-     * 画像ファイルをCanvasで軽量リサイズ圧縮 (最大長辺800px, quality 0.72)
+     * 画像ファイルをCanvasで超軽量リサイズ圧縮 (最大長辺480px, quality 0.55 / 1枚約12〜20KB)
+     * LocalStorageの5MB制限でも数百枚安全に保存可能
      */
     function compressImageFile(file, callback) {
-        if (!file || !file.type.startsWith('image/')) return;
+        if (!file || !file.type.startsWith('image/')) {
+            alert('画像ファイル（JPG / PNG 等）を選択してください。');
+            return;
+        }
         const reader = new FileReader();
         reader.onload = (e) => {
             const img = new Image();
             img.onload = () => {
-                const maxDim = 800;
+                const maxDim = 480;
                 let w = img.width;
                 let h = img.height;
                 if (w > maxDim || h > maxDim) {
@@ -735,8 +765,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 canvas.height = h;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, w, h);
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.72);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.55);
                 callback(compressedDataUrl);
+            };
+            img.onerror = () => {
+                alert('画像の読み込みに失敗しました。別の画像をお試しください。');
             };
             img.src = e.target.result;
         };
@@ -748,7 +781,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const preview = document.getElementById(previewId);
         if (!input || !preview) return;
 
-        preview.addEventListener('click', (e) => {
+        preview.onclick = (e) => {
             if (e.target.classList.contains('btn-remove-photo')) {
                 e.stopPropagation();
                 tempPhotos[type] = null;
@@ -757,12 +790,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             input.click();
-        });
+        };
 
-        input.addEventListener('change', () => {
-            const file = input.files[0];
+        input.onchange = () => {
+            const file = input.files && input.files[0];
             if (file) {
-                preview.innerHTML = '<span style="font-size:0.7rem; color:#38bdf8;">圧縮中...</span>';
+                preview.innerHTML = '<span style="font-size:0.7rem; color:#38bdf8;">⏳ 圧縮中...</span>';
                 compressImageFile(file, (dataUrl) => {
                     tempPhotos[type] = dataUrl;
                     preview.innerHTML = `
@@ -771,7 +804,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                 });
             }
-        });
+        };
     }
 
     setupPhotoUpload('crm-photo-before-input', 'crm-photo-before-preview', 'before');
@@ -789,17 +822,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (iAfter) iAfter.value = '';
     }
 
-    // 🎨 クイックパレットチップのクリック挿入
-    document.querySelectorAll('.palette-chip').forEach((chip) => {
-        chip.addEventListener('click', () => {
+    // 🎨 イベント委譲によるクイックパレットチップの即座挿入（確実に動作）
+    document.addEventListener('click', (e) => {
+        const chip = e.target.closest('.palette-chip');
+        if (chip) {
+            e.preventDefault();
+            e.stopPropagation();
             const insertText = chip.getAttribute('data-insert');
             const recipeArea = document.getElementById('crm-input-recipe');
             if (recipeArea && insertText) {
                 const current = recipeArea.value.trim();
                 recipeArea.value = current ? `${current} ${insertText}` : insertText;
                 recipeArea.focus();
+                chip.style.transform = 'scale(0.92)';
+                chip.style.borderColor = '#38bdf8';
+                setTimeout(() => {
+                    chip.style.transform = '';
+                    chip.style.borderColor = '';
+                }, 150);
             }
-        });
+        }
     });
 
     // 📋 前回の配合・メニューを呼び出し
@@ -830,25 +872,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 🎙️ Web Speech API 音声入力
+    // 🎙️ イベント委譲による Web Speech API 音声入力（確実なトグル制御＆リアルタイムUI表示）
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let activeRecognizer = null;
+    let currentRecordingBtn = null;
 
-    document.querySelectorAll('.btn-voice-input').forEach((btn) => {
-        btn.addEventListener('click', () => {
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-voice-input');
+        if (btn) {
+            e.preventDefault();
+            e.stopPropagation();
+
             if (!SpeechRecognition) {
-                alert('お使いのブラウザは音声入力に対応していません。Google ChromeまたはSafariをご利用ください。');
+                alert('お使いのブラウザは音声入力に対応していません。\nGoogle Chrome または Safari の最新版をご利用いただくか、マイク権限を許可してください。');
                 return;
             }
 
             const targetId = btn.getAttribute('data-target');
             const targetEl = document.getElementById(targetId);
+            const statusEl = document.getElementById('crm-save-status');
             if (!targetEl) return;
 
             if (activeRecognizer) {
                 activeRecognizer.stop();
                 activeRecognizer = null;
-                btn.classList.remove('recording');
+                if (currentRecordingBtn) currentRecordingBtn.classList.remove('recording');
+                currentRecordingBtn = null;
+                if (statusEl) statusEl.textContent = '';
                 return;
             }
 
@@ -857,26 +907,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 recognition.lang = 'ja-JP';
                 recognition.interimResults = false;
                 recognition.maxAlternatives = 1;
+                recognition.continuous = false;
 
                 btn.classList.add('recording');
+                currentRecordingBtn = btn;
                 activeRecognizer = recognition;
 
+                if (statusEl) {
+                    statusEl.innerHTML = '<span style="color:#f43f5e; font-weight:700;">🎙️ 音声聞き取り中... お話しください</span>';
+                }
+
                 recognition.onresult = (event) => {
-                    const speechText = event.results[0][0].transcript;
-                    const current = targetEl.value.trim();
-                    targetEl.value = current ? `${current} ${speechText}` : speechText;
-                    targetEl.focus();
+                    if (event.results && event.results[0] && event.results[0][0]) {
+                        const speechText = event.results[0][0].transcript;
+                        const current = targetEl.value.trim();
+                        targetEl.value = current ? `${current} ${speechText}` : speechText;
+                        targetEl.focus();
+                        if (statusEl) {
+                            statusEl.innerHTML = '<span style="color:#a7f3d0; font-weight:700;">✅ 音声を入力しました</span>';
+                            setTimeout(() => { statusEl.textContent = ''; }, 3000);
+                        }
+                    }
                 };
 
                 recognition.onerror = (event) => {
                     console.warn('Speech recognition error:', event.error);
                     btn.classList.remove('recording');
                     activeRecognizer = null;
+                    currentRecordingBtn = null;
+                    if (statusEl) {
+                        statusEl.innerHTML = `<span style="color:#f87171;">⚠️ 音声認識エラー: ${event.error === 'not-allowed' ? 'マイクの使用を許可してください' : event.error}</span>`;
+                        setTimeout(() => { statusEl.textContent = ''; }, 4000);
+                    }
                 };
 
                 recognition.onend = () => {
                     btn.classList.remove('recording');
                     activeRecognizer = null;
+                    currentRecordingBtn = null;
                 };
 
                 recognition.start();
@@ -884,8 +952,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Speech recognition start failed:', err);
                 btn.classList.remove('recording');
                 activeRecognizer = null;
+                currentRecordingBtn = null;
+                if (statusEl) {
+                    statusEl.innerHTML = '<span style="color:#f87171;">⚠️ マイクの起動に失敗しました</span>';
+                }
             }
-        });
+        }
     });
 
     // 📸 写真拡大・比較モーダル
@@ -988,19 +1060,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
             ledger[custKey].logs.unshift(newLog);
             ledger[custKey].lastVisited = dateVal;
-            saveCrmLedger(ledger);
+            const saveSuccess = saveCrmLedger(ledger);
 
-            renderCrmTimeline(custKey);
+            if (saveSuccess) {
+                renderCrmTimeline(custKey);
 
-            document.getElementById('crm-input-recipe').value = '';
-            document.getElementById('crm-input-talk').value = '';
-            document.getElementById('crm-input-next').value = '';
-            resetPhotoUploads();
+                document.getElementById('crm-input-recipe').value = '';
+                document.getElementById('crm-input-talk').value = '';
+                document.getElementById('crm-input-next').value = '';
+                resetPhotoUploads();
 
-            const statusEl = document.getElementById('crm-save-status');
-            if (statusEl) {
-                statusEl.textContent = `✅ カルテに保存しました (${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})})`;
-                setTimeout(() => { statusEl.textContent = ''; }, 3500);
+                const statusEl = document.getElementById('crm-save-status');
+                if (statusEl) {
+                    const photoMsg = (photoBefore && photoAfter) ? '（写真2枚付き）' : (photoBefore || photoAfter ? '（写真付き）' : '');
+                    statusEl.innerHTML = `<span style="color:#a7f3d0; font-weight:700;">✅ カルテに保存しました ${photoMsg}</span>`;
+                    setTimeout(() => { statusEl.textContent = ''; }, 4000);
+                }
             }
         });
     }
