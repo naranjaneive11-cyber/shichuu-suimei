@@ -706,6 +706,229 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ================= 時短DX：写真添付・Canvas圧縮・クイックパレット・音声入力 =================
+    let tempPhotos = { before: null, after: null };
+
+    /**
+     * 画像ファイルをCanvasで軽量リサイズ圧縮 (最大長辺800px, quality 0.72)
+     */
+    function compressImageFile(file, callback) {
+        if (!file || !file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const maxDim = 800;
+                let w = img.width;
+                let h = img.height;
+                if (w > maxDim || h > maxDim) {
+                    if (w > h) {
+                        h = Math.round((h * maxDim) / w);
+                        w = maxDim;
+                    } else {
+                        w = Math.round((w * maxDim) / h);
+                        h = maxDim;
+                    }
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.72);
+                callback(compressedDataUrl);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function setupPhotoUpload(inputId, previewId, type) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        if (!input || !preview) return;
+
+        preview.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-remove-photo')) {
+                e.stopPropagation();
+                tempPhotos[type] = null;
+                input.value = '';
+                preview.innerHTML = '<span class="photo-placeholder-text">＋ 写真を追加</span>';
+                return;
+            }
+            input.click();
+        });
+
+        input.addEventListener('change', () => {
+            const file = input.files[0];
+            if (file) {
+                preview.innerHTML = '<span style="font-size:0.7rem; color:#38bdf8;">圧縮中...</span>';
+                compressImageFile(file, (dataUrl) => {
+                    tempPhotos[type] = dataUrl;
+                    preview.innerHTML = `
+                        <img src="${dataUrl}" class="photo-thumb-img" alt="${type}">
+                        <button type="button" class="btn-remove-photo" title="写真を削除">&times;</button>
+                    `;
+                });
+            }
+        });
+    }
+
+    setupPhotoUpload('crm-photo-before-input', 'crm-photo-before-preview', 'before');
+    setupPhotoUpload('crm-photo-after-input', 'crm-photo-after-preview', 'after');
+
+    function resetPhotoUploads() {
+        tempPhotos = { before: null, after: null };
+        const pBefore = document.getElementById('crm-photo-before-preview');
+        const pAfter = document.getElementById('crm-photo-after-preview');
+        const iBefore = document.getElementById('crm-photo-before-input');
+        const iAfter = document.getElementById('crm-photo-after-input');
+        if (pBefore) pBefore.innerHTML = '<span class="photo-placeholder-text">＋ 写真を追加</span>';
+        if (pAfter) pAfter.innerHTML = '<span class="photo-placeholder-text">＋ 写真を追加</span>';
+        if (iBefore) iBefore.value = '';
+        if (iAfter) iAfter.value = '';
+    }
+
+    // 🎨 クイックパレットチップのクリック挿入
+    document.querySelectorAll('.palette-chip').forEach((chip) => {
+        chip.addEventListener('click', () => {
+            const insertText = chip.getAttribute('data-insert');
+            const recipeArea = document.getElementById('crm-input-recipe');
+            if (recipeArea && insertText) {
+                const current = recipeArea.value.trim();
+                recipeArea.value = current ? `${current} ${insertText}` : insertText;
+                recipeArea.focus();
+            }
+        });
+    });
+
+    // 📋 前回の配合・メニューを呼び出し
+    const btnCopyLast = document.getElementById('btn-copy-last-recipe');
+    if (btnCopyLast) {
+        btnCopyLast.addEventListener('click', () => {
+            const name = document.getElementById('cust-name').value.trim() || 'お客様';
+            const y = parseInt(yearSelect.value) || 1995;
+            const m = parseInt(monthSelect.value) || 5;
+            const d = parseInt(daySelect.value) || 15;
+            const birthdayStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const custKey = getCustomerKey(name, birthdayStr);
+            const ledger = getCrmLedger();
+            const customer = ledger[custKey];
+
+            if (customer && customer.logs && customer.logs.length > 0) {
+                const last = customer.logs[0];
+                if (last.menu) document.getElementById('crm-input-menu').value = last.menu;
+                if (last.recipe) document.getElementById('crm-input-recipe').value = last.recipe;
+                const statusEl = document.getElementById('crm-save-status');
+                if (statusEl) {
+                    statusEl.textContent = `📋 前回 (${last.date}) の配合を復元しました`;
+                    setTimeout(() => { statusEl.textContent = ''; }, 3000);
+                }
+            } else {
+                alert('このお客様の過去の施術履歴がまだありません。');
+            }
+        });
+    }
+
+    // 🎙️ Web Speech API 音声入力
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let activeRecognizer = null;
+
+    document.querySelectorAll('.btn-voice-input').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            if (!SpeechRecognition) {
+                alert('お使いのブラウザは音声入力に対応していません。Google ChromeまたはSafariをご利用ください。');
+                return;
+            }
+
+            const targetId = btn.getAttribute('data-target');
+            const targetEl = document.getElementById(targetId);
+            if (!targetEl) return;
+
+            if (activeRecognizer) {
+                activeRecognizer.stop();
+                activeRecognizer = null;
+                btn.classList.remove('recording');
+                return;
+            }
+
+            try {
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'ja-JP';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                btn.classList.add('recording');
+                activeRecognizer = recognition;
+
+                recognition.onresult = (event) => {
+                    const speechText = event.results[0][0].transcript;
+                    const current = targetEl.value.trim();
+                    targetEl.value = current ? `${current} ${speechText}` : speechText;
+                    targetEl.focus();
+                };
+
+                recognition.onerror = (event) => {
+                    console.warn('Speech recognition error:', event.error);
+                    btn.classList.remove('recording');
+                    activeRecognizer = null;
+                };
+
+                recognition.onend = () => {
+                    btn.classList.remove('recording');
+                    activeRecognizer = null;
+                };
+
+                recognition.start();
+            } catch (err) {
+                console.error('Speech recognition start failed:', err);
+                btn.classList.remove('recording');
+                activeRecognizer = null;
+            }
+        });
+    });
+
+    // 📸 写真拡大・比較モーダル
+    const photoModal = document.getElementById('crm-photo-modal');
+    const photoModalTitle = document.getElementById('crm-photo-modal-title');
+    const photoCompareContainer = document.getElementById('crm-photo-compare-container');
+    const btnClosePhoto = document.getElementById('btn-close-photo-modal');
+    const btnClosePhotoFooter = document.getElementById('btn-close-photo-modal-footer');
+
+    function closePhotoModal() {
+        if (photoModal) photoModal.classList.add('hidden');
+    }
+    if (btnClosePhoto) btnClosePhoto.addEventListener('click', closePhotoModal);
+    if (btnClosePhotoFooter) btnClosePhotoFooter.addEventListener('click', closePhotoModal);
+
+    window.openPhotoCompareModal = function(dateStr, beforeUrl, afterUrl, memo) {
+        if (!photoModal || !photoCompareContainer) return;
+        photoModalTitle.textContent = `📸 ${dateStr} 施術写真 (${memo || 'Before / After 比較'})`;
+        photoCompareContainer.innerHTML = '';
+
+        if (beforeUrl) {
+            const bCard = document.createElement('div');
+            bCard.className = 'photo-compare-card';
+            bCard.innerHTML = `
+                <div class="photo-compare-header" style="color: #cbd5e1;">📷 施術前 (Before)</div>
+                <img src="${beforeUrl}" class="photo-compare-img" alt="Before Photo">
+            `;
+            photoCompareContainer.appendChild(bCard);
+        }
+
+        if (afterUrl) {
+            const aCard = document.createElement('div');
+            aCard.className = 'photo-compare-card';
+            aCard.innerHTML = `
+                <div class="photo-compare-header" style="color: #a7f3d0;">✨ 仕上がり (After)</div>
+                <img src="${afterUrl}" class="photo-compare-img" alt="After Photo">
+            `;
+            photoCompareContainer.appendChild(aCard);
+        }
+
+        photoModal.classList.remove('hidden');
+    };
+
     // --- 施術記録追加・保存イベント ---
     const btnAddCrmLog = document.getElementById('btn-add-crm-log');
     if (btnAddCrmLog) {
@@ -724,9 +947,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const recipeVal = document.getElementById('crm-input-recipe').value.trim();
             const talkVal = document.getElementById('crm-input-talk').value.trim();
             const nextVal = document.getElementById('crm-input-next').value.trim();
+            const photoBefore = tempPhotos.before;
+            const photoAfter = tempPhotos.after;
 
-            if (!recipeVal && !talkVal && !nextVal) {
-                alert('「カラー配合/施術レシピ」「会話メモ」「次回提案」のいずれかを入力してください。');
+            if (!recipeVal && !talkVal && !nextVal && !photoBefore && !photoAfter) {
+                alert('「カラー配合」「会話メモ」「次回提案」「施術写真」のいずれかを入力してください。');
                 return;
             }
 
@@ -756,6 +981,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 recipe: recipeVal,
                 talk: talkVal,
                 next: nextVal,
+                photoBefore: photoBefore || null,
+                photoAfter: photoAfter || null,
                 createdAt: new Date().toISOString()
             };
 
@@ -768,6 +995,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('crm-input-recipe').value = '';
             document.getElementById('crm-input-talk').value = '';
             document.getElementById('crm-input-next').value = '';
+            resetPhotoUploads();
 
             const statusEl = document.getElementById('crm-save-status');
             if (statusEl) {
@@ -1303,7 +1531,33 @@ function renderCrmTimeline(custKey) {
             ${log.recipe ? `<div style="font-size: 0.8rem; color: #a7f3d0;"><strong>🧪 配合/レシピ:</strong> ${log.recipe}</div>` : ''}
             ${log.talk ? `<div style="font-size: 0.78rem; color: #cbd5e1;"><strong>💬 会話/好み:</strong> ${log.talk}</div>` : ''}
             ${log.next ? `<div style="font-size: 0.78rem; color: #f472b6;"><strong>🌟 次回提案:</strong> ${log.next}</div>` : ''}
+            ${(log.photoBefore || log.photoAfter) ? `
+                <div class="log-photo-strip">
+                    ${log.photoBefore ? `
+                        <div class="log-photo-thumb-wrap" title="タップで写真を拡大比較">
+                            <img src="${log.photoBefore}" class="log-photo-thumb-img" alt="Before">
+                            <span class="log-photo-tag">Before</span>
+                        </div>
+                    ` : ''}
+                    ${log.photoAfter ? `
+                        <div class="log-photo-thumb-wrap" title="タップで写真を拡大比較">
+                            <img src="${log.photoAfter}" class="log-photo-thumb-img" alt="After">
+                            <span class="log-photo-tag" style="color:#a7f3d0;">After</span>
+                        </div>
+                    ` : ''}
+                    <span style="font-size: 0.7rem; color: #38bdf8; align-self: center; cursor: pointer;">🔍 拡大比較</span>
+                </div>
+            ` : ''}
         `;
+
+        if (log.photoBefore || log.photoAfter) {
+            const photoStrip = item.querySelector('.log-photo-strip');
+            if (photoStrip) {
+                photoStrip.addEventListener('click', () => {
+                    openPhotoCompareModal(log.date, log.photoBefore, log.photoAfter, log.menu);
+                });
+            }
+        }
 
         const delBtn = item.querySelector('.btn-delete-log');
         delBtn.addEventListener('click', () => {
@@ -1615,7 +1869,33 @@ function openCustomerDetailModal(custKey) {
                 ${log.recipe ? `<div style="font-size: 0.85rem; color: #a7f3d0;"><strong>🧪 配合:</strong> ${log.recipe}</div>` : ''}
                 ${log.talk ? `<div style="font-size: 0.8rem; color: #cbd5e1;"><strong>💬 会話:</strong> ${log.talk}</div>` : ''}
                 ${log.next ? `<div style="font-size: 0.8rem; color: #f472b6;"><strong>🌟 次回提案:</strong> ${log.next}</div>` : ''}
+                ${(log.photoBefore || log.photoAfter) ? `
+                    <div class="log-photo-strip">
+                        ${log.photoBefore ? `
+                            <div class="log-photo-thumb-wrap" title="タップで写真を拡大比較">
+                                <img src="${log.photoBefore}" class="log-photo-thumb-img" alt="Before">
+                                <span class="log-photo-tag">Before</span>
+                            </div>
+                        ` : ''}
+                        ${log.photoAfter ? `
+                            <div class="log-photo-thumb-wrap" title="タップで写真を拡大比較">
+                                <img src="${log.photoAfter}" class="log-photo-thumb-img" alt="After">
+                                <span class="log-photo-tag" style="color:#a7f3d0;">After</span>
+                            </div>
+                        ` : ''}
+                        <span style="font-size: 0.7rem; color: #38bdf8; align-self: center; cursor: pointer;">🔍 写真を拡大比較</span>
+                    </div>
+                ` : ''}
             `;
+
+            if (log.photoBefore || log.photoAfter) {
+                const photoStrip = card.querySelector('.log-photo-strip');
+                if (photoStrip) {
+                    photoStrip.addEventListener('click', () => {
+                        openPhotoCompareModal(log.date, log.photoBefore, log.photoAfter, log.menu);
+                    });
+                }
+            }
 
             card.querySelector('.btn-del-detail-log').addEventListener('click', () => {
                 if (confirm(`${log.date} の記録を削除しますか？`)) {
