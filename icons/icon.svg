@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+  <rect width="500" height="500" x="6" y="6" rx="106" fill="none" stroke="url(#goldGrad)" stroke-width="6" opacity="0.7"/>
+
+  <circle cx="120" cy="120" r="4" fill="#fef08a" opacity="0.8"/>
+  <circle cx="400" cy="110" r="5" fill="#fef08a" opacity="0.9"/>
+  <circle cx="390" cy="400" r="4" fill="#38bdf8" opacity="0.7"/>
+  <circle cx="110" cy="380" r="3" fill="#a7f3d0" opacity="0.7"/>
+
+  <circle cx="256" cy="256" r="160" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3" stroke-dasharray="6,6"/>
+
+  <path d="M190 150 L270 280 L250 300 L160 170 Z" fill="url(#goldGrad)"/>
+  <path d="M322 150 L242 280 L262 300 L352 170 Z" fill="url(#goldGrad)"/>
+
+  <circle cx="170" cy="370" r="46" fill="none" stroke="url(#goldGrad)" stroke-width="16"/>
+  <path d="M195 330 L250 300" stroke="url(#goldGrad)" stroke-width="16" stroke-linecap="round"/>
+
+  <circle cx="342" cy="370" r="46" fill="none" stroke="url(#goldGrad)" stroke-width="16"/>
+  <path d="M317 330 L262 300" stroke="url(#goldGrad)" stroke-width="16" stroke-linecap="round"/>
+
+  <polygon points="256,230 264,250 286,256 264,262 256,282 248,262 226,256 248,250" fill="#ffffff"/>
+  <polygon points="256,80 266,105 292,112 266,119 256,144 246,119 220,112 246,105" fill="url(#goldGrad)"/>
+</svg>

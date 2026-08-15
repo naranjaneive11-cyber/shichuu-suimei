@@ -718,6 +718,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('ui-overlay').classList.add('hidden');
                 document.getElementById('gateway').classList.remove('hidden');
                 window.currentMetaverseData = null;
+                try {
+                    history.pushState(null, '', 'metaverse.html');
+                    document.title = 'Stargazer | 四柱推命';
+                } catch (e) {
+                    console.warn('URL restore failed:', e);
+                }
             }
         });
     }
@@ -1662,6 +1668,14 @@ window.recheckCompatibility = function(encodedPerson) {
 // 空間へのダイブアニメーションとThree.jsの初期化（シングル用）
 // m は calculateMeishiki(date) の結果のオブジェクト全体を受け取るよう拡張
 function diveIntoMetaverse(name, gender, m) {
+    // URLの表示を「Stargazer」に変更し、ブラウザのタブ名も「Stargazer」に統一
+    try {
+        history.pushState(null, '', 'Stargazer');
+        document.title = 'Stargazer';
+    } catch (e) {
+        console.warn('URL/Title rewrite failed:', e);
+    }
+
     // UI の更新
     document.getElementById('gateway').classList.add('hidden');
     document.getElementById('ui-overlay').classList.remove('hidden');

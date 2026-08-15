@@ -5,6 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stargazer | 四柱推命鑑定</title>
+    <!-- PWA Settings -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Stargazer">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -23,12 +33,19 @@
     </div>
 
     <main class="container">
-        <section class="hero glass-panel">
-            <h1 class="title" style="margin-bottom: 0;">Stargazer</h1>
-            <a href="metaverse.html" class="btn-primary"
-                style="display:inline-flex; align-items:center; justify-content:center; gap:0.5rem; margin-top:1.5rem; padding: 0.8rem 2rem; background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); text-decoration:none; font-weight:bold; border-radius:30px; box-shadow: 0 4px 15px rgba(161, 140, 209, 0.4); transition: transform 0.3s;">
-                <span style="font-size:1.2rem;">🌌</span> 新感覚 Stargazer（3D版）へ
-            </a>
+        <section class="hero glass-panel" style="padding: 2.5rem 1.5rem; text-align: center; border: 1px solid var(--accent-glow); background: linear-gradient(180deg, rgba(18, 26, 43, 0.9) 0%, rgba(9, 13, 22, 0.95) 100%);">
+            <span style="font-size: 0.8rem; letter-spacing: 3px; color: #a78bfa; font-weight: 700; text-transform: uppercase;">Stargazer Personal Cosmology</span>
+            <h1 class="title" style="margin: 0.5rem 0; font-size: 2.4rem; background: linear-gradient(135deg, #fff 0%, #c084fc 50%, #818cf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Stargazer Portal</h1>
+            <p style="font-size: 0.95rem; color: #94a3b8; max-width: 600px; margin: 0 auto 1.5rem auto; line-height: 1.6;">
+                生年月日に秘められた星のエネルギーを読み解き、あなただけの3Dメタバース空間と命式を描き出します。
+            </p>
+            
+            <div style="display:flex; justify-content:center; max-width: 500px; margin: 0 auto;">
+                <a href="metaverse.html" class="btn-primary"
+                    style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.4rem; padding: 1rem 2rem; background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(124, 58, 237, 0.6) 100%); border: 1.5px solid #a78bfa; color:#ffffff; text-decoration:none; border-radius:30px; box-shadow: 0 4px 20px rgba(167, 139, 250, 0.3); transition: all 0.3s; font-weight: 700; width: 100%;">
+                    <span>🌌</span> 3Dメタバース仮想空間鑑定へ
+                </a>
+            </div>
         </section>
 
         <section class="card glass input-section">
@@ -2280,6 +2297,25 @@
             }
         });
 
+    </script>
+    <script>
+        // PWA Service Worker 登録（強制キャッシュクリア＆自動リロード対応）
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then((reg) => {
+                    console.log('✅ ServiceWorker Registered! Scope:', reg.scope);
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('🔄 New Service Worker version installed. Force reloading...');
+                                window.location.reload();
+                            }
+                        });
+                    });
+                }).catch((err) => console.warn('ServiceWorker Registration failed:', err));
+            });
+        }
     </script>
 </body>
 
