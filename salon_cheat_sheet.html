@@ -862,12 +862,21 @@
 
     <script src="salon_cheat_sheet.js"></script>
     <script>
-        // PWA Service Worker 登録
+        // PWA Service Worker 登録（強制キャッシュクリア＆自動リロード対応）
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then((reg) => console.log('✅ ServiceWorker Registered! Scope:', reg.scope))
-                    .catch((err) => console.warn('ServiceWorker Registration failed:', err));
+                navigator.serviceWorker.register('./sw.js').then((reg) => {
+                    console.log('✅ ServiceWorker Registered! Scope:', reg.scope);
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('🔄 New Service Worker version installed. Force reloading...');
+                                window.location.reload();
+                            }
+                        });
+                    });
+                }).catch((err) => console.warn('ServiceWorker Registration failed:', err));
             });
         }
     </script>

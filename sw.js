@@ -1,5 +1,5 @@
-// Stargazer Salon PWA Service Worker v1.0.0
-const CACHE_NAME = 'stargazer-salon-v1';
+// Stargazer PWA Service Worker v2.0.0 (強制キャッシュクリア版)
+const CACHE_NAME = 'stargazer-salon-v2';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
@@ -28,13 +28,14 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// 新バージョン有効化時に古いキャッシュを削除
+// 新バージョン有効化時に古いキャッシュを即座に完全削除
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('🧹 Removing old cache:', key);
             return caches.delete(key);
           }
         })
@@ -43,27 +44,46 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// ネットワーク優先 (Network First with Cache Fallback)
-// 最新コードがあれば取得し、オフライン時はキャッシュから即座に応答
+// ネットワーク優先 (Network First)
 self.addEventListener('fetch', (event) => {
-  // GETリクエストのみキャッシュ対象
   if (event.request.method !== 'GET') return;
 
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // 成功したレスポンスをキャッシュに複製保存
-        if (response && response.status === 200 && response.type === 'basic') {
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-        }
-        return response;
+  const url = new URL(event.request.url);
+  const isHtml = event.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/';
+
+  if (isHtml) {
+    // HTMLページ遷移時は「必ずネットワーク優先」で最新の画面を表示
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          return caches.match(event.request);
+        })
+    );
+  } else {
+    // 静的アセット（CSS/JS/画像）はキャッシュを返しつつ、バックグラウンドで更新をチェック
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        const fetchPromise = fetch(event.request).then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        }).catch(() => null);
+
+        return cachedResponse || fetchPromise;
       })
-      .catch(() => {
-        // オフライン時はキャッシュから返す
-        return caches.match(event.request);
-      })
-  );
+    );
+  }
 });
