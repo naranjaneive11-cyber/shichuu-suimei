@@ -176,7 +176,7 @@
             <button type="button" id="btn-summon-guardian" class="btn-primary theme-btn"
                 style="padding: 0.8rem 1.5rem; border-radius: 8px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #fff; max-width: 200px; box-shadow: 0 4px 15px rgba(67, 233, 123, 0.4);"><span
                     style="margin-right:0.5rem">🛡️</span>守護神を召喚</button>
-            <button type="button" id="btn-open-storybook" class="btn-primary theme-btn"
+            <button type="button" id="btn-open-storybook" onclick="if(window.openStorybook){window.openStorybook();}" class="btn-primary theme-btn"
                 style="padding: 0.8rem 1.5rem; border-radius: 8px; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #fff; max-width: 200px; box-shadow: 0 4px 15px rgba(255, 154, 158, 0.4);"><span
                     style="margin-right:0.5rem">📖</span>星の物語 (紙芝居)</button>
         </div>
@@ -668,8 +668,8 @@
 
 
     <!-- 星の物語（紙芝居）モーダル -->
-    <div id="storybook-modal" class="modal-overlay hidden" style="z-index: 3000; background: rgba(10, 10, 18, 0.95); backdrop-filter: blur(12px);">
-        <div class="glass-panel storybook-content" style="width: 95%; max-width: 750px; padding: 2.5rem 1.8rem; border-radius: 24px; position: relative; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255, 154, 158, 0.15); border: 1px solid rgba(255,255,255,0.15); background: rgba(18, 18, 35, 0.85); box-sizing: border-box; overflow: hidden;">
+    <div id="storybook-modal" class="modal-overlay hidden" style="z-index: 3000; background: rgba(10, 10, 18, 0.95); backdrop-filter: blur(12px); pointer-events: auto !important;">
+        <div class="glass-panel storybook-content" style="width: 95%; max-width: 750px; padding: 2.5rem 1.8rem; border-radius: 24px; position: relative; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255, 154, 158, 0.15); border: 1px solid rgba(255,255,255,0.15); background: rgba(18, 18, 35, 0.85); box-sizing: border-box; overflow: hidden; pointer-events: auto !important;">
             <button id="storybook-modal-close" style="position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; font-size: 2rem; color: rgba(255,255,255,0.6); cursor: pointer; transition: color 0.2s; pointer-events: auto; z-index: 3100;" onclick="document.getElementById('storybook-modal').classList.add('hidden')">&times;</button>
             
             <h2 id="storybook-title" style="margin-bottom: 1.5rem; font-size: 1.8rem; font-weight: 700; color: #fff; font-family: 'Noto Sans JP', sans-serif;">📖 あなたの星の物語</h2>

@@ -1680,6 +1680,12 @@ function diveIntoMetaverse(name, gender, m) {
     document.getElementById('gateway').classList.add('hidden');
     document.getElementById('ui-overlay').classList.remove('hidden');
 
+    // ペアモード等で非表示にされたテーマボタンエリアを確実に再表示する
+    const themeBtns = document.querySelector('.theme-buttons');
+    if (themeBtns) {
+        themeBtns.style.display = 'flex';
+    }
+
     const dayTenkan = m.dayTenkan;
     const dayChishi = m.dayChishi;
 

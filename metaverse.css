@@ -120,12 +120,14 @@ html {
 
 /* カスタムモーダルはui-overlayのpointer-events:noneを上書きする */
 #appraisal-modal:not(.hidden),
-#compatibility-modal:not(.hidden) {
+#compatibility-modal:not(.hidden),
+#storybook-modal:not(.hidden) {
     pointer-events: auto !important;
 }
 
 #appraisal-modal:not(.hidden) *,
-#compatibility-modal:not(.hidden) * {
+#compatibility-modal:not(.hidden) *,
+#storybook-modal:not(.hidden) * {
     pointer-events: auto;
 }
 
