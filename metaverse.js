@@ -3284,3 +3284,199 @@ window.renderElementGroupList = function(stem) {
     }
     document.getElementById('element-group-modal').classList.remove('hidden');
 };
+
+// --- 星の物語（紙芝居カルーセル）ロジック ---
+let currentStorybookSlideIndex = 0;
+let currentStorybookSlides = [];
+
+const STORYBOOK_DATA = {
+    '庚': [
+        {
+            title: "鉄の目覚め",
+            image: "assets/geng_blade_spirit.jpg",
+            description: "あなたの魂は、冷たく硬い「剛鉄（鉱石）」から生まれました。磨かれ、叩かれることで本領を発揮し、世界を切り拓くための強力な武器や道具となる宿命を持っています。"
+        },
+        {
+            title: "【光】活かされたあなたの輝く姿",
+            image: "assets/geng_light_storybook.jpg",
+            description: "自分を磨き、強い決断力を発揮した時、あなたは「人々を明るい未来へ導く聖なる名刀」となります。その圧倒的な行動力とスピード感で、どんな困難な未来も美しく切り拓くことができるのです。"
+        },
+        {
+            title: "【影】磨かれずに錆びてしまった姿",
+            image: "assets/geng_dark_storybook.jpg",
+            description: "挑戦を避け、自分を鍛えることを怠ってしまうと、あなたの鉄は冷たい雨ざらしの中で「錆びついた古い鉄」になってしまいます。本来の輝きや切れ味を失い、ただ周囲を傷つけてしまうだけになってしまうかもしれません。"
+        },
+        {
+            title: "【日常】あなたの身近なすがた",
+            image: "assets/geng_light_storybook.jpg",
+            description: "現実社会では、道なき道を開拓する「ブルドーザー」、人々を危険から守る「頑強な盾」、新しい何かを作り出す「調理器具やハサミ」のように、実用性と強さをもって他者を力強く支え、守っています。"
+        },
+        {
+            title: "【調和】名刀へと仕上がるための鍵",
+            image: "assets/geng_light_storybook.jpg",
+            description: "あなたを鍛え上げてくれる「丁（火＝規律や情熱）」や、鋭すぎる刃を優しく包み込みクールダウンさせる「壬（水＝広大なゆとり）」を意識して生活に取り入れることで、あなたはさらに魅力的な名刀へと進化します！"
+        }
+    ],
+    // 他の十干のフォールバック用データ
+    'default': [
+        {
+            title: "自然の起源",
+            image: "assets/geng_blade_spirit.jpg",
+            description: "あなたの魂は、大自然の神秘なるエレメントから誕生しました。自分自身を深く知り、その輝きをどう活かすかであなたの運命の絵本の結末は大きく変わります。"
+        },
+        {
+            title: "【光】活かされたあなたの姿",
+            image: "assets/geng_light_storybook.jpg",
+            description: "生まれ持った星の性質を存分に発揮したとき、あなたは周囲の人々に恵みやインスピレーションを与える素晴らしい輝きを放ちます！"
+        },
+        {
+            title: "【影】眠ったままの姿",
+            image: "assets/geng_dark_storybook.jpg",
+            description: "自分を磨くことをやめ、その本質を眠らせたままにしてしまうと、あなたの星はくすみ、本来のポテンシャルを発揮できずに立ち止まってしまいます。"
+        },
+        {
+            title: "【日常】社会でのあなたの役割",
+            image: "assets/geng_light_storybook.jpg",
+            description: "日常生活や仕事の中で、あなたはそれぞれの星に応じた唯一無二の役割を担っています。あなたの存在自体が、世界の多様性を支えるピースです。"
+        },
+        {
+            title: "【調和】さらなる輝きへのヒント",
+            image: "assets/geng_light_storybook.jpg",
+            description: "他の五行の性質（木・火・土・金・水）をバランスよく取り入れることで、あなたの魂は最高に調和した美しい状態へと導かれます。"
+        }
+    ]
+};
+
+// 他の十干データもdefaultを参照またはカスタム設定
+['甲', '乙', '丙', '丁', '戊', '己', '辛', '壬', '癸'].forEach(stem => {
+    // 簡易的に十干ごとのテキストをローカライズ
+    const stemNames = {
+        '甲': { name: '大樹', light: '天高く青々と茂り、人々に木陰を提供する雄大な世界樹', dark: '水分を失ってポッキリ折れ、枯れ果てた寂しい枯れ木' },
+        '乙': { name: '草花', light: 'しなやかに揺れ、周囲を明るい笑顔にする美しいお花畑', dark: '雑草に埋もれ、日光が当たらずにぐったりしたしおれた花' },
+        '丙': { name: '太陽', light: '世界をあたたかく包み込み、みんなを元気に照らす太陽', dark: '分厚い雨雲に遮られ、光も熱も届かなくなった暗い曇り空' },
+        '丁': { name: '灯火', light: '暗闇の中で旅人の足元をそっと優しく照らし導くランタン', dark: '風に吹き消されて火が消え、冷えて固まってしまった炭' },
+        '戊': { name: '山', light: '緑豊かな森、美しい滝があり、動物たちが集う豊かな山岳', dark: '土砂崩れが起き、草木が一本も生えない荒涼としたハゲ山' },
+        '己': { name: '畑', light: '豊かな作物が実り、万物に恵みをもたらす肥沃な田園', dark: '水分が枯渇してカサカサにひび割れた、作物が育たない荒れ地' },
+        '辛': { name: '宝石', light: '丁寧に磨き上げられ、まばゆい七色の輝きを放つダイヤ', dark: '泥の中に埋もれ、ただの黒い石だと思われているくすんだ原石' },
+        '壬': { name: '海', light: 'クジラや魚たちが泳ぎ、ダイナミックに循環する美しい大海原', dark: '流れが止まって淀み、濁って暗くなってしまった泥水・水たまり' },
+        '癸': { name: '雨露', light: '新芽の成長を優しく促し、大地を潤す豊かな恵みの雨', dark: '汚れて濁り、周囲の土壌を濡らすだけの冷たい水たまりや豪雨' }
+    };
+    
+    const info = stemNames[stem];
+    STORYBOOK_DATA[stem] = [
+        {
+            title: `${info.name}の起源`,
+            image: "assets/geng_blade_spirit.jpg",
+            description: `あなたの魂は、自然界の「${info.name}」から生まれました。個性的で美しい魅力にあふれ、自分らしく生きることで世界に調和をもたらします。`
+        },
+        {
+            title: `【光】活かされたあなたの輝く姿`,
+            image: "assets/geng_light_storybook.jpg",
+            description: `自分を磨き、その魅力を活かした時、あなたは「${info.light}」となり、周囲にインスピレーションと癒やしを与える素晴らしい存在になります！`
+        },
+        {
+            title: `【影】磨かれずに錆びてしまった姿`,
+            image: "assets/geng_dark_storybook.jpg",
+            description: `磨くことを怠り、本質を眠らせてしまうと、あなたは「${info.dark}」のようになり、本来持っている素晴らしいポテンシャルを発揮できなくなってしまいます。`
+        },
+        {
+            title: `【日常】あなたの身近なすがた`,
+            image: "assets/geng_light_storybook.jpg",
+            description: `実生活の中では、周囲に安らぎを与える空間や、なくてはならない大切な存在として、あなたなりの方法でみんなを支えています。`
+        },
+        {
+            title: `【調和】輝きを深める鍵`,
+            image: "assets/geng_light_storybook.jpg",
+            description: "あなたに足りない要素や、相性の良い五行のエネルギーを日々の生活に取り入れることで、あなたの魂はさらに美しく調和された姿へと変化します！"
+        }
+    ];
+});
+
+window.openStorybook = function() {
+    const data = window.currentMetaverseData;
+    const tenkan = (data && data.dayTenkan) ? data.dayTenkan : '庚';
+    
+    currentStorybookSlides = STORYBOOK_DATA[tenkan] || STORYBOOK_DATA['default'];
+    currentStorybookSlideIndex = 0;
+    
+    // ドットインジケータの生成
+    const dotsContainer = document.getElementById('storybook-dots');
+    if (dotsContainer) {
+        dotsContainer.innerHTML = currentStorybookSlides.map((_, idx) => `
+            <div class="storybook-dot ${idx === 0 ? 'active' : ''}" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor:pointer; transition: all 0.3s;" onclick="setStorybookSlide(${idx})"></div>
+        `).join('');
+    }
+    
+    renderStorybookSlide();
+    document.getElementById('storybook-modal').classList.remove('hidden');
+};
+
+window.changeStorybookSlide = function(direction) {
+    const newIndex = currentStorybookSlideIndex + direction;
+    if (newIndex >= 0 && newIndex < currentStorybookSlides.length) {
+        currentStorybookSlideIndex = newIndex;
+        renderStorybookSlide();
+    }
+};
+
+window.setStorybookSlide = function(index) {
+    if (index >= 0 && index < currentStorybookSlides.length) {
+        currentStorybookSlideIndex = index;
+        renderStorybookSlide();
+    }
+};
+
+function renderStorybookSlide() {
+    const slide = currentStorybookSlides[currentStorybookSlideIndex];
+    const container = document.getElementById('storybook-slide-content');
+    if (!container || !slide) return;
+    
+    // スライドアニメーション（一度フェードアウトしてからイン）
+    container.style.opacity = '0';
+    container.style.transform = 'scale(0.95)';
+    
+    setTimeout(() => {
+        container.innerHTML = `
+            <div style="margin-bottom: 1.2rem; display: flex; justify-content: center; position: relative;">
+                <img src="${slide.image}" alt="${slide.title}" style="width: 100%; max-width: 320px; aspect-ratio: 1/1; object-fit: cover; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.2);">
+                <div style="position: absolute; bottom: -0.8rem; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #fff; padding: 0.3rem 1.2rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                    Page ${currentStorybookSlideIndex + 1} / ${currentStorybookSlides.length}
+                </div>
+            </div>
+            <h3 style="font-size: 1.4rem; color: #fbc2eb; margin: 1rem 0 0.8rem; font-family: 'Noto Sans JP', sans-serif;">${slide.title}</h3>
+            <p style="font-size: 0.95rem; color: #e2e8f0; line-height: 1.8; text-align: justify; text-justify: inter-character; background: rgba(0,0,0,0.4); padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); margin: 0 auto; max-width: 550px; font-family: 'Noto Sans JP', sans-serif;">
+                ${slide.description}
+            </p>
+        `;
+        
+        // 矢印ボタンの表示制御
+        const prevBtn = document.getElementById('btn-storybook-prev');
+        const nextBtn = document.getElementById('btn-storybook-next');
+        if (prevBtn) prevBtn.style.opacity = currentStorybookSlideIndex === 0 ? '0.3' : '1';
+        if (nextBtn) nextBtn.style.opacity = currentStorybookSlideIndex === currentStorybookSlides.length - 1 ? '0.3' : '1';
+        
+        // ドットのactive切り替え
+        const dots = document.querySelectorAll('.storybook-dot');
+        dots.forEach((dot, idx) => {
+            if (idx === currentStorybookSlideIndex) {
+                dot.style.background = '#ff9a9e';
+                dot.style.transform = 'scale(1.3)';
+            } else {
+                dot.style.background = 'rgba(255,255,255,0.3)';
+                dot.style.transform = 'scale(1)';
+            }
+        });
+        
+        // フェードイン
+        container.style.opacity = '1';
+        container.style.transform = 'scale(1)';
+    }, 200);
+}
+
+// ドキュメントロード時のイベント設定
+document.addEventListener('DOMContentLoaded', () => {
+    const btnOpenStorybook = document.getElementById('btn-open-storybook');
+    if (btnOpenStorybook) {
+        btnOpenStorybook.addEventListener('click', window.openStorybook);
+    }
+});
