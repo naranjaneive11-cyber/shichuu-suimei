@@ -3,6 +3,7 @@ const CACHE_NAME = 'stargazer-salon-v1';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
+  './salon_index.html',
   './salon_cheat_sheet.html',
   './salon_customer.html',
   './styles.css',

@@ -2,7 +2,7 @@
   "name": "Stargazer 開運似合わせコンシェルジュ",
   "short_name": "開運カルテ",
   "description": "四柱推命×美容師接客DX 開運似合わせコンシェルジュ＆顧客カルテ",
-  "start_url": "./salon_cheat_sheet.html",
+  "start_url": "./salon_index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
